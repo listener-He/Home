@@ -5,7 +5,7 @@
 希望大家喜欢 ❤️
 </p>
 
-![LQBBYの主页](https://www.lqbby.com/upload/2022/06/QQ%E6%88%AA%E5%9B%BE20220613163335.webp)
+![Honesty的主页](https://www.lqbby.com/upload/2022/06/QQ%E6%88%AA%E5%9B%BE20220613163335.webp)
 
 >和风天气 API 每日限量1000次，需 [自行申请](https://dev.qweather.com/)，或更换其他 API
 
@@ -13,7 +13,7 @@
 >由于 CDN 缓存原因，查看最新效果可能需要 `Ctrl` + `F5` 强制刷新浏览器缓存
 
 ### 👀 预览
-- [LQBBYの主页](https://zy.lqbby.com:1443)
+- [Honesty的主页](https://www.hehouhui.cn)
 
 ### 🌈 功能
 
