@@ -61,8 +61,7 @@ $(document).ready(function () {
 	}
 
 	var imgUrl = imgUrls[index];
-    var url = "https://www.bing.com" + imgUrl;
-    $panel.css("background", "url('" + url + "') center center no-repeat #666");
+    $panel.css("background", "url('" + imgUrl + "') center center no-repeat #666");
     $panel.css("background-size", "cover");
 
 	$(".iUp").each(function (i, e) {
