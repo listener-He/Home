@@ -44,23 +44,25 @@ $(document).ready(function () {
 	var imgUrls = JSON.parse(sessionStorage.getItem("imgUrls"));
 	var index = sessionStorage.getItem("index");
 	var $panel = $('#panel');
+	var date = new Date();
+    var dayOfWeek = date.getDay() + 1;
 	if (imgUrls == null) {
 		imgUrls = new Array();
 		index = 0;
         for (let i = 1; i < 8; i++) {
-            imgUrls.push("https://cdn.jsdelivr.net/gh/listener-He/Home/images/bj/"+i+".jpg");
+            imgUrls.push("https://blog-file.hehouhui.cn/bj/"+i+".jpg");
         }
         sessionStorage.setItem("imgUrls", JSON.stringify(imgUrls));
-        sessionStorage.setItem("index", index);
+        // sessionStorage.setItem("index", index);
 	} else {
-		if (index == 7)
-			index = 0;
-		else
-			index++;
-		sessionStorage.setItem("index", index);
+//		if (index == imgUrls.length)
+//			index = 0;
+//		else
+//			index++;
+//		sessionStorage.setItem("index", index);
 	}
 
-	var imgUrl = imgUrls[index];
+	var imgUrl = imgUrls[dayOfWeek];
     $panel.css("background", "url('" + imgUrl + "') center center no-repeat #666");
     $panel.css("background-size", "cover");
 
