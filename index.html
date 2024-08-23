@@ -31,6 +31,7 @@
           media="all">
     <!--科技炫酷按钮-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/listener-He/Home/css/sey.css">
+<!--    <link rel="stylesheet" href="./css/style.css" />-->
 
     <!--IE淘汰计划-->
     <script>
@@ -39,17 +40,11 @@
 </head>
 
 <body oncontextmenu=self.event.returnValue=false onselectstart="return false">
-<!--&lt;!&ndash;<span class="mobile btn-mobile-menu">-->
-<!--    <i class="social iconfont icon-list btn-mobile-menu__icon"></i>-->
-<!--    <i class="social iconfont icon-ngleup btn-mobile-close__icon hidden"></i>-->
-<!--</span>&ndash;&gt;-->
 <!-- style="background: url(https://blog-file.hehouhui.cn/bj/1.jpg) center center / cover no-repeat rgb(102, 102, 102);" -->
 <header id="panel" class="panel-cover"
         >
     <!--星空背景-->
-    <div id="stars"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
+<!--    <canvas id="bg"></canvas>-->
     <!--天气-->
     <div id="he-plugin-simple"></div>
     <script>
@@ -80,8 +75,8 @@
     <div class="panel-main">
         <div class="panel-main__inner panel-inverted">
             <div class="panel-main__content">
-                <div class="ih-item circle effect right_to_left">
-                    <a class="blog-button">
+                <div class="ih-item circle effect right_to_left" id="avatar">
+                    <a class="blog-button" >
                         <div class="img"><img src="https://cdn.jsdelivr.net/gh/listener-He/images@default/202309111525908.jpeg" alt="img"
                                               class="js-avatar iUp profilepic header-logo">
                         </div>
@@ -230,6 +225,7 @@ var _hmt = _hmt || [];
 
     gtag('config', 'G-DYWDEVKDP0');
 </script>
-
+<!--<script src="./js/StarrySky.js"></script>-->
+<!--<script src="./js/stars.js"></script>-->
 </body>
 </html>
