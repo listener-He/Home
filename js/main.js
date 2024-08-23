@@ -30,7 +30,7 @@ var iUp = (function () {
 $(document).ready(function () {
 
 	// 获取一言数据
-	fetch('https://v1.hitokoto.cn?c=a%c=b&c=c&c=d&c=h&c=i&c=k').then(function (res) {
+	fetch('https://v1.hitokoto.cn?c=c&c=d&c=i&c=k').then(function (res) {
 		return res.json();
 	}).then(function (e) {
 		$('#description').html(e.hitokoto + "<br/> -「<strong>" + e.from + "</strong>」")
