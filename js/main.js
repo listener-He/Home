@@ -45,7 +45,7 @@ $(document).ready(function () {
 	var index = sessionStorage.getItem("index");
 	var $panel = $('#panel');
 	var date = new Date();
-    var dayOfWeek = date.getDay() + 1;
+    var dayOfWeek = date.getDay();
 	if (imgUrls == null) {
 		imgUrls = new Array();
 		index = 0;
