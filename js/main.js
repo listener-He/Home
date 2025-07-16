@@ -47,7 +47,7 @@ $(document).ready(function () {
 	var date = new Date();
     var dayOfWeek = date.getDay();
 	if (imgUrls == null) {
-		imgUrls = new Array();
+		imgUrls = [];
 		index = 0;
         for (let i = 1; i < 8; i++) {
             imgUrls.push("https://blog-file.hehouhui.cn/bj/"+i+".jpg");
