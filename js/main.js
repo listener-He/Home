@@ -95,9 +95,9 @@ $('.moments-link').on('click', function (e) {
   
   // 获取链接地址
   var url = $(this).attr('href');
-  
+  console.log("当前用户UA-", navigator.userAgent)
   // 判断是否是移动端
-  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  var isMobile = /iPhone|Android/i.test(navigator.userAgent);
   
   if (isMobile) {
     // 移动端：直接跳转
