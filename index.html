@@ -147,7 +147,7 @@
                                     </a>
                                 </li>
                                 <li class="navigation__item">
-                                    <a href="https://moments.hehouhui.cn/"
+                                    <a href="https://moments.hehouhui.cn/" class="moments-link"
                                        title="瞬间" target="_blank">
                                         <j class="fa-solid fa-camera"></j>
                                         <span class="label">瞬间</span>
@@ -198,9 +198,19 @@
         </p>
     </div>
 </header>
-<!--黑暗主题-->
+  <!-- 模拟iPhone 16容器 -->
+  <div class="iphone-simulator">
+    <div class="browser-view">
+      <div class="close-btn"></div>
+      <iframe id="moment-frame" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+  </div>
+  
+  <!-- 遮罩层 -->
+  <div class="overlay"></div>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/jquery.min.js"></script>
+  <!--黑暗主题-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/fetch.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/main.js?version=1"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/bj.js"></script>
