@@ -214,26 +214,35 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/fetch.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/main.js?version=2"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/bj.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/listener-He/Home/js/moments.js"></script>
 <script async src="https://analyse.hehouhui.cn/tracker.js" data-ackee-server="https://analyse.hehouhui.cn" data-ackee-domain-id="7887135f-a413-46e2-a98c-52d4f18d9973"></script>
 <script>
     // 百度站点统计
 var _hmt = _hmt || [];
 (function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
+    try {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    } catch (e) {
+        console.log("百度统计错误", e);
+    }
+
 })();
 </script>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYWDEVKDP0"></script>
 <script type="text/javascript">
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-DYWDEVKDP0');
+    try {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DYWDEVKDP0');
+    } catch (e) {
+        console.log("google ga error", e);
+    }
 </script>
 <!--<script src="./js/StarrySky.js"></script>-->
 <!--<script src="./js/stars.js"></script>-->
