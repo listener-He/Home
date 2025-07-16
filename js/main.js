@@ -35,7 +35,7 @@ $(document).ready(function () {
 	}).then(function (e) {
 		$('#description').html(e.hitokoto + "<br/> -「<strong>" + e.from + "</strong>」")
 	}).catch(function (err) {
-		console.error(err);
+		console.error("获取一言数据失败", err);
 	})
 
 	/**
