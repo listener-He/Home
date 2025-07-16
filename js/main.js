@@ -94,7 +94,7 @@ $('.moments-link').on('click', function (e) {
   e.preventDefault(); // 阻止默认跳转
   
   // 获取链接地址
-  var url = $(this).attr('href');
+  var url = "https://moments.hehouhui.cn";
   console.log("当前用户UA-", navigator.userAgent)
   // 判断是否是移动端
   var isMobile = /iPhone|Android/i.test(navigator.userAgent);
