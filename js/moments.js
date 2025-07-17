@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    const iframe = document.getElementById('moment-frame');
     function animateDynamicIsland(text = '正在加载...') {
         const island = document.querySelector('.dynamic-island');
         const content = island.querySelector('.content');
@@ -8,36 +9,41 @@ $(document).ready(function () {
 
         setTimeout(() => {
             island.classList.remove('expand');
-        }, 2000); // 2秒后收缩
+        }, (iframe.src == null || iframe.src === '') ? 2000 : 250); // 2秒后收缩
     }
 
     function openSimulator(url) {
         const sim = document.querySelector('.iphone-simulator');
-        const iframe = document.getElementById('moment-frame');
+        const overlay = document.querySelector('.overlay');
         const skeleton = document.querySelector('.skeleton');
-        const browserView = document.querySelector('.browser-view');
-
         sim.style.display = 'block';
-        document.querySelector('.overlay').style.display = 'block';
+        overlay.style.display = 'block';
+        if (iframe.src == null || iframe.src === '' || iframe.src !== url) {
+            const browserView = document.querySelector('.browser-view');
+            iframe.src = url;
 
-        iframe.src = url;
+            iframe.onload = () => {
+                setTimeout(() => {
+                    skeleton.style.display = 'none';
+                    browserView.classList.add('loaded');
+                }, 300); // 延迟更自然
+            };
+        } else {
+            skeleton.style.display = 'none';
+        }
 
-        iframe.onload = () => {
-            setTimeout(() => {
-                skeleton.style.display = 'none';
-                browserView.classList.add('loaded');
-            }, 300); // 延迟更自然
-        };
     }
+
+
 
     // 处理瞬间链接点击事件
     $('.moments-link').on('click', function (e) {
         e.preventDefault(); // 阻止默认跳转
 
         // 获取链接地址
-        var url = "https://moments.hehouhui.cn";
+        const url = "https://moments.hehouhui.cn";
         // 判断是否是移动端
-        var isMobile = /iPhone|Android/i.test(navigator.userAgent);
+        const isMobile = /iPhone|Android/i.test(navigator.userAgent);
 
         if (isMobile) {
             // 移动端：直接跳转
@@ -54,7 +60,6 @@ $(document).ready(function () {
         $('.iphone-simulator').hide();
         $('.overlay').hide();
         $('.iphone-simulator').removeClass('visible');
-        $('#moment-frame').attr('src', ''); // 清空iframe内容
     });
 
     // 遮罩层点击事件 点击空白处关闭模拟器
@@ -62,10 +67,8 @@ $(document).ready(function () {
         $(this).hide();
         $('.iphone-simulator').hide();
         $('.iphone-simulator').removeClass('visible');
-        $('#moment-frame').attr('src', '');
     });
 
-    const iframe = document.getElementById('moment-frame');
     document.querySelector('.back-btn').addEventListener('click', () => {
         try {
             // 安全地尝试让 iframe 内部回退
