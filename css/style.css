@@ -10115,10 +10115,13 @@ j {
 .iphone-simulator {
     position: fixed;
     top: 50%;
-    right: 1%;
+    right: 10px;
     transform: translate(-50%, -50%) scale(1);
     width: 393px; /* iPhone 16 Pro 宽度 */
     height: 852px; /* iPhone 16 Pro 高度 */
+    max-width: 30vw; /* 自适应最大宽度为视口宽度的30% */
+    max-height: 90vh; /* 自适应最大高度为视口高度的90% */
+    aspect-ratio: 393 / 852; /* 保持 iPhone 16 Pro 比例 */
     border-radius: 47px; /* 真机圆角 */
     box-shadow: 0 0 0 12px #1a1a1a, /* 边框模拟 */
     0 0 0 14px #000, /* 外阴影 */
