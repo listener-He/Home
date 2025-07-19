@@ -13,7 +13,7 @@
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
     <meta name="author" content="HeHouHui">
     <title>Honesty的主页</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2">
+    <link rel="stylesheet" type="text/css" href="/css/style.css?version=2">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/iconfont.css">
     <link rel="apple-touch-icon" href="https://blog-file.hehouhui.cn/bj/logo.png">
     <link rel="icon" href="https://cdn.jsdmirror.com/gh/listener-He/Home/favicon.ico?version=1">
@@ -121,7 +121,8 @@
                                     <a href="https://nav.hehouhui.cn/"><span>导航</span><i></i></a>
                                 </li>
                                 <li class="navigation__item">
-                                    <a href="javascript:void(0)" class="moments-link"><span>瞬间</span><i></i></a>
+                                    <!-- javascript:void(0) -->
+                                    <a href="https://moments.hehouhui.cn" class="moments-link"><span>瞬间</span><i></i></a>
                                 </li>
                             </ul>
                         </nav>
@@ -194,17 +195,9 @@
         </p>
     </div>
 </header>
-<!-- 模拟iPhone 16容器 -->
-<div class="iphone-simulator" style="display: none">
-    <div class="dynamic-island">
-        <p class="content"></p>
-    </div>
-    <div class="back-btn"></div>
-    <div class="browser-view">
-        <div class="close-btn"></div>
-        <div class="skeleton"></div>
-        <iframe id="moment-frame"  width="100%" height="100%" frameborder="0"></iframe>
-    </div>
+<!-- iframe容器 -->
+<div id="moments-container" style="display: none;">
+    <iframe id="moment-frame" src="" width="100%" height="500px" frameborder="0"></iframe>
 </div>
 
 <!-- 遮罩层 -->
@@ -215,7 +208,7 @@
 <script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/fetch.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/main.js?version=2"></script>
 <script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/bj.js"></script>
-<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/moments.js"></script>
+<!--<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/moments.js"></script>-->
 <script async src="https://analyse.hehouhui.cn/tracker.js" data-ackee-server="https://analyse.hehouhui.cn"
         data-ackee-domain-id="7887135f-a413-46e2-a98c-52d4f18d9973"></script>
 <script>
