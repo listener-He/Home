@@ -13,7 +13,7 @@
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
     <meta name="author" content="HeHouHui">
     <title>Honesty的主页</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=3">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/iconfont.css">
     <link rel="apple-touch-icon" href="https://blog-file.hehouhui.cn/bj/logo.png">
     <link rel="icon" href="https://cdn.jsdmirror.com/gh/listener-He/Home/favicon.ico?version=1">
@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/volantis-x/cdn-fontawesome-pro@master/css/all.min.css"
           media="all">
     <!--科技炫酷按钮-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/sey.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdmirror.com/gh/listener-He/Home/css/sey.css?version=3">
     <!--    <link rel="stylesheet" href="./css/style.css" />-->
 
     <!--IE淘汰计划-->
@@ -98,7 +98,7 @@
                 <!--                <canvas class="navigation-wrapper iUp" id="canvas" style="width:50%;padding-top:0px;" width="920"-->
                 <!--                        height="350"></canvas>-->
                 <!--                <script src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/clock.js"></script>-->
-                <hr class="iUp"/>
+                <!-- 横线已移除 -->
                 <!--一言无法显示时的文字-->
                 <p id="description" style="margin-top: 10%" class="panel-cover__description iUp">人生天地之间，若白驹之过隙，忽然而已。
                     <br/>
@@ -128,58 +128,91 @@
                         </nav>
 
                     </div>
-                    <div class="iUp">
-                        <nav class="cover-navigation navigation--social">
-                            <ul class="navigation">
-                                <li class="navigation__item">
-                                    <a href="https://github.com/listener-He" title="Github" target="_blank">
-                                        <j class="iconfont icon-github"></j>
-                                        <span class="label">Github</span>
-                                    </a>
-                                </li>
-                                <li class="navigation__item">
-                                    <a href="https://www.linkedin.com/in/honesty861024" title="Linkedin"
-                                       target="_blank">
-                                        <j class="fab fa-telegram-plane"></j>
-                                        <span class="label">Linkedin</span>
-                                    </a>
-                                </li>
-                                <li class="navigation__item">
-                                    <a href="https://twitter.com/Honesty861024" title="Twitter" target="_blank">
-                                        <j class="fab fa-twitter"></j>
-                                        <span class="label">Twitter</span>
-                                    </a>
-                                </li>
-                                <li class="navigation__item">
-                                    <a onClick="weixin()" title="微信" target="_blank">
-                                        <j class="fab fa-weixin"></j>
-                                        <script>
-                                            function weixin() {
-                                                Swal.fire({
-                                                    title: "请扫码",
-                                                    text: "请使用微信扫一扫",
-                                                    confirmButtonText: "好的",
-                                                    imageUrl: "./images/my-wechat.jpeg",
-                                                    imageWidth: 150,
-                                                    imageHeight: 150
-                                                })
-                                            }
-                                        </script>
-                                    </a>
-                                </li>
-                                <li class="navigation__item">
-                                    <a href="mailto:hehouhui@hehouhui.cn" title="Email">
-                                        <j class="fas fa-envelope"></j>
-                                        <span class="label">Email</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                    <div>
+                        <div class="social-icons-row">
+                            <div class="social-icon">
+                                <a href="https://github.com/listener-He" title="Github" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                    <span class="label">Github</span>
+                                </a>
+                            </div>
+                            <div class="social-icon">
+                                <a href="https://www.linkedin.com/in/honesty861024" title="Linkedin"
+                                   target="_blank">
+                                    <i class="fab fa-linkedin"></i>
+                                    <span class="label">Linkedin</span>
+                                </a>
+                            </div>
+                            <div class="social-icon">
+                                <a href="https://twitter.com/Honesty861024" title="Twitter" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                    <span class="label">Twitter</span>
+                                </a>
+                            </div>
+                            <div class="social-icon">
+                                <a onClick="weixin()" title="微信" class="weixin-link">
+                                    <i class="fab fa-weixin"></i><span class="label">微信</span>
+                                </a>
+                            </div>
+                            
+                            <div class="social-icon">
+                                <a href="mailto:hehouhui@hehouhui.cn" title="Email">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="panel-cover--overlay cover-slate"></div>
+        <div class="weixin-qrcode-overlay" id="weixinOverlay">
+            <div class="weixin-qrcode-container">
+                <div class="weixin-qrcode-title">扫描二维码</div>
+                <div class="weixin-qrcode-desc">请使用微信扫一扫添加关注</div>
+                <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="微信二维码" class="weixin-qrcode-image" onerror="this.src='https://cdn.jsdmirror.com/gh/listener-He/Home/images/logo.png'; this.alt='二维码加载失败'">
+                <button class="weixin-qrcode-close" onclick="closeWeixin()">关闭</button>
+            </div>
+        </div>
+    <script>
+        function weixin() {
+            const overlay = document.getElementById('weixinOverlay');
+            overlay.style.display = 'flex';
+
+            // 防止滚动穿透
+            document.body.style.overflow = 'hidden';
+            // 添加ESC键关闭
+            document.addEventListener('keydown', closeOnEsc);
+        }
+        
+        function closeWeixin() {
+            const overlay = document.getElementById('weixinOverlay');
+            overlay.style.display = 'none';
+            // 恢复滚动
+            document.body.style.overflow = '';
+            // 移除ESC键监听
+            document.removeEventListener('keydown', closeOnEsc);
+        }
+        
+        function closeOnEsc(e) {
+            if (e.key === 'Escape') {
+                closeWeixin();
+            }
+        }
+        
+        // 点击空白处关闭
+        document.getElementById('weixinOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWeixin();
+            }
+        });
+        
+        // 阻止点击弹框内容时关闭
+        document.querySelector('.weixin-qrcode-container').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
     </div>
     <div class="remark iUp">
         <p class="power">
@@ -206,8 +239,8 @@
 <!--黑暗主题-->
 <script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/fetch.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/main.js?version=2"></script>
-<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/bj.js"></script>
+<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/main.js?version=3"></script>
+<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/bj.js?version=3"></script>
 <!--<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/moments.js"></script>-->
 <script async src="https://analyse.hehouhui.cn/tracker.js" data-ackee-server="https://analyse.hehouhui.cn"
         data-ackee-domain-id="7887135f-a413-46e2-a98c-52d4f18d9973"></script>
@@ -255,5 +288,7 @@
 
 <!--<script src="./js/StarrySky.js"></script>-->
 <!--<script src="./js/stars.js"></script>-->
+
+
 </body>
 </html>

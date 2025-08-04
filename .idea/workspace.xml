@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ca4c42b7-2c40-4223-a51d-9a9224a435fe" name="更改" comment="build: 更新样式文件链接&#10;&#10;- 将本地 css 文件链接替换为 CDN 链接&#10;- 使用 https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2 替代 /css/style.css?version=2" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;listener-He&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:listener-He/Home.git&quot;,
+    &quot;accountId&quot;: &quot;a38f36a0-a845-4a1a-adc5-5ee0b3c38bce&quot;
+  }
+}</component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2kaxXYhyD4z1HKrZloEb3NT3pUc" />
+  <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hehui/dev/git/private/hehh/Home&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/css" />
+      <recent name="$PROJECT_DIR$/js" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/images/bj" />
+      <recent name="$PROJECT_DIR$/assets/fonts" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/webfonts" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26574.91" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26574.91" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="ca4c42b7-2c40-4223-a51d-9a9224a435fe" name="更改" comment="" />
+      <created>1723535528835</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723535528835</updated>
+      <workItem from="1723535530050" duration="16764000" />
+      <workItem from="1723973493039" duration="126000" />
+      <workItem from="1724033631759" duration="12487000" />
+      <workItem from="1724203088713" duration="648000" />
+      <workItem from="1724308775209" duration="6794000" />
+      <workItem from="1724636100498" duration="432000" />
+      <workItem from="1724893429504" duration="351000" />
+      <workItem from="1724979888957" duration="136000" />
+      <workItem from="1725111230778" duration="8000" />
+      <workItem from="1725454646912" duration="289000" />
+      <workItem from="1752647928589" duration="3687000" />
+      <workItem from="1752663994100" duration="273000" />
+      <workItem from="1752683354856" duration="8014000" />
+      <workItem from="1752736356401" duration="72000" />
+      <workItem from="1752737241223" duration="472000" />
+      <workItem from="1752751123675" duration="4478000" />
+      <workItem from="1752816013831" duration="37000" />
+      <workItem from="1752827796340" duration="5567000" />
+      <workItem from="1753788144619" duration="710000" />
+    </task>
+    <task id="LOCAL-00001" summary="add bj">
+      <option name="closed" value="true" />
+      <created>1723625589491</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723625589491</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add key">
+      <option name="closed" value="true" />
+      <created>1723625763470</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1723625763472</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update js">
+      <option name="closed" value="true" />
+      <created>1723626294629</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1723626294629</updated>
+    </task>
+    <task id="LOCAL-00004" summary="更改样式 与 元素">
+      <option name="closed" value="true" />
+      <created>1723790812200</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1723790812200</updated>
+    </task>
+    <task id="LOCAL-00005" summary="调整ICP备案">
+      <option name="closed" value="true" />
+      <created>1723791836295</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1723791836295</updated>
+    </task>
+    <task id="LOCAL-00006" summary="移除ICP">
+      <option name="closed" value="true" />
+      <created>1723792285587</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1723792285587</updated>
+    </task>
+    <task id="LOCAL-00007" summary="移除过时依赖">
+      <option name="closed" value="true" />
+      <created>1723792666325</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1723792666325</updated>
+    </task>
+    <task id="LOCAL-00008" summary="调整图片">
+      <option name="closed" value="true" />
+      <created>1724035421952</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1724035421952</updated>
+    </task>
+    <task id="LOCAL-00009" summary="update js">
+      <option name="closed" value="true" />
+      <created>1724035613631</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1724035613631</updated>
+    </task>
+    <task id="LOCAL-00010" summary="update version">
+      <option name="closed" value="true" />
+      <created>1724035720103</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1724035720103</updated>
+    </task>
+    <task id="LOCAL-00011" summary="update js script">
+      <option name="closed" value="true" />
+      <created>1724035882206</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1724035882206</updated>
+    </task>
+    <task id="LOCAL-00012" summary="update js script version">
+      <option name="closed" value="true" />
+      <created>1724038040768</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1724038040768</updated>
+    </task>
+    <task id="LOCAL-00013" summary="update hitokoto param">
+      <option name="closed" value="true" />
+      <created>1724119505388</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1724119505388</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add about">
+      <option name="closed" value="true" />
+      <created>1724122259899</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1724122259899</updated>
+    </task>
+    <task id="LOCAL-00015" summary="update about">
+      <option name="closed" value="true" />
+      <created>1724135509659</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1724135509659</updated>
+    </task>
+    <task id="LOCAL-00016" summary="update config">
+      <option name="closed" value="true" />
+      <created>1724310144317</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1724310144317</updated>
+    </task>
+    <task id="LOCAL-00017" summary="update . home . background">
+      <option name="closed" value="true" />
+      <created>1724320251837</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1724320251837</updated>
+    </task>
+    <task id="LOCAL-00018" summary="update . StarrySky">
+      <option name="closed" value="true" />
+      <created>1724377255092</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1724377255092</updated>
+    </task>
+    <task id="LOCAL-00019" summary="update hitokoto keyword class">
+      <option name="closed" value="true" />
+      <created>1724385170042</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1724385170042</updated>
+    </task>
+    <task id="LOCAL-00020" summary="update main.js dayOfWeek">
+      <option name="closed" value="true" />
+      <created>1724636127008</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1724636127008</updated>
+    </task>
+    <task id="LOCAL-00021" summary="feat(navigation): 更新导航栏中的 QQ 链接为瞬间链接&#10;&#10;- 将 QQ 链接替换为瞬间链接（https://moments.hehouhui.cn/）&#10;- 使用相机图标代替 QQ 图标&#10;- 修改标签文本从 &quot;QQ&quot; 到 &quot;瞬间&quot;">
+      <option name="closed" value="true" />
+      <created>1752648311341</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1752648311341</updated>
+    </task>
+    <task id="LOCAL-00022" summary="refactor: 修正瞬间图标标签&#10;&#10;- 将瞬间图标的 HTML 标签从 &lt;a&gt;改为 &lt;j&gt;&#10;- 这个修改可能是为了优化 HTML 结构或适应新的设计需求">
+      <option name="closed" value="true" />
+      <created>1752648737978</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1752648737978</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat: 添加瞬间页面模拟器功能&#10;&#10;- 在 PC 端点击瞬间链接时，弹出模拟 iPhone 16 的窗口展示内容- 添加相应的 HTML、CSS 和 JavaScript 代码实现该功能&#10;-优化了用户体验，特别是在大屏幕上查看瞬间内容时">
+      <option name="closed" value="true" />
+      <created>1752649580177</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1752649580177</updated>
+    </task>
+    <task id="LOCAL-00024" summary="feat(index): 更新样式和脚本版本&#10;&#10;- 更新 style.css 文件版本为 2&#10;- 更新 main.js 文件版本为 2&#10;- 修改瞬间页面图标为 QQ 图标">
+      <option name="closed" value="true" />
+      <created>1752651355439</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1752651355439</updated>
+    </task>
+    <task id="LOCAL-00025" summary="refactor(js): 优化一言数据获取失败的错误日志- 在 catch 方法中，将原始的错误信息替换为更具可读性的自定义错误消息&#10;- 新增&quot;获取一言数据失败&quot;的前缀，使错误类型更加清晰">
+      <option name="closed" value="true" />
+      <created>1752651597095</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1752651597095</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor: 优化移动端判断逻辑并添加 UA 日志输出&#10;&#10;- 移除了对 iPad 和 iPod 的判断，只保留 iPhone 和 Android- 在判断移动端之前添加了 UA 日志输出，便于调试">
+      <option name="closed" value="true" />
+      <created>1752651789549</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1752651789549</updated>
+    </task>
+    <task id="LOCAL-00027" summary="refactor: 更新瞬间链接打开方式&#10;&#10;- 将瞬间链接的 href 属性从实际 URL 改为 &quot;javascript:void(0)&quot;&#10;- 在 main.js 中硬编码瞬间链接的 URL&#10;- 这种改动可以提高用户体验，避免直接在新标签页打开链接">
+      <option name="closed" value="true" />
+      <created>1752664138348</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1752664138350</updated>
+    </task>
+    <task id="LOCAL-00028" summary="refactor(script): 重构脚本加载和错误处理&#10;&#10;- 添加 moments.js 新脚本文件，分离瞬间功能逻辑&#10;- 为百度统计和 Google Analytics 添加错误处理&#10;- 更新 main.js，移除瞬间功能相关代码">
+      <option name="closed" value="true" />
+      <created>1752683703341</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1752683703341</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat(iconfont): 新增朋友图标并优化瞬间功能&#10;&#10;- 在 iconfont.css 中添加了新的朋友图标 (\e84d)&#10;-优化了瞬间功能的加载和显示逻辑&#10;- 更新了 CDN链接为更快的镜像源&#10;- 修复了一些小的前端问题，如百度统计和 Google Analytics 的加载顺序">
+      <option name="closed" value="true" />
+      <created>1752736304613</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1752736304613</updated>
+    </task>
+    <task id="LOCAL-00030" summary="refactor(navigation): 调整导航栏链接和图标&#10;&#10;- 将&quot;壁纸&quot;链接替换为&quot;瞬间&quot;链接&#10;- 移除 Twitter 导航项&#10;- 删除多余的&quot;瞬间&quot;导航项">
+      <option name="closed" value="true" />
+      <created>1752736415410</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1752736415410</updated>
+    </task>
+    <task id="LOCAL-00031" summary="perf(moments): 优化动态岛和 iframe 加载逻辑&#10;&#10;- 添加 iframe 加载判断，动态调整动态岛收缩时间&#10;- 优化 iframe 源的加载逻辑，减少重复加载&#10;- 移除冗余的 iframe 源清空操作&#10;- 修复后退按钮点击事件">
+      <option name="closed" value="true" />
+      <created>1752751664039</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1752751664039</updated>
+    </task>
+    <task id="LOCAL-00032" summary="style(css): 优化 iPhone 模拟器样式&#10;&#10;- 调整 iPhone 模拟器的位置和大小&#10;- 添加自适应最大宽度和高度限制&#10;- 保持 iPhone 16 Pro 的宽高比例&#10;- 优化边框和阴影效果">
+      <option name="closed" value="true" />
+      <created>1752754800367</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1752754800367</updated>
+    </task>
+    <task id="LOCAL-00033" summary="style(css): 调整 iPhone 16 Pro 的模拟器尺寸和比例&#10;&#10;- 调整宽度和高度以更接近真实设备尺寸&#10;- 增加最大宽度百分比以适应不同视口大小&#10;- 更新宽高比以匹配新尺寸">
+      <option name="closed" value="true" />
+      <created>1752767727960</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1752767727960</updated>
+    </task>
+    <task id="LOCAL-00034" summary="refactor(index): 重构瞬间功能并优化页面结构&#10;&#10;- 移除 iPhone 模拟器，改为直接使用 iframe 嵌入瞬间页面&#10;- 更新瞬间链接为实际 URL，取消 javascript:void(0)- 调整 iframe 容器样式，设置初始隐藏状态- 重构 moments.js，简化代码结构，优化动画效果&#10;- 更新 CSS 链接为相对路径，提高性能">
+      <option name="closed" value="true" />
+      <created>1752902690674</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1752902690674</updated>
+    </task>
+    <task id="LOCAL-00035" summary="build: 更新样式文件链接&#10;&#10;- 将本地 css 文件链接替换为 CDN 链接&#10;- 使用 https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2 替代 /css/style.css?version=2">
+      <option name="closed" value="true" />
+      <created>1752902717458</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1752902717458</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update js script" />
+    <MESSAGE value="update js script version" />
+    <MESSAGE value="update hitokoto param" />
+    <MESSAGE value="add about" />
+    <MESSAGE value="update about" />
+    <MESSAGE value="update config" />
+    <MESSAGE value="update . home . background" />
+    <MESSAGE value="update . StarrySky" />
+    <MESSAGE value="update hitokoto keyword class" />
+    <MESSAGE value="update main.js dayOfWeek" />
+    <MESSAGE value="feat(navigation): 更新导航栏中的 QQ 链接为瞬间链接&#10;&#10;- 将 QQ 链接替换为瞬间链接（https://moments.hehouhui.cn/）&#10;- 使用相机图标代替 QQ 图标&#10;- 修改标签文本从 &quot;QQ&quot; 到 &quot;瞬间&quot;" />
+    <MESSAGE value="refactor: 修正瞬间图标标签&#10;&#10;- 将瞬间图标的 HTML 标签从 &lt;a&gt;改为 &lt;j&gt;&#10;- 这个修改可能是为了优化 HTML 结构或适应新的设计需求" />
+    <MESSAGE value="feat: 添加瞬间页面模拟器功能&#10;&#10;- 在 PC 端点击瞬间链接时，弹出模拟 iPhone 16 的窗口展示内容- 添加相应的 HTML、CSS 和 JavaScript 代码实现该功能&#10;-优化了用户体验，特别是在大屏幕上查看瞬间内容时" />
+    <MESSAGE value="feat(index): 更新样式和脚本版本&#10;&#10;- 更新 style.css 文件版本为 2&#10;- 更新 main.js 文件版本为 2&#10;- 修改瞬间页面图标为 QQ 图标" />
+    <MESSAGE value="refactor(js): 优化一言数据获取失败的错误日志- 在 catch 方法中，将原始的错误信息替换为更具可读性的自定义错误消息&#10;- 新增&quot;获取一言数据失败&quot;的前缀，使错误类型更加清晰" />
+    <MESSAGE value="refactor: 优化移动端判断逻辑并添加 UA 日志输出&#10;&#10;- 移除了对 iPad 和 iPod 的判断，只保留 iPhone 和 Android- 在判断移动端之前添加了 UA 日志输出，便于调试" />
+    <MESSAGE value="refactor: 更新瞬间链接打开方式&#10;&#10;- 将瞬间链接的 href 属性从实际 URL 改为 &quot;javascript:void(0)&quot;&#10;- 在 main.js 中硬编码瞬间链接的 URL&#10;- 这种改动可以提高用户体验，避免直接在新标签页打开链接" />
+    <MESSAGE value="refactor(script): 重构脚本加载和错误处理&#10;&#10;- 添加 moments.js 新脚本文件，分离瞬间功能逻辑&#10;- 为百度统计和 Google Analytics 添加错误处理&#10;- 更新 main.js，移除瞬间功能相关代码" />
+    <MESSAGE value="feat(iconfont): 新增朋友图标并优化瞬间功能&#10;&#10;- 在 iconfont.css 中添加了新的朋友图标 (\e84d)&#10;-优化了瞬间功能的加载和显示逻辑&#10;- 更新了 CDN链接为更快的镜像源&#10;- 修复了一些小的前端问题，如百度统计和 Google Analytics 的加载顺序" />
+    <MESSAGE value="refactor(navigation): 调整导航栏链接和图标&#10;&#10;- 将&quot;壁纸&quot;链接替换为&quot;瞬间&quot;链接&#10;- 移除 Twitter 导航项&#10;- 删除多余的&quot;瞬间&quot;导航项" />
+    <MESSAGE value="perf(moments): 优化动态岛和 iframe 加载逻辑&#10;&#10;- 添加 iframe 加载判断，动态调整动态岛收缩时间&#10;- 优化 iframe 源的加载逻辑，减少重复加载&#10;- 移除冗余的 iframe 源清空操作&#10;- 修复后退按钮点击事件" />
+    <MESSAGE value="style(css): 优化 iPhone 模拟器样式&#10;&#10;- 调整 iPhone 模拟器的位置和大小&#10;- 添加自适应最大宽度和高度限制&#10;- 保持 iPhone 16 Pro 的宽高比例&#10;- 优化边框和阴影效果" />
+    <MESSAGE value="style(css): 调整 iPhone 16 Pro 的模拟器尺寸和比例&#10;&#10;- 调整宽度和高度以更接近真实设备尺寸&#10;- 增加最大宽度百分比以适应不同视口大小&#10;- 更新宽高比以匹配新尺寸" />
+    <MESSAGE value="refactor(index): 重构瞬间功能并优化页面结构&#10;&#10;- 移除 iPhone 模拟器，改为直接使用 iframe 嵌入瞬间页面&#10;- 更新瞬间链接为实际 URL，取消 javascript:void(0)- 调整 iframe 容器样式，设置初始隐藏状态- 重构 moments.js，简化代码结构，优化动画效果&#10;- 更新 CSS 链接为相对路径，提高性能" />
+    <MESSAGE value="build: 更新样式文件链接&#10;&#10;- 将本地 css 文件链接替换为 CDN 链接&#10;- 使用 https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2 替代 /css/style.css?version=2" />
+    <option name="LAST_COMMIT_MESSAGE" value="build: 更新样式文件链接&#10;&#10;- 将本地 css 文件链接替换为 CDN 链接&#10;- 使用 https://cdn.jsdmirror.com/gh/listener-He/Home/css/style.css?version=2 替代 /css/style.css?version=2" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
