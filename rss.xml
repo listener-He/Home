@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Honesty的博客</title>
+    <link>https://blog.hehouhui.cn</link>
+    <description>分享技术心得与生活感悟</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 15 Jan 2024 10:00:00 +0800</lastBuildDate>
+    <atom:link href="https://blog.hehouhui.cn/rss.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>现代Web开发最佳实践</title>
+      <link>https://blog.hehouhui.cn/posts/modern-web-development</link>
+      <description>探讨现代Web开发中的最佳实践，包括性能优化、安全性考虑和用户体验设计。从前端框架选择到后端架构设计，全面分析如何构建高质量的Web应用程序。</description>
+      <pubDate>Mon, 15 Jan 2024 09:00:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/modern-web-development</guid>
+      <category>技术分享</category>
+    </item>
+    
+    <item>
+      <title>JavaScript异步编程深度解析</title>
+      <link>https://blog.hehouhui.cn/posts/javascript-async-programming</link>
+      <description>深入理解JavaScript中的异步编程模式，从回调函数到Promise再到async/await。通过实际案例分析异步编程的最佳实践和常见陷阱。</description>
+      <pubDate>Wed, 10 Jan 2024 14:30:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/javascript-async-programming</guid>
+      <category>前端开发</category>
+    </item>
+    
+    <item>
+      <title>开源项目贡献指南</title>
+      <link>https://blog.hehouhui.cn/posts/open-source-contribution-guide</link>
+      <description>如何有效地为开源项目做贡献，包括代码规范、提交流程和社区交流技巧。分享从新手到贡献者的成长路径和实用建议。</description>
+      <pubDate>Fri, 05 Jan 2024 16:45:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/open-source-contribution-guide</guid>
+      <category>开源</category>
+    </item>
+    
+    <item>
+      <title>React性能优化实战技巧</title>
+      <link>https://blog.hehouhui.cn/posts/react-performance-optimization</link>
+      <description>React应用性能优化的实战技巧，包括组件优化、状态管理、代码分割等方面。通过具体案例展示如何提升React应用的运行效率。</description>
+      <pubDate>Tue, 02 Jan 2024 11:20:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/react-performance-optimization</guid>
+      <category>前端开发</category>
+    </item>
+    
+    <item>
+      <title>Node.js微服务架构设计</title>
+      <link>https://blog.hehouhui.cn/posts/nodejs-microservices-architecture</link>
+      <description>基于Node.js的微服务架构设计原则和实践经验。涵盖服务拆分、通信机制、数据一致性和监控等关键技术点。</description>
+      <pubDate>Sun, 28 Dec 2023 13:15:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/nodejs-microservices-architecture</guid>
+      <category>后端开发</category>
+    </item>
+    
+    <item>
+      <title>CSS Grid布局完全指南</title>
+      <link>https://blog.hehouhui.cn/posts/css-grid-complete-guide</link>
+      <description>CSS Grid布局的完整学习指南，从基础概念到高级应用。通过丰富的示例展示Grid布局在现代Web设计中的强大功能。</description>
+      <pubDate>Thu, 21 Dec 2023 15:30:00 +0800</pubDate>
+      <guid>https://blog.hehouhui.cn/posts/css-grid-complete-guide</guid>
+      <category>前端开发</category>
+    </item>
+    
+  </channel>
+</rss>

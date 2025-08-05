@@ -3,19 +3,24 @@ var stars_count;
 var stars;
 ini();
 makeStars();
-var interval=setInterval(function(){drawStars();},50);//¶¨Ê±Ë¢ĞÂĞÇĞÇÊı¾İ
+var interval=setInterval(function(){drawStars();},50);//ï¿½ï¿½Ê±Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-function ini(){//³õÊ¼»¯
-    canvas = document.getElementById("starfield");
+function ini(){//åˆå§‹åŒ–
+    canvas = document.getElementById("bg");
+    if (!canvas) {
+        console.warn('Canvas element with id "bg" not found');
+        return;
+    }
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     context = canvas.getContext("2d");
-    stars = Array();//Êı×é´æ·ÅËæ»úÉú³ÉµÄĞÇĞÇÊı¾İ£¨x,y,´óĞ¡£¬ÑÕÉ«£¬ËÙ¶È£©
-    stars_count = 300;//ĞÇĞÇÊıÁ¿
+    stars = Array();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ£ï¿½x,y,ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ù¶È£ï¿½
+    stars_count = 300;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     clearInterval(interval);
 }
 
-function makeStars(){//Ëæ»úÉú³ÉĞÇĞÇÊı¾İ
+function makeStars(){//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    if (!canvas) return;
     for(var i=0;i<stars_count;i++)
     {
         let x=Math.random() * canvas.offsetWidth;
@@ -23,12 +28,13 @@ function makeStars(){//Ëæ»úÉú³ÉĞÇĞÇÊı¾İ
         let radius = Math.random()*0.8;
         let color="rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+",0.8)";
         let speed=Math.random()*0.5;
-        let arr={'x':x,'y':y,'radius':radius,'color':color,'speed':speed};//£¨x,y,´óĞ¡£¬ÑÕÉ«£¬ËÙ¶È£©
-        stars.push(arr);//Ëæ»úÉú³ÉµÄĞÇĞÇÊı¾İ´æÔÚÕâÀï
+        let arr={'x':x,'y':y,'radius':radius,'color':color,'speed':speed};//ï¿½ï¿½x,y,ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ù¶È£ï¿½
+        stars.push(arr);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 }
 
-function drawStars(){//°ÑĞÇĞÇ»­µ½»­²¼ÉÏ
+function drawStars(){//ï¿½ï¿½ï¿½ï¿½ï¿½Ç»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    if (!canvas || !context) return;
     context.fillStyle = "#0e1729";
     context.fillRect(0,0,canvas.width,canvas.height);
     for (var i = 0; i < stars.length; i++) {
@@ -44,7 +50,7 @@ function drawStars(){//°ÑĞÇĞÇ»­µ½»­²¼ÉÏ
     }
 }
 
-window.onresize = function(){//´°¿Ú´óĞ¡·¢Éú±ä»¯Ê±ÖØĞÂËæ»úÉú³ÉĞÇĞÇÊı¾İ
+window.onresize = function(){//ï¿½ï¿½ï¿½Ú´ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ä»¯Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     ini();
     makeStars();
     interval=setInterval(function(){drawStars();},50);

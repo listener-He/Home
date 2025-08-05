@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - Honesty</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="了解更多关于Honesty的信息 - 技术栈、项目经验、个人兴趣">
+</head>
+<body>
+    <div class="about-container">
+        <!-- 导航栏 -->
+        <nav class="about-nav">
+            <div class="nav-content">
+                <a href="index.html" class="nav-logo">
+                    <img src="https://cdn.jsdmirror.com/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty">
+                    <span>Honesty</span>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">首页</a>
+                    <a href="about.html" class="active">关于我</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主要内容 -->
+        <main class="about-main">
+            <!-- 英雄区域 -->
+            <section class="hero-section">
+                <div class="hero-background">
+                    <div class="floating-shapes">
+                        <div class="shape shape-1"></div>
+                        <div class="shape shape-2"></div>
+                        <div class="shape shape-3"></div>
+                    </div>
+                </div>
+                <div class="hero-content">
+                    <div class="profile-avatar">
+                        <img src="https://cdn.jsdmirror.com/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty">
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <h1 class="hero-title">Honesty</h1>
+                    <p class="hero-subtitle">全栈开发工程师 · 开源爱好者</p>
+                    <div class="personality-badge">
+                        <span class="mbti-tag">INFJ</span>
+                        <span class="badge-desc">提倡者人格</span>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="github-repos">--</span>
+                            <span class="stat-label">开源项目</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="github-followers">--</span>
+                            <span class="stat-label">GitHub关注</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-visitors">--</span>
+                            <span class="stat-label">访问量</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 技术栈云图 -->
+            <section class="tech-cloud-section">
+                <div class="section-header">
+                    <h2 class="section-title">技术栈</h2>
+                    <p class="section-subtitle">我的技术工具箱</p>
+                </div>
+                <div class="tech-cloud">
+                    <div class="tech-orbit orbit-1">
+                        <span class="tech-item primary">JavaScript</span>
+                        <span class="tech-item primary">Java</span>
+                        <span class="tech-item primary">Python</span>
+                    </div>
+                    <div class="tech-orbit orbit-2">
+                        <span class="tech-item secondary">Vue.js</span>
+                        <span class="tech-item secondary">React</span>
+                        <span class="tech-item secondary">Spring Boot</span>
+                        <span class="tech-item secondary">Node.js</span>
+                    </div>
+                    <div class="tech-orbit orbit-3">
+                        <span class="tech-item tertiary">TypeScript</span>
+                        <span class="tech-item tertiary">MySQL</span>
+                        <span class="tech-item tertiary">Docker</span>
+                        <span class="tech-item tertiary">Git</span>
+                        <span class="tech-item tertiary">Linux</span>
+                        <span class="tech-item tertiary">AWS</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 个性特质时间线 -->
+            <section class="personality-timeline-section">
+                <div class="section-header">
+                    <h2 class="section-title">关于我</h2>
+                    <p class="section-subtitle">INFJ · 创造者 · 探索者</p>
+                </div>
+                <div class="personality-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🚴‍♂️</div>
+                        <div class="timeline-content">
+                            <h3>骑行爱好者</h3>
+                            <p>享受在路上的自由感，用车轮丈量世界，在风景中寻找灵感</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">📚</div>
+                        <div class="timeline-content">
+                            <h3>阅读与写作</h3>
+                            <p>通过文字记录思考轨迹，分享技术见解，用代码诠释创意</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🔍</div>
+                        <div class="timeline-content">
+                            <h3>开源探索</h3>
+                            <p>热衷于开源项目，相信分享的力量，用代码连接世界</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">💡</div>
+                        <div class="timeline-content">
+                            <h3>持续学习</h3>
+                            <p>保持对新技术的好奇心，在变化中成长，在挑战中进步</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GitHub项目展示 -->
+            <section class="github-showcase-section">
+                <div class="section-header">
+                    <h2 class="section-title">开源项目</h2>
+                    <p class="section-subtitle">用代码改变世界</p>
+                </div>
+                <div class="projects-masonry" id="projects-container">
+                    <div class="loading-placeholder">
+                        <div class="loading-spinner"></div>
+                        <p>正在加载项目...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 博客文章瀑布流 -->
+            <section class="blog-waterfall-section">
+                <div class="section-header">
+                    <h2 class="section-title">最新文章</h2>
+                    <p class="section-subtitle">思考的足迹</p>
+                    <a href="#" class="view-all-link" target="_blank">
+                        查看全部 <i class="iconfont icon-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="articles-waterfall" id="blog-container">
+                    <div class="loading-placeholder">
+                        <div class="loading-spinner"></div>
+                        <p>正在加载文章...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 访问统计仪表盘 -->
+            <section class="stats-dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">访问统计</h2>
+                    <p class="section-subtitle">数据驱动的成长</p>
+                </div>
+                <div class="stats-dashboard">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-number" id="total-visitors">-</div>
+                        <div class="stat-label">总访问人数</div>
+                    </div>
+                    <div class="stat-card secondary">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-number" id="total-visits">-</div>
+                        <div class="stat-label">总访问次数</div>
+                    </div>
+                    <div class="stat-card accent">
+                        <div class="stat-icon">🌟</div>
+                        <div class="stat-number" id="today-visitors">-</div>
+                        <div class="stat-label">今日访问人数</div>
+                    </div>
+                    <div class="stat-card highlight">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-number" id="today-visits">-</div>
+                        <div class="stat-label">今日访问次数</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 联系方式浮动区域 -->
+            <section class="contact-floating-section">
+                <div class="contact-container">
+                    <div class="contact-title">
+                        <h2>让我们连接</h2>
+                        <p>欢迎交流技术、分享想法</p>
+                    </div>
+                    <div class="social-orbit">
+                        <div class="social-center">
+                            <i class="iconfont icon-message"></i>
+                        </div>
+                        <a href="https://github.com/listener-He" class="social-planet planet-1" target="_blank">
+                            <i class="iconfont icon-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                        <a href="mailto:your-email@example.com" class="social-planet planet-2">
+                            <i class="iconfont icon-email"></i>
+                            <span>邮箱</span>
+                        </a>
+                        <a href="#" class="social-planet planet-3" target="_blank">
+                            <i class="iconfont icon-blog"></i>
+                            <span>博客</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 评论系统 -->
+            <section class="comments-section">
+                <div class="comments-container">
+                    <h2 class="section-title">留言板</h2>
+                    <p class="section-subtitle">分享你的想法</p>
+                    <div id="artalk-container"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="about-footer">
+            <p>&copy; 2024 Honesty. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- 脚本文件 -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/about.js"></script>
+    <!-- Artalk 评论系统 -->
+    <script src="https://unpkg.com/artalk@latest/dist/Artalk.js"></script>
+    <link href="https://unpkg.com/artalk@latest/dist/Artalk.css" rel="stylesheet">
+</body>
+</html>
