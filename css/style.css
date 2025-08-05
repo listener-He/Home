@@ -541,34 +541,45 @@ nav {
 
 /* 导航响应式设计 */
 
-
-@media screen and (max-width: 1024px) {
+/* 超小屏幕优化 (320px - 375px) */
+@media screen and (max-width: 375px) {
   .navigation {
-    padding: 15px;
+    padding: 6px;
+    gap: 4px;
+    margin: 0 5px;
+  }
+  
+  .navigation__item a {
+    padding: 5px 8px;
+    font-size: 0.65em;
+    border-radius: 12px;
+  }
+  
+  .social-icons-row {
     gap: 12px;
+    margin-top: 20px;
   }
-  .btn, .navigation__item a {
-    padding: 10px 20px;
-    font-size: 0.9em;
-  }
-  .social-icons-row .social-icon {
-    margin: 0 2%;
-  }
+  
   .social-icons-row .social-icon a {
-    font-size: 1.2em;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+  
+  .social-icons-row .social-icon svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .navigation {
     padding: 12px;
     gap: 10px;
-    border-radius: 20px;
   }
   .btn, .navigation__item a {
     padding: 8px 16px;
-    font-size: 0.85em;
-    letter-spacing: 1px;
+    font-size: 0.8em;
   }
   .social-icons-row .social-icon {
     margin: 0 1.5%;
@@ -578,23 +589,120 @@ nav {
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 768px) {
+  /* 平板端导航优化 */
   .navigation {
     padding: 10px;
     gap: 8px;
-    flex-direction: column;
+    border-radius: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
+  
   .btn, .navigation__item a {
-    padding: 8px 14px;
-    font-size: 0.8em;
-    width: 100%;
-    text-align: center;
+    padding: 7px 14px;
+    font-size: 0.75em;
+    letter-spacing: 0.5px;
+    border-radius: 18px;
   }
+  
+  /* 平板端社交图标优化 */
+  .social-icons-row {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
   .social-icons-row .social-icon {
-    margin: 0 1%;
+    margin: 0;
   }
+  
   .social-icons-row .social-icon a {
-    font-size: 1em;
+    font-size: 1.05em;
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+  }
+  
+  .social-icons-row .social-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* 导航区域移动端优化 */
+  .navigation {
+    padding: 8px;
+    gap: 6px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .navigation__item {
+    flex: 0 0 auto;
+    margin: 2px;
+  }
+  
+  .btn, .navigation__item a {
+    padding: 6px 10px;
+    font-size: 0.7em;
+    min-width: auto;
+    white-space: nowrap;
+    border-radius: 15px;
+    letter-spacing: 0.3px;
+  }
+  
+  /* 社交图标区域移动端优化 */
+  .social-icons-row {
+    margin-top: 25px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .social-icons-row .social-icon {
+    margin: 0;
+    flex: 0 0 auto;
+  }
+  
+  .social-icons-row .social-icon a {
+    font-size: 1.1em;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .social-icons-row .social-icon a:hover {
+    transform: scale(1.15) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+  }
+  
+  .social-icons-row .social-icon svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -796,15 +904,66 @@ nav {
   to { transform: scale(1); opacity: 1; }
 }
 
+/* 移动端微信二维码优化 */
 @media (max-width: 480px) {
+  .weixin-qrcode-overlay {
+    padding-top: 10px;
+  }
+  
   .weixin-qrcode-container {
-    width: 250px;
+    width: 280px;
+    max-width: 90vw;
+    padding: 15px;
+    margin: 0 auto;
+  }
+  
+  .weixin-qrcode-image {
+    max-width: 200px;
+    margin: 10px 0;
+  }
+  
+  .weixin-qrcode-title {
+    font-size: 16px;
+  }
+  
+  .weixin-qrcode-desc {
+    font-size: 13px;
   }
   
   .weixin-qrcode-close {
-    padding: 12px 24px;
-    font-size: 18px;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 150px;
+  }
+}
+
+/* 横屏模式优化 */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .navigation {
+    padding: 5px;
+    gap: 5px;
+  }
+  
+  .navigation__item a {
+    padding: 4px 8px;
+    font-size: 0.7em;
+  }
+  
+  .social-icons-row {
     margin-top: 15px;
+    gap: 10px;
+  }
+  
+  .social-icons-row .social-icon a {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .social-icons-row .social-icon svg {
+    width: 14px;
+    height: 14px;
   }
 }
 /* 以上已包含完整的微信二维码模态框样式 */

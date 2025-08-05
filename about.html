@@ -7,21 +7,20 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.css">
     <link rel="icon" href="favicon.ico">
     <meta name="description" content="了解更多关于Honesty的信息 - 技术栈、项目经验、个人兴趣">
 </head>
 <body>
     <div class="about-container">
         <!-- 导航栏 -->
-        <nav class="about-nav">
-            <div class="nav-content">
-                <a href="index.html" class="nav-logo">
-                    <img src="https://cdn.jsdmirror.com/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty">
-                    <span>Honesty</span>
-                </a>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">Honesty</a>
                 <div class="nav-links">
                     <a href="index.html">首页</a>
-                    <a href="about.html" class="active">关于我</a>
+                    <a href="javascript:void(0);" class="active">关于我</a>
+                    <a href="https://blog.hehouhui.cn">博客</a>
                 </div>
             </div>
         </nav>
@@ -30,36 +29,76 @@
         <main class="about-main">
             <!-- 英雄区域 -->
             <section class="hero-section">
-                <div class="hero-background">
-                    <div class="floating-shapes">
-                        <div class="shape shape-1"></div>
-                        <div class="shape shape-2"></div>
-                        <div class="shape shape-3"></div>
-                    </div>
+                <!-- INFJ装饰图片 -->
+                <div class="infj-decoration">
+                    <img src="https://blog-file.hehouhui.cn/INFJ.png" alt="INFJ" class="infj-image">
                 </div>
-                <div class="hero-content">
-                    <div class="profile-avatar">
-                        <img src="https://cdn.jsdmirror.com/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty">
-                        <div class="avatar-ring"></div>
-                    </div>
-                    <h1 class="hero-title">Honesty</h1>
-                    <p class="hero-subtitle">全栈开发工程师 · 开源爱好者</p>
-                    <div class="personality-badge">
-                        <span class="mbti-tag">INFJ</span>
-                        <span class="badge-desc">提倡者人格</span>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="github-repos">--</span>
-                            <span class="stat-label">开源项目</span>
+                <div class="hero-container">
+                    <div class="hero-left">
+                        <div class="profile-card">
+                            <div class="profile-avatar">
+                                <img src="https://cdn.jsdmirror.com/gh/listener-He/images@default/202309111525908.jpeg" alt="Honesty" class="avatar-image">
+                                <div class="status-indicator"></div>
+                            </div>
+                            <div class="profile-info">
+                                <h1 class="hero-title">Honesty</h1>
+                                <p class="hero-subtitle">Java后端 + AI开发工程师</p>
+                                <div class="location-info">
+                                    <span class="location-item">
+                                        <i class="iconfont icon-location"></i>
+                                        现居上海
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="github-followers">--</span>
-                            <span class="stat-label">GitHub关注</span>
+                    </div>
+                    <div class="hero-right">
+                        <div class="intro-content">
+                            <div class="intro-text">
+                                <div class="quote-section">
+                                    <div class="quote-line"></div>
+                                    <div class="quote-content">
+                                        <h2>关于我</h2>
+                                        <blockquote class="intro-quote">
+                                            <p>"我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。"</p>
+                                        </blockquote>
+                                        <blockquote class="intro-quote">
+                                            <p>"作为INFJ人格类型，我善于深度思考，注重细节，喜欢通过代码创造有意义的产品。我相信技术的力量能够改变世界，也热衷于在开源社区中分享知识与经验。"</p>
+                                        </blockquote>
+                                    </div>
+                                </div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="total-visitors">--</span>
-                            <span class="stat-label">访问量</span>
+                            <div class="personality-section">
+                                <div class="mbti-card">
+                                    <div class="mbti-header">
+                                        <span class="mbti-tag">INFJ</span>
+                                        <span class="mbti-name">提倡者人格</span>
+                                    </div>
+                                    <div class="mbti-traits">
+                                        <span class="trait">理想主义与道德感</span>
+                                        <span class="trait">果断决绝的行动力</span>
+                                        <span class="trait">深度洞察与创意</span>
+                                        <span class="trait">关怀与同理心</span>
+                                    </div>
+                                    <div class="infj-quote">
+                                        <p>"提倡者人格类型的人非常稀少，只有不到1%的人口属于这种类型，但他们对世界的贡献不容忽视。"</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hero-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="github-repos">--</span>
+                                    <span class="stat-label">开源项目</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="github-followers">--</span>
+                                    <span class="stat-label">GitHub关注</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="coding-years">7+</span>
+                                    <span class="stat-label">编程年限</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,29 +107,48 @@
             <!-- 技术栈云图 -->
             <section class="tech-cloud-section">
                 <div class="section-header">
-                    <h2 class="section-title">技术栈</h2>
-                    <p class="section-subtitle">我的技术工具箱</p>
+                    <h2 class="section-title">技术栈云图</h2>
+                    <p class="section-subtitle">技术探索之旅 - 追求深度与完美的技术实践</p>
                 </div>
-                <div class="tech-cloud">
-                    <div class="tech-orbit orbit-1">
-                        <span class="tech-item primary">JavaScript</span>
-                        <span class="tech-item primary">Java</span>
-                        <span class="tech-item primary">Python</span>
+                <div class="tech-cloud-container">
+                    <div class="cloud-wrapper">
+                        <span class="cloud-tag" data-weight="5" data-category="core">Java</span>
+                        <span class="cloud-tag" data-weight="4" data-category="core">Python</span>
+                        <span class="cloud-tag" data-weight="4" data-category="core">JavaScript</span>
+                        <span class="cloud-tag" data-weight="5" data-category="backend">Spring Boot</span>
+                        <span class="cloud-tag" data-weight="3" data-category="core">TypeScript</span>
+                        <span class="cloud-tag" data-weight="4" data-category="backend">Spring Cloud</span>
+                        <span class="cloud-tag" data-weight="3" data-category="core">Go</span>
+                        <span class="cloud-tag" data-weight="4" data-category="data">MySQL</span>
+                        <span class="cloud-tag" data-weight="4" data-category="data">Redis</span>
+                        <span class="cloud-tag" data-weight="3" data-category="data">MongoDB</span>
+                        <span class="cloud-tag" data-weight="4" data-category="ops">Docker</span>
+                        <span class="cloud-tag" data-weight="3" data-category="ops">Kubernetes</span>
+                        <span class="cloud-tag" data-weight="3" data-category="ai">OpenAI API</span>
+                        <span class="cloud-tag" data-weight="3" data-category="ai">LangChain</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ai">TensorFlow</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ai">PyTorch</span>
+                        <span class="cloud-tag" data-weight="3" data-category="data">Elasticsearch</span>
+                        <span class="cloud-tag" data-weight="2" data-category="data">RabbitMQ</span>
+                        <span class="cloud-tag" data-weight="2" data-category="data">Kafka</span>
+                        <span class="cloud-tag" data-weight="3" data-category="ops">Jenkins</span>
+                        <span class="cloud-tag" data-weight="4" data-category="ops">Git</span>
+                        <span class="cloud-tag" data-weight="3" data-category="ops">Linux</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ops">AWS</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ops">Nginx</span>
+                        <span class="cloud-tag" data-weight="3" data-category="backend">Spring Security</span>
+                        <span class="cloud-tag" data-weight="3" data-category="backend">MyBatis</span>
+                        <span class="cloud-tag" data-weight="2" data-category="backend">JPA</span>
+                        <span class="cloud-tag" data-weight="2" data-category="backend">Dubbo</span>
+                        <span class="cloud-tag" data-weight="2" data-category="backend">Netty</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ai">Transformers</span>
+                        <span class="cloud-tag" data-weight="2" data-category="ai">Scikit-learn</span>
+                        <span class="cloud-tag" data-weight="1" data-category="ai">Ollama</span>
+                        <span class="cloud-tag" data-weight="1" data-category="data">ClickHouse</span>
                     </div>
-                    <div class="tech-orbit orbit-2">
-                        <span class="tech-item secondary">Vue.js</span>
-                        <span class="tech-item secondary">React</span>
-                        <span class="tech-item secondary">Spring Boot</span>
-                        <span class="tech-item secondary">Node.js</span>
-                    </div>
-                    <div class="tech-orbit orbit-3">
-                        <span class="tech-item tertiary">TypeScript</span>
-                        <span class="tech-item tertiary">MySQL</span>
-                        <span class="tech-item tertiary">Docker</span>
-                        <span class="tech-item tertiary">Git</span>
-                        <span class="tech-item tertiary">Linux</span>
-                        <span class="tech-item tertiary">AWS</span>
-                    </div>
+                </div>
+                <div class="tech-philosophy">
+                    <p class="philosophy-text">"我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。"</p>
                 </div>
             </section>
 
@@ -163,36 +221,6 @@
                 </div>
             </section>
 
-            <!-- 访问统计仪表盘 -->
-            <section class="stats-dashboard-section">
-                <div class="section-header">
-                    <h2 class="section-title">访问统计</h2>
-                    <p class="section-subtitle">数据驱动的成长</p>
-                </div>
-                <div class="stats-dashboard">
-                    <div class="stat-card primary">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-number" id="total-visitors">-</div>
-                        <div class="stat-label">总访问人数</div>
-                    </div>
-                    <div class="stat-card secondary">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-number" id="total-visits">-</div>
-                        <div class="stat-label">总访问次数</div>
-                    </div>
-                    <div class="stat-card accent">
-                        <div class="stat-icon">🌟</div>
-                        <div class="stat-number" id="today-visitors">-</div>
-                        <div class="stat-label">今日访问人数</div>
-                    </div>
-                    <div class="stat-card highlight">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-number" id="today-visits">-</div>
-                        <div class="stat-label">今日访问次数</div>
-                    </div>
-                </div>
-            </section>
-
             <!-- 联系方式浮动区域 -->
             <section class="contact-floating-section">
                 <div class="contact-container">
@@ -200,22 +228,72 @@
                         <h2>让我们连接</h2>
                         <p>欢迎交流技术、分享想法</p>
                     </div>
-                    <div class="social-orbit">
-                        <div class="social-center">
-                            <i class="iconfont icon-message"></i>
+                    <div class="social-grid">
+                        <a href="https://github.com/listener-He" class="social-card github" target="_blank">
+                            <div class="social-icon">
+                                <i class="iconfont icon-github"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>GitHub</h3>
+                                <p>开源项目与代码</p>
+                            </div>
+                        </a>
+                        <a href="mailto:hehouhui@foxmail.com" class="social-card email">
+                            <div class="social-icon">
+                                <i class="iconfont icon-email"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>邮箱</h3>
+                                <p>商务合作联系</p>
+                            </div>
+                        </a>
+                        <a href="https://blog.hehouhui.cn" class="social-card blog" target="_blank">
+                            <div class="social-icon">
+                                <i class="iconfont icon-blog"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>技术博客</h3>
+                                <p>技术文章分享</p>
+                            </div>
+                        </a>
+                        <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="social-card zhihu" target="_blank">
+                            <div class="social-icon">
+                                <i class="iconfont icon-zhihu"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>知乎</h3>
+                                <p>技术问答交流</p>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0);" class="social-card wechat" onclick="showWechatQR()">
+                            <div class="social-icon">
+                                <i class="iconfont icon-wechat"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>微信公众号</h3>
+                                <p>技术干货推送</p>
+                            </div>
+                        </a>
+                        <a href="https://juejin.cn/user/3659591622878503" class="social-card juejin" target="_blank">
+                            <div class="social-icon">
+                                <i class="iconfont icon-juejin"></i>
+                            </div>
+                            <div class="social-info">
+                                <h3>掘金</h3>
+                                <p>前端技术社区</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- 微信二维码弹窗 -->
+                <div id="wechat-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close" onclick="hideWechatQR()">&times;</span>
+                        <h3>微信公众号</h3>
+                        <div class="qr-code">
+                            <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg alt="微信公众号二维码" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuW+ruS/oeS6jOe7tOeggeWNs+WwhuS4iue6vzwvdGV4dD48L3N2Zz4='">
                         </div>
-                        <a href="https://github.com/listener-He" class="social-planet planet-1" target="_blank">
-                            <i class="iconfont icon-github"></i>
-                            <span>GitHub</span>
-                        </a>
-                        <a href="mailto:your-email@example.com" class="social-planet planet-2">
-                            <i class="iconfont icon-email"></i>
-                            <span>邮箱</span>
-                        </a>
-                        <a href="#" class="social-planet planet-3" target="_blank">
-                            <i class="iconfont icon-blog"></i>
-                            <span>博客</span>
-                        </a>
+                        <p>扫码关注获取最新技术文章</p>
                     </div>
                 </div>
             </section>
@@ -231,16 +309,24 @@
         </main>
 
         <!-- 页脚 -->
-        <footer class="about-footer">
-            <p>&copy; 2024 Honesty. All rights reserved.</p>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-bottom">
+                    <div class="footer-info">
+                        <p>&copy; 2024 Honesty. All rights reserved.</p>
+                        <p>ICP备案号：<a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备20014902号</a></p>
+                        <p>Powered by <a href="https://github.com/features/actions" target="_blank">GitHub Actions</a></p>
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 
     <!-- 脚本文件 -->
     <script src="js/jquery.min.js"></script>
+     <!-- Artalk 评论系统 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.js"></script>
     <script src="js/about.js"></script>
-    <!-- Artalk 评论系统 -->
-    <script src="https://unpkg.com/artalk@latest/dist/Artalk.js"></script>
-    <link href="https://unpkg.com/artalk@latest/dist/Artalk.css" rel="stylesheet">
+    
 </body>
 </html>
