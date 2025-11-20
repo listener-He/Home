@@ -50,7 +50,7 @@ $(document).ready(function () {
 		imgUrls = [];
 		index = 0;
         for (let i = 1; i < 8; i++) {
-            imgUrls.push("https://blog-file.hehouhui.cn/bj/"+i+".jpg");
+            imgUrls.push("/images/bj/"+i+".jpg");
         }
         sessionStorage.setItem("imgUrls", JSON.stringify(imgUrls));
         // sessionStorage.setItem("index", index);

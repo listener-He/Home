@@ -1,0 +1,44 @@
+[
+  {
+    "title": "向量数据库全攻略：从算法公式到选型指南，一篇吃透高维数据存储术",
+    "excerpt": "深入探讨向量数据库的核心算法、应用场景和选型策略，帮助开发者掌握高维数据存储的关键技术...",
+    "link": "https://blog.hehouhui.cn/posts/vector-database-guide",
+    "pubDate": "2025-01-02",
+    "category": "技术分享"
+  },
+  {
+    "title": "CompletableFuture 从源码到实战：让异步编程像喝奶茶一样丝滑",
+    "excerpt": "全面解析CompletableFuture的源码实现和实战应用，让Java异步编程变得简单优雅...",
+    "link": "https://blog.hehouhui.cn/posts/completablefuture-guide",
+    "pubDate": "2025-01-02",
+    "category": "Java开发"
+  },
+  {
+    "title": "从规范到架构：一篇读懂 Java 工程建模、分层、命名与演进之路",
+    "excerpt": "深入讲解Java工程的规范化建设，包括项目结构、分层架构、命名规范等最佳实践...",
+    "link": "https://blog.hehouhui.cn/posts/java-project-architecture",
+    "pubDate": "2025-01-01",
+    "category": "架构设计"
+  },
+  {
+    "title": "Spring Boot 3.0 新特性详解与实战应用",
+    "excerpt": "全面介绍Spring Boot 3.0的新特性，包括原生镜像支持、可观测性增强等...",
+    "link": "https://blog.hehouhui.cn/posts/spring-boot-3-features",
+    "pubDate": "2024-12-30",
+    "category": "Spring框架"
+  },
+  {
+    "title": "微服务架构设计模式与最佳实践",
+    "excerpt": "深入分析微服务架构的设计模式，包括服务拆分、数据一致性、分布式事务等核心问题...",
+    "link": "https://blog.hehouhui.cn/posts/microservices-patterns",
+    "pubDate": "2024-12-28",
+    "category": "微服务"
+  },
+  {
+    "title": "Redis 高可用集群搭建与性能优化实战",
+    "excerpt": "详细介绍Redis集群的搭建过程、高可用配置以及性能调优技巧...",
+    "link": "https://blog.hehouhui.cn/posts/redis-cluster-optimization",
+    "pubDate": "2024-12-25",
+    "category": "数据库"
+  }
+]

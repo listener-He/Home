@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1011713435,
+    "name": "yunxiao-LLM-reviewer",
+    "html_url": "https://github.com/listener-He/yunxiao-LLM-reviewer",
+    "description": "一款专为阿里云云效 Flow 平台设计的自动化代码审查工具。通过集成 Qwen、DeepSeek 等先进大模型，该工具能够实时分析 Git 合并请求（MR）中的代码变更，智能识别潜在问题并自动生成结构化评审意见。",
+    "stargazers_count": 9,
+    "forks_count": 3,
+    "language": "TypeScript",
+    "updated_at": "2025-10-10T11:06:34Z"
+  },
+  {
+    "id": 1064414600,
+    "name": "hexo-theme-stellar",
+    "html_url": "https://github.com/listener-He/hexo-theme-stellar",
+    "description": "综合型hexo主题：博客+知识库+专栏+笔记，内置海量的标签组件和动态数据组件。",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "language": null,
+    "updated_at": "2025-09-26T02:12:18Z"
+  },
+  {
+    "id": 1060085476,
+    "name": "Universal-IoT-Java",
+    "html_url": "https://github.com/listener-He/Universal-IoT-Java",
+    "description": "通用 IoT Java 平台（示例）",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "language": null,
+    "updated_at": "2025-10-13T02:30:28Z"
+  }
+]
