@@ -227,7 +227,6 @@ function displayProjects(repos) {
         var description = repo.description || '暂无描述';
         var isLongDescription = description.length > 100;
         var displayDescription = isLongDescription ? description.substring(0, 100) + '...' : description;
-        var descriptionClass = isLongDescription ? 'project-description collapsible' : 'project-description';
         
         var starSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Star" role="img"><path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"></path></svg>';
         var forkSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Fork" role="img"><path d="M7 4a3 3 0 106 0 3 3 0 00-6 0zm10 0a3 3 0 106 0 3 3 0 00-6 0v6a3 3 0 01-3 3H7"></path></svg>';
@@ -235,8 +234,8 @@ function displayProjects(repos) {
             '<div class="project-header">' +
                 '<div>' +
                     '<h3 class="project-title">' + repo.name + '</h3>' +
-                    '<p class="' + descriptionClass + '" data-full-text="' + description + '" data-short-text="' + (isLongDescription ? description.substring(0, 100) + '...' : description) + '">' + displayDescription + '</p>' +
-                    (isLongDescription ? '<button class="toggle-description" onclick="toggleDescription(event, this)">显示更多</button>' : '') +
+                    '<p class="project-description' + (isLongDescription ? ' collapsible' : '') + '" data-full-text="' + description + '" data-short-text="' + (isLongDescription ? description.substring(0, 100) : description) + '">' + displayDescription + 
+                    (isLongDescription ? '<button class="toggle-description" onclick="toggleDescription(event, this)">更多<span class="arrow">▼</span></button>' : '') + '</p>' +
                 '</div>' +
                 '<div class="project-stats">' +
                     '<span>' + starSvg + ' ' + (repo.stargazers_count || 0) + '</span>' +
@@ -255,18 +254,18 @@ function displayProjects(repos) {
 function toggleDescription(event, button) {
     event.stopPropagation(); // 阻止事件冒泡，避免触发项目卡片的点击事件
     
-    var description = button.previousElementSibling;
+    var description = button.parentElement;
     var fullText = description.getAttribute('data-full-text');
     var shortText = description.getAttribute('data-short-text');
     
-    if (button.textContent === '显示更多') {
-        // 展开描述
-        description.textContent = fullText;
-        button.textContent = '收起';
-    } else {
+    if (description.classList.contains('expanded')) {
         // 收起描述
-        description.textContent = shortText;
-        button.textContent = '显示更多';
+        description.classList.remove('expanded');
+        description.innerHTML = shortText + '... <button class="toggle-description" onclick="toggleDescription(event, this)">更多<span class="arrow">▼</span></button>';
+    } else {
+        // 展开描述
+        description.classList.add('expanded');
+        description.innerHTML = fullText + ' <button class="toggle-description" onclick="toggleDescription(event, this)">收起<span class="arrow">▲</span></button>';
     }
 }
 
