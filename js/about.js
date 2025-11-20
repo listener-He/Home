@@ -190,7 +190,7 @@ function initProjects() {
         success: function(repos) {
             // 过滤并排序：优先显示原创项目（非fork），按星数排序
             var filteredRepos = repos.filter(function(repo) {
-                return !repo.fork; // 过滤掉fork的项目
+                return repo.stargazers_count > 0 || repo.forks_count > 0; // 过滤掉fork的项目
             }).sort(function(a, b) {
                 return b.stargazers_count - a.stargazers_count; // 按星数降序排序
             }).slice(0, 12); // 只取前12个

@@ -131,7 +131,7 @@ const SiteConfig = {
   
   // 开发环境配置
   dev: {
-    isLocal: location.hostname.indexOf( 'localhost') > -1 || location.hostname.indexOf( '127.0.0.1') > -1
+    isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
   }
 };
 
