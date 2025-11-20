@@ -21,13 +21,17 @@
     --accent-b: #4ECDC4;
     --accent-coral: #FF6B6B;
     --accent-lavender: #7B7AE6;
+    /* 白天模式专用文字颜色 */
+    --day-text-primary: #212529;
+    --day-text-secondary: #495057;
+    --day-text-tertiary: #6C757D;
 }
 
 :root.theme-day {
     --grad-a: #F8F9FA; /* 更淡雅的白天模式背景色 */
     --grad-b: #E9ECEF; /* 更淡雅的白天模式背景色 */
-    --text-strong: #212529;
-    --text-soft: #495057;
+    --text-strong: var(--day-text-primary);
+    --text-soft: var(--day-text-secondary);
     --glass-alpha: 0.25; /* 增加毛玻璃效果 */
     --glass-border: rgba(0, 0, 0, 0.08);
 }
@@ -43,18 +47,18 @@
 
 
 .theme-day .nav-logo {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
 }
 
 .theme-day .nav-links a {
-    color: var(--text-soft);
+    color: var(--day-text-secondary);
 }
 
 .theme-day .hero-title,
 .theme-day .section-title,
 .theme-day .project-title,
 .theme-day .article-title {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
 }
 
 .theme-day .hero-subtitle,
@@ -65,11 +69,11 @@
 .theme-day .section-subtitle,
 .theme-day .location-info,
 .theme-day .stat-label {
-    color: var(--text-soft);
+    color: var(--day-text-secondary);
 }
 
 .theme-day .cloud-tag {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
     border-color: rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.4);
 }
@@ -84,42 +88,121 @@
 .theme-day .trait,
 .theme-day .profile-info h1,
 .theme-day .social-info h3 {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
 }
 
 .theme-day .intro-quote p,
-.theme-day .mbti-traits,
-.theme-day .profile-info p,
+.theme-day .intro-text p,
 .theme-day .timeline-content p,
 .theme-day .project-description,
 .theme-day .article-excerpt,
 .theme-day .article-meta,
 .theme-day .social-info p,
-.theme-day .contact-title p,
-.theme-day .philosophy-text,
-.theme-day .footer-info {
-    color: var(--text-soft);
+.theme-day .github-bio {
+    color: var(--day-text-secondary);
 }
 
 .theme-day .stat-number {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
 }
 
 .theme-day .project-stat,
 .theme-day .project-stats span {
-    color: var(--text-soft);
+    color: var(--day-text-secondary);
 }
 
 .theme-day .article-meta {
-    color: var(--text-soft);
-}
-
-.theme-day .timeline-content h3 {
-    color: var(--text-strong);
+    color: var(--day-text-secondary);
 }
 
 .theme-day .view-all-link {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
+}
+
+.theme-day .timeline-content h3 {
+    color: var(--day-text-primary);
+}
+
+/* 为特定模块设置专门的颜色 */
+
+/* 英雄区域白天模式文字颜色 */
+.theme-day .hero-section .hero-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .hero-section .hero-subtitle {
+    color: var(--day-text-secondary);
+}
+
+.theme-day .hero-section .location-info {
+    color: var(--day-text-tertiary);
+}
+
+/* 技术栈云图白天模式文字颜色 */
+.theme-day .tech-cloud-section .section-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .tech-cloud-section .section-subtitle {
+    color: var(--day-text-secondary);
+}
+
+/* 个性时间线白天模式文字颜色 */
+.theme-day .personality-timeline-section .section-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .personality-timeline-section .section-subtitle {
+    color: var(--day-text-secondary);
+}
+
+/* 开源项目展示白天模式文字颜色 */
+.theme-day .github-showcase-section .section-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .github-showcase-section .section-subtitle {
+    color: var(--day-text-secondary);
+}
+
+/* 博客瀑布流白天模式文字颜色 */
+.theme-day .blog-waterfall-section .section-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .blog-waterfall-section .section-subtitle {
+    color: var(--day-text-secondary);
+}
+
+/* 联系方式区域白天模式文字颜色 */
+.theme-day .contact-floating-section .contact-title h2 {
+    color: var(--day-text-primary);
+}
+
+.theme-day .contact-floating-section .contact-title p {
+    color: var(--day-text-secondary);
+}
+
+/* 评论系统区域白天模式文字颜色 */
+.theme-day .comments-section .section-title {
+    color: var(--day-text-primary);
+}
+
+.theme-day .comments-section .section-subtitle {
+    color: var(--day-text-secondary);
+}
+
+/* 页脚白天模式文字颜色 */
+.theme-day .footer-info {
+    color: var(--day-text-secondary);
+}
+
+.theme-day .footer-info a {
+    color: var(--day-text-secondary);
+}
+
+.theme-day .footer-info a:hover {
+    color: var(--day-text-primary);
 }
 
 .theme-night .nav-logo {
@@ -300,7 +383,7 @@ a:hover {
 .intro-quote p {
     margin: 0;
     font-style: italic;
-    color: var(--text-strong); /* 使用主题文字颜色 */
+    /*color: var(--text-strong); !* 使用主题文字颜色 *!*/
     line-height: 1.7;
     font-size: 1.1rem;
 }
@@ -777,7 +860,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 .mbti-name {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--text-strong); /* 使用主题文字颜色 */
+    color: #3498db;
 }
 
 .mbti-traits {
@@ -792,7 +875,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     border-radius: 20px;
     font-size: 0.9rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--text-strong); /* 使用主题文字颜色 */
+    color: #667eea;
 }
 
 
@@ -1220,7 +1303,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
 /* 白天模式下的标签样式 */
 .theme-day .cloud-tag {
-    color: var(--text-strong);
+    color: var(--day-text-primary);
     background: rgba(255, 255, 255, 0.4);
     border-color: rgba(0, 0, 0, 0.15);
 }

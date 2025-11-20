@@ -55,7 +55,7 @@ const SiteConfig = {
   },
   
   blog: {
-    rssUrl: 'https://blog.hehouhui.cn/rss/feed.xml',
+    rssUrl: 'https://blog.hehouhui.cn/api/rss',
     cache: {
       key: 'blog_articles_cache',
       timeKey: 'blog_articles_cache_time',

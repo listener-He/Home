@@ -1,5 +1,6 @@
-// 关于页面JavaScript功能 - 现代动态版本
 
+
+// 关于页面JavaScript功能 - 现代动态版本
 $(document).ready(function() {
     initThemeByTime();
     initMotionController();
@@ -287,18 +288,88 @@ function initBlogArticles() {
         return;
     }
     
-    // 清除过期缓存并重新获取
+    // 清除过期缓存
     localStorage.removeItem(cacheKey);
     localStorage.removeItem(cacheTimeKey);
     
-    fetch('data/articles.json')
-        .then(function(res) { return res.json(); })
-        .then(function(json) {
-            localStorage.setItem(cacheKey, JSON.stringify(json));
-            localStorage.setItem(cacheTimeKey, now.toString());
-            displayBlogArticles(json);
+    // 先尝试从RSS源获取数据
+    fetch(rssUrl)
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('RSS fetch failed');
+            }
+            return response.text();
         })
-        .catch(function() { displayBlogArticles([]); });
+        .then(function(xmlText) {
+            // 解析XML响应
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(xmlText, "application/xml");
+            
+            // 检查解析是否成功
+            if (xmlDoc.documentElement.nodeName === "parsererror") {
+                throw new Error('RSS XML parse error');
+            }
+            
+            // 提取文章信息
+            var articles = [];
+            var items = xmlDoc.getElementsByTagName("item");
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                
+                // 安全地获取元素文本内容
+                var titleElement = item.querySelector("title");
+                var title = titleElement ? (titleElement.textContent || titleElement.innerText || "无标题") : "无标题";
+                
+                var linkElement = item.querySelector("link");
+                var link = linkElement ? (linkElement.textContent || linkElement.innerText || "#") : "#";
+                
+                // 对于 guid 作为链接的备选方案
+                if (link === "#" || link === "") {
+                    var guidElement = item.querySelector("guid");
+                    link = guidElement ? (guidElement.textContent || guidElement.innerText || "#") : "#";
+                }
+                
+                var descriptionElement = item.querySelector("description");
+                var description = descriptionElement ? (descriptionElement.textContent || descriptionElement.innerText || "暂无描述") : "暂无描述";
+                
+                var pubDateElement = item.querySelector("pubDate");
+                var pubDate = pubDateElement ? (pubDateElement.textContent || pubDateElement.innerText || new Date().toString()) : new Date().toString();
+                
+                var categoryElement = item.querySelector("category");
+                var category = categoryElement ? (categoryElement.textContent || categoryElement.innerText || "技术") : "技术";
+                
+                // 创建文章对象
+                articles.push({
+                    title: title,
+                    link: link,
+                    excerpt: description.substring(0, 150),
+                    pubDate: pubDate,
+                    category: category
+                });
+            }
+            
+            // 缓存数据
+            localStorage.setItem(cacheKey, JSON.stringify(articles));
+            localStorage.setItem(cacheTimeKey, now.toString());
+            
+            // 显示文章
+            displayBlogArticles(articles);
+        })
+        .catch(function(error) {
+            console.log('RSS fetch failed:', error);
+            // 如果RSS源失败，回退到JSON文件
+            fetch('data/articles.json')
+                .then(function(res) { return res.json(); })
+                .then(function(json) {
+                    localStorage.setItem(cacheKey, JSON.stringify(json));
+                    localStorage.setItem(cacheTimeKey, now.toString());
+                    displayBlogArticles(json);
+                })
+                .catch(function() {
+                    // 如果JSON文件也失败，显示空列表
+                    displayBlogArticles([]);
+                });
+        });
 }
 
 function displayBlogArticles(articles) {
@@ -410,25 +481,25 @@ function initTechCloud() {
 function initHorizontalTechCloud(items) {
     var container = document.getElementById('tech-cloud-wrapper');
     if (!container) return;
-    
+
     // 清空容器
     container.innerHTML = '';
     container.classList.remove('sphere');
-    
+
     // 按权重排序，确保重要的标签优先显示
     var sortedItems = items.slice().sort(function(a, b) {
         return b.weight - a.weight;
     });
-    
+
     // 创建三行容器
     var row1 = document.createElement('div');
     var row2 = document.createElement('div');
     var row3 = document.createElement('div');
-    
+
     row1.className = 'tech-row';
     row2.className = 'tech-row';
     row3.className = 'tech-row';
-    
+
     // 将标签分配到三行中
     sortedItems.forEach(function(item, index) {
         var el = document.createElement('span');
@@ -436,7 +507,7 @@ function initHorizontalTechCloud(items) {
         el.textContent = item.name;
         el.setAttribute('data-category', item.category);
         el.setAttribute('data-weight', item.weight);
-        
+
         // 根据索引分配到不同行
         if (index % 3 === 0) {
             row1.appendChild(el);
@@ -445,7 +516,7 @@ function initHorizontalTechCloud(items) {
         } else {
             row3.appendChild(el);
         }
-        
+
         // 为每个标签复制一个副本，实现无缝滚动效果
         var elClone = el.cloneNode(true);
         if (index % 3 === 0) {
@@ -456,20 +527,20 @@ function initHorizontalTechCloud(items) {
             row3.appendChild(elClone);
         }
     });
-    
+
     container.appendChild(row1);
     container.appendChild(row2);
     container.appendChild(row3);
-    
+
     // 设置不同的初始延迟时间
     setTimeout(function() {
         row1.classList.add('scrolling');
     }, 0);
-    
+
     setTimeout(function() {
         row2.classList.add('scrolling');
     }, 500);
-    
+
     setTimeout(function() {
         row3.classList.add('scrolling');
     }, 1000);
@@ -479,11 +550,11 @@ function initHorizontalTechCloud(items) {
 function initTechSphere(items) {
     var container = document.getElementById('tech-cloud-wrapper');
     if (!container) return;
-    
+
     // 清空容器并添加球体类
     container.innerHTML = '';
     container.classList.add('sphere');
-    
+
     // 创建标签元素
     var tags = [];
     items.forEach(function(item, index) {
@@ -496,7 +567,7 @@ function initTechSphere(items) {
         container.appendChild(el);
         tags.push(el);
     });
-    
+
     // 球体参数
     var radius = 250; // 减小球体半径以适应容器并避免标签被遮挡
     var dtr = Math.PI / 180;
@@ -511,25 +582,25 @@ function initTechSphere(items) {
     var mouseX = 0;
     var mouseY = 0;
     var mouseDown = false;
-    
+
     // 初始化标签位置
     tags.forEach(function(tag, i) {
         var phi = Math.acos(-1 + (2 * i) / tags.length);
         var theta = Math.sqrt(tags.length * Math.PI) * phi;
-        
+
         var x = radius * Math.cos(theta) * Math.sin(phi);
         var y = radius * Math.sin(theta) * Math.sin(phi);
         var z = radius * Math.cos(phi);
-        
+
         tag.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)';
         tag.style.opacity = '0.9';
-        
+
         // 根据权重设置标签大小和最小宽度
         var weight = parseInt(tag.getAttribute('data-weight'));
         var scale = 0.6 + (weight * 0.12);
         // 按照规范设置标签尺寸
         var minWidth, minHeight, fontSize, padding;
-        
+
         switch(weight) {
             case 5:
                 minWidth = 120;
@@ -562,16 +633,16 @@ function initTechSphere(items) {
                 fontSize = 12;
                 padding = '8px 15px';
         }
-        
+
         tag.style.transform += ' scale(' + scale + ')';
         tag.style.minWidth = minWidth + 'px';
         tag.style.minHeight = minHeight + 'px';
         tag.style.fontSize = fontSize + 'px';
         tag.style.padding = padding;
-        
+
         // 设置z-index确保正确的层级显示
         tag.style.zIndex = Math.floor(z + radius);
-        
+
         // 存储位置信息
         mcList.push({
             obj: tag,
@@ -580,7 +651,7 @@ function initTechSphere(items) {
             z: z
         });
     });
-    
+
     // 鼠标交互
     container.addEventListener('mousedown', function(e) {
         mouseDown = true;
@@ -588,7 +659,7 @@ function initTechSphere(items) {
         mouseY = e.clientY;
         e.preventDefault();
     });
-    
+
     container.addEventListener('mousemove', function(e) {
         if (mouseDown) {
             lasta = (e.clientX - mouseX) * 0.0005; // 降低鼠标影响系数
@@ -598,16 +669,16 @@ function initTechSphere(items) {
             e.preventDefault();
         }
     });
-    
+
     container.addEventListener('mouseup', function(e) {
         mouseDown = false;
         e.preventDefault();
     });
-    
+
     container.addEventListener('mouseleave', function() {
         mouseDown = false;
     });
-    
+
     // 触摸交互
     container.addEventListener('touchstart', function(e) {
         if (e.touches.length > 0) {
@@ -617,7 +688,7 @@ function initTechSphere(items) {
             e.preventDefault();
         }
     });
-    
+
     container.addEventListener('touchmove', function(e) {
         if (mouseDown && e.touches.length > 0) {
             lasta = (e.touches[0].clientX - mouseX) * 0.0005; // 降低触摸影响系数
@@ -627,12 +698,12 @@ function initTechSphere(items) {
             e.preventDefault();
         }
     });
-    
+
     container.addEventListener('touchend', function(e) {
         mouseDown = false;
         e.preventDefault();
     });
-    
+
     // 自动旋转动画
     function update() {
         // 添加轻微的自动旋转，即使没有用户交互
@@ -640,14 +711,14 @@ function initTechSphere(items) {
             lasta = lasta * 0.98 + 0.0001; // 更轻微的自动旋转，逐渐减速
             lastb = lastb * 0.98;
         }
-        
+
         // 限制旋转速度，防止过快
         lasta = Math.max(Math.min(lasta, 0.01), -0.01); // 限制在更小的范围内
         lastb = Math.max(Math.min(lastb, 0.01), -0.01);
-        
+
         var a = lasta;
         var b = lastb;
-        
+
         var c = 0;
         var sa = Math.sin(a);
         var ca = Math.cos(a);
@@ -655,39 +726,39 @@ function initTechSphere(items) {
         var cb = Math.cos(b);
         var sc = Math.sin(c);
         var cc = Math.cos(c);
-        
+
         // 更新标签位置
         mcList.forEach(function(mc) {
             var rx = mc.x;
             var ry = mc.y * ca + mc.z * sa;
             var rz = mc.y * -sa + mc.z * ca;
-            
+
             var nx = rx * cb + rz * sb;
             var ny = ry;
             var nz = rx * -sb + rz * cb;
-            
+
             mc.x = nx;
             mc.y = ny;
             mc.z = nz;
-            
+
             // 应用变换
             mc.obj.style.transform = 'translate3d(' + nx + 'px, ' + ny + 'px, ' + nz + 'px)';
-            
+
             // 根据z轴位置设置缩放和透明度
             var scale = (nz + radius) / (2 * radius) * 0.6 + 0.7;
             var weight = parseInt(mc.obj.getAttribute('data-weight'));
             scale = scale * (0.6 + (weight * 0.12));
-            
+
             mc.obj.style.transform += ' scale(' + scale + ')';
             mc.obj.style.opacity = 0.7 + (nz + radius) / (2 * radius) * 0.3;
-            
+
             // 设置z-index确保正确的层级显示
             mc.obj.style.zIndex = Math.floor(nz + radius);
         });
-        
+
         requestAnimationFrame(update);
     }
-    
+
     // 启动动画
     requestAnimationFrame(update);
 }
@@ -699,21 +770,21 @@ function initScrollEffects() {
     $(window).scroll(function() {
         var scrollTop = $(this).scrollTop();
         var navbar = $('.navbar');
-        
+
         // 添加滚动样式
         if (scrollTop > 50) {
             navbar.addClass('scrolled');
         } else {
             navbar.removeClass('scrolled');
         }
-        
+
         // 隐藏/显示导航栏
         if (scrollTop > lastScrollTop && scrollTop > 100) {
             navbar.css('transform', 'translateY(-100%)');
         } else {
             navbar.css('transform', 'translateY(0)');
         }
-        
+
         lastScrollTop = scrollTop;
     });
 }
@@ -803,97 +874,97 @@ function initPageAnimations() {
 
 // 添加GitHub统计的CSS样式
 var githubStyles = '<style>' +
- '.github-profile {' +
- '    display: flex;' +
- '    align-items: center;' +
- '    gap: 1rem;' +
- '}' +
- '.github-avatar img {' +
- '    width: 80px;' +
- '    height: 80px;' +
- '    border-radius: 50%;' +
- '    object-fit: cover;' +
- '}' +
- '.github-info h3 {' +
- '    margin: 0 0 0.5rem 0;' +
- '    color: #fff;' +
- '}' +
- '.github-bio {' +
- '    color: rgba(255, 255, 255, 0.8);' +
- '    margin-bottom: 1rem;' +
- '    font-size: 0.9rem;' +
- '}' +
- '.github-stats-row {' +
- '    display: flex;' +
- '    gap: 1rem;' +
- '}' +
- '.stat-item {' +
- '    text-align: center;' +
- '}' +
- '.stat-item .stat-number {' +
- '    display: block;' +
- '    font-size: 1.2rem;' +
- '    font-weight: 600;' +
- '    color: #fff;' +
- '}' +
- '.stat-item .stat-label {' +
- '    font-size: 0.8rem;' +
- '    color: rgba(255, 255, 255, 0.8);' +
- '}' +
- '.commits-stats h3 {' +
- '    margin-bottom: 1rem;' +
- '    color: #fff;' +
- '}' +
- '.commit-item {' +
- '    display: flex;' +
- '    align-items: center;' +
- '    gap: 1rem;' +
- '    margin-bottom: 0.8rem;' +
- '}' +
- '.commit-date {' +
- '    width: 60px;' +
- '    font-size: 0.9rem;' +
- '    color: rgba(255, 255, 255, 0.8);' +
- '}' +
- '.commit-bar {' +
- '    flex: 1;' +
- '    height: 8px;' +
- '    background: rgba(255, 255, 255, 0.1);' +
- '    border-radius: 4px;' +
- '    overflow: hidden;' +
- '}' +
- '.commit-fill {' +
- '    height: 100%;' +
- '    background: linear-gradient(135deg, #667eea, #764ba2);' +
- '    border-radius: 4px;' +
- '    transition: width 0.3s ease;' +
- '}' +
- '.commit-count {' +
- '    width: 40px;' +
- '    text-align: right;' +
- '    font-size: 0.9rem;' +
- '    font-weight: 600;' +
- '    color: #fff;' +
- '}' +
- '.error {' +
- '    text-align: center;' +
- '    color: rgba(255, 255, 255, 0.5);' +
- '    font-style: italic;' +
- '    padding: 2rem;' +
- '}' +
- '.project-updated {' +
- '    margin-top: 1rem;' +
- '    font-size: 0.8rem;' +
- '    color: rgba(255, 255, 255, 0.8);' +
- '}' +
- '.article-category {' +
- '    background: rgba(102, 126, 234, 0.2);' +
- '    color: #fff;' +
- '    padding: 0.2rem 0.6rem;' +
- '    border-radius: 12px;' +
- '    font-size: 0.8rem;' +
- '}' +
- '</style>';
+    '.github-profile {' +
+    '    display: flex;' +
+    '    align-items: center;' +
+    '    gap: 1rem;' +
+    '}' +
+    '.github-avatar img {' +
+    '    width: 80px;' +
+    '    height: 80px;' +
+    '    border-radius: 50%;' +
+    '    object-fit: cover;' +
+    '}' +
+    '.github-info h3 {' +
+    '    margin: 0 0 0.5rem 0;' +
+    '    color: #fff;' +
+    '}' +
+    '.github-bio {' +
+    '    color: rgba(255, 255, 255, 0.8);' +
+    '    margin-bottom: 1rem;' +
+    '    font-size: 0.9rem;' +
+    '}' +
+    '.github-stats-row {' +
+    '    display: flex;' +
+    '    gap: 1rem;' +
+    '}' +
+    '.stat-item {' +
+    '    text-align: center;' +
+    '}' +
+    '.stat-item .stat-number {' +
+    '    display: block;' +
+    '    font-size: 1.2rem;' +
+    '    font-weight: 600;' +
+    '    color: #fff;' +
+    '}' +
+    '.stat-item .stat-label {' +
+    '    font-size: 0.8rem;' +
+    '    color: rgba(255, 255, 255, 0.8);' +
+    '}' +
+    '.commits-stats h3 {' +
+    '    margin-bottom: 1rem;' +
+    '    color: #fff;' +
+    '}' +
+    '.commit-item {' +
+    '    display: flex;' +
+    '    align-items: center;' +
+    '    gap: 1rem;' +
+    '    margin-bottom: 0.8rem;' +
+    '}' +
+    '.commit-date {' +
+    '    width: 60px;' +
+    '    font-size: 0.9rem;' +
+    '    color: rgba(255, 255, 255, 0.8);' +
+    '}' +
+    '.commit-bar {' +
+    '    flex: 1;' +
+    '    height: 8px;' +
+    '    background: rgba(255, 255, 255, 0.1);' +
+    '    border-radius: 4px;' +
+    '    overflow: hidden;' +
+    '}' +
+    '.commit-fill {' +
+    '    height: 100%;' +
+    '    background: linear-gradient(135deg, #667eea, #764ba2);' +
+    '    border-radius: 4px;' +
+    '    transition: width 0.3s ease;' +
+    '}' +
+    '.commit-count {' +
+    '    width: 40px;' +
+    '    text-align: right;' +
+    '    font-size: 0.9rem;' +
+    '    font-weight: 600;' +
+    '    color: #fff;' +
+    '}' +
+    '.error {' +
+    '    text-align: center;' +
+    '    color: rgba(255, 255, 255, 0.5);' +
+    '    font-style: italic;' +
+    '    padding: 2rem;' +
+    '}' +
+    '.project-updated {' +
+    '    margin-top: 1rem;' +
+    '    font-size: 0.8rem;' +
+    '    color: rgba(255, 255, 255, 0.8);' +
+    '}' +
+    '.article-category {' +
+    '    background: rgba(102, 126, 234, 0.2);' +
+    '    color: #fff;' +
+    '    padding: 0.2rem 0.6rem;' +
+    '    border-radius: 12px;' +
+    '    font-size: 0.8rem;' +
+    '}' +
+    '</style>';
 
 // 添加样式到页面
 $('head').append(githubStyles);
@@ -915,14 +986,14 @@ function initWeChatModal() {
         e.preventDefault();
         showWeChatModal();
     });
-    
+
     // 关闭弹窗事件
     $(document).on('click', '.modal .close, .modal', function(e) {
         if (e.target === this) {
             hideWeChatModal();
         }
     });
-    
+
     // ESC键关闭弹窗
     $(document).on('keydown', function(e) {
         if (e.keyCode === 27) { // ESC键
@@ -934,21 +1005,21 @@ function initWeChatModal() {
 function showWeChatModal() {
     var modalHtml = '<div id="wechatModal" class="modal" style="display: none;">' +
         '<div class="modal-content">' +
-            '<span class="close">&times;</span>' +
-            '<h3>微信公众号</h3>' +
-            '<div class="qr-code">' +
-                '<img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="微信公众号二维码" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">' +
-                '<div style="display: none; padding: 2rem; text-align: center; color: rgba(255, 255, 255, 0.8);">二维码加载失败<br>请搜索公众号：技术分享小站</div>' +
-            '</div>' +
-            '<p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8); text-align: center;">扫码关注获取最新技术文章</p>' +
+        '<span class="close">&times;</span>' +
+        '<h3>微信公众号</h3>' +
+        '<div class="qr-code">' +
+        '<img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="微信公众号二维码" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">' +
+        '<div style="display: none; padding: 2rem; text-align: center; color: rgba(255, 255, 255, 0.8);">二维码加载失败<br>请搜索公众号：技术分享小站</div>' +
         '</div>' +
-    '</div>';
-    
+        '<p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8); text-align: center;">扫码关注获取最新技术文章</p>' +
+        '</div>' +
+        '</div>';
+
     // 如果弹窗不存在则创建
     if ($('#wechatModal').length === 0) {
         $('body').append(modalHtml);
     }
-    
+
     $('#wechatModal').fadeIn(300);
 }
 
@@ -980,27 +1051,21 @@ function hideWechatQR() {
 function initThemeByTime() {
     var hour = new Date().getHours();
     var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var night = hour >= 18 || prefersDark;
+    var night = hour >= 25 ;
     var root = document.documentElement;
     root.classList.toggle('theme-night', night);
     root.classList.toggle('theme-day', !night);
-    
+
     // 确保在主题切换时技术标签颜色正确更新
     updateTechTagColors();
 }
 
 // 更新技术标签颜色以适配当前主题
 function updateTechTagColors() {
-    var root = document.documentElement;
-    var isDayTheme = root.classList.contains('theme-day');
-    
+
     var tags = document.querySelectorAll('.cloud-tag');
     tags.forEach(function(tag) {
-        if (isDayTheme) {
             tag.style.color = 'var(--text-strong)';
-        } else {
-            tag.style.color = '#fff';
-        }
     });
 }
 
@@ -1066,28 +1131,28 @@ function renderCommitStats(stats) {
     var commitsHtml = '<div class="commits-stats">'+
         '<h3>提交统计</h3>'+
         '<div class="commits-chart">'+
-            '<div class="commit-item">'+
-                '<span class="commit-date">本周</span>'+
-                '<div class="commit-bar">'+
-                    '<div class="commit-fill" style="width: '+pct(w)+'%"></div>'+
-                '</div>'+
-                '<span class="commit-count">'+w+'</span>'+
-            '</div>'+
-            '<div class="commit-item">'+
-                '<span class="commit-date">本月</span>'+
-                '<div class="commit-bar">'+
-                    '<div class="commit-fill" style="width: '+pct(m)+'%"></div>'+
-                '</div>'+
-                '<span class="commit-count">'+m+'</span>'+
-            '</div>'+
-            '<div class="commit-item">'+
-                '<span class="commit-date">今年</span>'+
-                '<div class="commit-bar">'+
-                    '<div class="commit-fill" style="width: 100%"></div>'+
-                '</div>'+
-                '<span class="commit-count">'+y+'</span>'+
-            '</div>'+
+        '<div class="commit-item">'+
+        '<span class="commit-date">本周</span>'+
+        '<div class="commit-bar">'+
+        '<div class="commit-fill" style="width: '+pct(w)+'%"></div>'+
         '</div>'+
-    '</div>';
+        '<span class="commit-count">'+w+'</span>'+
+        '</div>'+
+        '<div class="commit-item">'+
+        '<span class="commit-date">本月</span>'+
+        '<div class="commit-bar">'+
+        '<div class="commit-fill" style="width: '+pct(m)+'%"></div>'+
+        '</div>'+
+        '<span class="commit-count">'+m+'</span>'+
+        '</div>'+
+        '<div class="commit-item">'+
+        '<span class="commit-date">今年</span>'+
+        '<div class="commit-bar">'+
+        '<div class="commit-fill" style="width: 100%"></div>'+
+        '</div>'+
+        '<span class="commit-count">'+y+'</span>'+
+        '</div>'+
+        '</div>'+
+        '</div>';
     $('#github-commits').html(commitsHtml);
 }
