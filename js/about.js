@@ -1051,7 +1051,7 @@ function hideWechatQR() {
 function initThemeByTime() {
     var hour = new Date().getHours();
     var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var night = hour >= 25 ;
+    var night = hour >= 18 || prefersDark ;
     var root = document.documentElement;
     root.classList.toggle('theme-night', night);
     root.classList.toggle('theme-day', !night);

@@ -494,7 +494,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 .nav-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -619,7 +619,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
 /* 技术栈云图 - INFJ风格设计 */
 .tech-cloud-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(15px); /* 增强毛玻璃效果 */
     -webkit-backdrop-filter: blur(15px);
@@ -1005,7 +1005,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 .section-header {
     text-align: center;
     margin-bottom: 4rem;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
 }
 
 .section-title {
@@ -1360,7 +1360,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
 /* 个性时间线 */
 .personality-timeline-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1493,7 +1493,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 /* GitHub项目展示 */
 
 .github-showcase-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1665,7 +1665,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 /* 博客瀑布流 */
 
 .blog-waterfall-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1765,7 +1765,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 /* 联系方式轨道 - 循环随机围绕动画 */
 
 .contact-floating-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     position: relative;
     min-height: 600px;
     overflow: hidden;
@@ -2089,7 +2089,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 /* 评论系统 */
 
 .comments-section {
-    padding: 8rem 2rem;
+    padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
