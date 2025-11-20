@@ -9,7 +9,7 @@ $(document).ready(function() {
     initWeChatModal();
     initArtalkComments();
     initPageAnimations();
-    initTechCloud();
+    initTechCloud(); // 初始化技术云图
     initScrollEffects();
     initRandomPositions();
 });
@@ -60,6 +60,18 @@ function initMotionController() {
         root.style.setProperty('--glass-blur', '0px');
         root.style.setProperty('--glass-alpha', '0.18');
     }
+    
+    // 监听屏幕尺寸变化，重新初始化技术云
+    window.addEventListener('resize', function() {
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(function() {
+            var newIsMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
+            if (newIsMobile !== isMobile) {
+                isMobile = newIsMobile;
+                initTechCloud();
+            }
+        }, 250);
+    });
 }
 
 // GitHub 统计信息
@@ -208,7 +220,7 @@ function initProjects() {
                 return !repo.fork; // 过滤掉fork的项目
             }).sort(function(a, b) {
                 return b.stargazers_count - a.stargazers_count; // 按星数降序排序
-            }).slice(0, 6); // 只取前6个
+            }).slice(0, 12); // 只取前12个
             
             // 缓存数据
             localStorage.setItem(cacheKey, JSON.stringify(filteredRepos));
@@ -381,111 +393,345 @@ function renderCommentsFallback(msg) {
 
 // 技术云图初始化
 function initTechCloud() {
-    var techItems = [
-        // 内层轨道 - 核心技能
-        { name: 'JavaScript', level: 'primary', orbit: 1 },
-        { name: 'Java', level: 'primary', orbit: 1 },
-        { name: 'React', level: 'primary', orbit: 1 },
-        
-        // 中层轨道 - 熟练技能
-        { name: 'Node.js', level: 'secondary', orbit: 2 },
-        { name: 'Vue.js', level: 'secondary', orbit: 2 },
-        { name: 'TypeScript', level: 'secondary', orbit: 2 },
-        { name: 'MySQL', level: 'secondary', orbit: 2 },
-        { name: 'Spring Boot', level: 'secondary', orbit: 2 },
-        { name: 'Spring Cloud', level: 'secondary', orbit: 2 },
-        { name: 'Spring AI', level: 'secondary', orbit: 2 },
-        { name: 'Spring Security', level: 'secondary', orbit: 2 },
-        { name: 'WebFlux', level: 'secondary', orbit: 2 },
-        
-        // 外层轨道 - 工具技能
-        { name: 'Docker', level: 'tertiary', orbit: 3 },
-        { name: 'Git', level: 'tertiary', orbit: 3 },
-        { name: 'Linux', level: 'tertiary', orbit: 3 },
-        { name: 'AWS', level: 'tertiary', orbit: 3 },
-        { name: 'MongoDB', level: 'tertiary', orbit: 3 },
-        { name: 'Redis', level: 'tertiary', orbit: 3 },
-        { name: 'Elasticsearch', level: 'tertiary', orbit: 3 },
-        { name: 'Kibana', level: 'tertiary', orbit: 3 },
-        { name: 'Prometheus', level: 'tertiary', orbit: 3 },
-        { name: 'Grafana', level: 'tertiary', orbit: 3 },
-        { name: 'Jenkins', level: 'tertiary', orbit: 3 }
-      
+    // 技术栈数据
+    var techStack = [
+        { name: 'Java', category: 'core', weight: 5 },
+        { name: 'Spring Boot', category: 'backend', weight: 5 },
+        { name: 'JavaScript', category: 'core', weight: 5 },
+        { name: 'Python', category: 'core', weight: 4 },
+        { name: 'WebFlux', category: 'backend', weight: 5 },
+        { name: 'Reactor', category: 'backend', weight: 5 },
+        { name: 'TypeScript', category: 'core', weight: 4 },
+        { name: 'Spring Cloud', category: 'backend', weight: 4 },
+        { name: 'Go', category: 'core', weight: 3 },
+        { name: 'MySQL', category: 'data', weight: 4 },
+        { name: 'Redis', category: 'data', weight: 4 },
+        { name: 'MongoDB', category: 'data', weight: 3 },
+        { name: 'Docker', category: 'ops', weight: 4 },
+        { name: 'Kubernetes', category: 'ops', weight: 3 },
+        { name: 'OpenAI API', category: 'ai', weight: 3 },
+        { name: 'LangChain', category: 'ai', weight: 3 },
+        { name: 'TensorFlow', category: 'ai', weight: 2 },
+        { name: 'PyTorch', category: 'ai', weight: 2 },
+        { name: 'Elasticsearch', category: 'data', weight: 3 },
+        { name: 'RabbitMQ', category: 'data', weight: 2 },
+        { name: 'Kafka', category: 'data', weight: 2 },
+        { name: 'Jenkins', category: 'ops', weight: 3 },
+        { name: 'Git', category: 'ops', weight: 4 },
+        { name: 'Linux', category: 'ops', weight: 3 },
+        { name: 'AWS', category: 'ops', weight: 2 },
+        { name: 'Nginx', category: 'ops', weight: 2 },
+        { name: 'Spring Security', category: 'backend', weight: 3 },
+        { name: 'MyBatis', category: 'backend', weight: 3 },
+        { name: 'JPA', category: 'backend', weight: 2 },
+        { name: 'Dubbo', category: 'backend', weight: 2 },
+        { name: 'Netty', category: 'backend', weight: 2 },
+        { name: 'Transformers', category: 'ai', weight: 2 },
+        { name: 'Scikit-learn', category: 'ai', weight: 2 },
+        { name: 'Ollama', category: 'ai', weight: 1 },
+        { name: 'Dify', category: 'ai', weight: 1 },
+        { name: 'Spring AI', category: 'ai', weight: 1 },
+        { name: 'ClickHouse', category: 'data', weight: 1 },
+        { name: 'Postgresql', category: 'data', weight: 1 }
     ];
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var isMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
-    if (!reduced && !isMobile) {
-        initTechSphere(techItems);
+    
+    // 对于移动端或减少动画的情况，使用横向滚动
+    if (isMobile || reduced) {
+        initHorizontalTechCloud(techStack);
         return;
     }
-    var container = $('.cloud-wrapper');
-    techItems.forEach(function(tech) {
-        var el = $('<span class="cloud-tag" data-category="' + (categoryOf(tech.level)) + '" data-weight="' + weightOf(tech.level) + '">' + tech.name + '</span>');
-        container.append(el);
-    });
+    
+    // PC端使用球状旋转效果
+    initTechSphere(techStack);
 }
 
-function categoryOf(level) {
-    if (level === 'primary') return 'core';
-    if (level === 'secondary') return 'backend';
-    return 'ops';
-}
-
-function weightOf(level) {
-    if (level === 'primary') return 5;
-    if (level === 'secondary') return 3;
-    return 2;
-}
-
-function initTechSphere(items) {
-    var container = document.querySelector('.cloud-wrapper');
+// 移动端和平板的横向滚动技术云
+function initHorizontalTechCloud(items) {
+    var container = document.getElementById('tech-cloud-wrapper');
     if (!container) return;
-    container.classList.add('sphere');
-    var N = items.length;
-    var tags = [];
-    for (var i = 0; i < N; i++) {
-        var item = items[i];
+    
+    // 清空容器
+    container.innerHTML = '';
+    container.classList.remove('sphere');
+    
+    // 按权重排序，确保重要的标签优先显示
+    var sortedItems = items.slice().sort(function(a, b) {
+        return b.weight - a.weight;
+    });
+    
+    // 创建三行容器
+    var row1 = document.createElement('div');
+    var row2 = document.createElement('div');
+    var row3 = document.createElement('div');
+    
+    row1.className = 'tech-row';
+    row2.className = 'tech-row';
+    row3.className = 'tech-row';
+    
+    // 将标签分配到三行中
+    sortedItems.forEach(function(item, index) {
         var el = document.createElement('span');
         el.className = 'cloud-tag';
         el.textContent = item.name;
-        el.setAttribute('data-category', categoryOf(item.level));
-        el.setAttribute('data-weight', weightOf(item.level));
-        el.style.left = '50%';
-        el.style.top = '50%';
+        el.setAttribute('data-category', item.category);
+        el.setAttribute('data-weight', item.weight);
+        
+        // 根据索引分配到不同行
+        if (index % 3 === 0) {
+            row1.appendChild(el);
+        } else if (index % 3 === 1) {
+            row2.appendChild(el);
+        } else {
+            row3.appendChild(el);
+        }
+        
+        // 为每个标签复制一个副本，实现无缝滚动效果
+        var elClone = el.cloneNode(true);
+        if (index % 3 === 0) {
+            row1.appendChild(elClone);
+        } else if (index % 3 === 1) {
+            row2.appendChild(elClone);
+        } else {
+            row3.appendChild(elClone);
+        }
+    });
+    
+    container.appendChild(row1);
+    container.appendChild(row2);
+    container.appendChild(row3);
+    
+    // 设置不同的初始延迟时间
+    setTimeout(function() {
+        row1.classList.add('scrolling');
+    }, 0);
+    
+    setTimeout(function() {
+        row2.classList.add('scrolling');
+    }, 500);
+    
+    setTimeout(function() {
+        row3.classList.add('scrolling');
+    }, 1000);
+}
+
+// PC端3D球状技术云
+function initTechSphere(items) {
+    var container = document.getElementById('tech-cloud-wrapper');
+    if (!container) return;
+    
+    // 清空容器并添加球体类
+    container.innerHTML = '';
+    container.classList.add('sphere');
+    
+    // 创建标签元素
+    var tags = [];
+    items.forEach(function(item, index) {
+        var el = document.createElement('div');
+        el.className = 'cloud-tag';
+        el.textContent = item.name;
+        el.setAttribute('data-category', item.category);
+        el.setAttribute('data-weight', item.weight);
+        el.setAttribute('data-index', index);
         container.appendChild(el);
         tags.push(el);
-    }
-    var radius = 220;
-    var phiStep = Math.PI * (3 - Math.sqrt(5)); // golden angle
-    tags.forEach(function(el, idx) {
-        var y = 1 - (idx / (N - 1)) * 2;
-        var r = Math.sqrt(1 - y * y);
-        var theta = idx * phiStep;
-        var x = Math.cos(theta) * r;
-        var z = Math.sin(theta) * r;
-        var tx = x * radius;
-        var ty = y * radius;
-        var tz = z * radius;
-        el.style.position = 'absolute';
-        el.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,' + tz + 'px) translate(-50%, -50%)';
-        el.style.willChange = 'transform';
-        var depth = (z + 1) / 2; // 0..1
-        var scale = 0.85 + depth * 0.3;
-        var opacity = 0.7 + depth * 0.3;
-        el.style.opacity = String(opacity);
-        el.style.transform += ' scale(' + scale + ')';
-        el.style.zIndex = String(Math.floor(100 + depth * 100));
     });
-    var rotY = 0;
-    var rotX = 8;
-    function animate() {
-        rotY += 0.3;
-        container.style.transform = 'perspective(800px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
-        requestAnimationFrame(animate);
+    
+    // 球体参数
+    var radius = 250; // 减小球体半径以适应容器并避免标签被遮挡
+    var dtr = Math.PI / 180;
+    var d = 300;
+    var mcList = [];
+    var active = false;
+    var lasta = 0; // 初始值设为0
+    var lastb = 0; // 初始值设为0
+    var distr = true;
+    var tspeed = 0.05; // 降低旋转速度，使动画更平滑
+    var size = 250;
+    var mouseX = 0;
+    var mouseY = 0;
+    var mouseDown = false;
+    
+    // 初始化标签位置
+    tags.forEach(function(tag, i) {
+        var phi = Math.acos(-1 + (2 * i) / tags.length);
+        var theta = Math.sqrt(tags.length * Math.PI) * phi;
+        
+        var x = radius * Math.cos(theta) * Math.sin(phi);
+        var y = radius * Math.sin(theta) * Math.sin(phi);
+        var z = radius * Math.cos(phi);
+        
+        tag.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)';
+        tag.style.opacity = '0.9';
+        
+        // 根据权重设置标签大小和最小宽度
+        var weight = parseInt(tag.getAttribute('data-weight'));
+        var scale = 0.6 + (weight * 0.12);
+        // 按照规范设置标签尺寸
+        var minWidth, minHeight, fontSize, padding;
+        
+        switch(weight) {
+            case 5:
+                minWidth = 120;
+                minHeight = 55;
+                fontSize = 16;
+                padding = '12px 22px';
+                break;
+            case 4:
+                minWidth = 110;
+                minHeight = 50;
+                fontSize = 15;
+                padding = '11px 20px';
+                break;
+            case 3:
+                minWidth = 100;
+                minHeight = 45;
+                fontSize = 14;
+                padding = '10px 18px';
+                break;
+            case 2:
+                minWidth = 90;
+                minHeight = 40;
+                fontSize = 13;
+                padding = '9px 16px';
+                break;
+            case 1:
+            default:
+                minWidth = 85;
+                minHeight = 38;
+                fontSize = 12;
+                padding = '8px 15px';
+        }
+        
+        tag.style.transform += ' scale(' + scale + ')';
+        tag.style.minWidth = minWidth + 'px';
+        tag.style.minHeight = minHeight + 'px';
+        tag.style.fontSize = fontSize + 'px';
+        tag.style.padding = padding;
+        
+        // 设置z-index确保正确的层级显示
+        tag.style.zIndex = Math.floor(z + radius);
+        
+        // 存储位置信息
+        mcList.push({
+            obj: tag,
+            x: x,
+            y: y,
+            z: z
+        });
+    });
+    
+    // 鼠标交互
+    container.addEventListener('mousedown', function(e) {
+        mouseDown = true;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        e.preventDefault();
+    });
+    
+    container.addEventListener('mousemove', function(e) {
+        if (mouseDown) {
+            lasta = (e.clientX - mouseX) * 0.0005; // 降低鼠标影响系数
+            lastb = (e.clientY - mouseY) * 0.0005;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            e.preventDefault();
+        }
+    });
+    
+    container.addEventListener('mouseup', function(e) {
+        mouseDown = false;
+        e.preventDefault();
+    });
+    
+    container.addEventListener('mouseleave', function() {
+        mouseDown = false;
+    });
+    
+    // 触摸交互
+    container.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 0) {
+            mouseDown = true;
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+            e.preventDefault();
+        }
+    });
+    
+    container.addEventListener('touchmove', function(e) {
+        if (mouseDown && e.touches.length > 0) {
+            lasta = (e.touches[0].clientX - mouseX) * 0.0005; // 降低触摸影响系数
+            lastb = (e.touches[0].clientY - mouseY) * 0.0005;
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+            e.preventDefault();
+        }
+    });
+    
+    container.addEventListener('touchend', function(e) {
+        mouseDown = false;
+        e.preventDefault();
+    });
+    
+    // 自动旋转动画
+    function update() {
+        // 添加轻微的自动旋转，即使没有用户交互
+        if (!mouseDown) {
+            lasta = lasta * 0.98 + 0.0001; // 更轻微的自动旋转，逐渐减速
+            lastb = lastb * 0.98;
+        }
+        
+        // 限制旋转速度，防止过快
+        lasta = Math.max(Math.min(lasta, 0.01), -0.01); // 限制在更小的范围内
+        lastb = Math.max(Math.min(lastb, 0.01), -0.01);
+        
+        var a = lasta;
+        var b = lastb;
+        
+        var c = 0;
+        var sa = Math.sin(a);
+        var ca = Math.cos(a);
+        var sb = Math.sin(b);
+        var cb = Math.cos(b);
+        var sc = Math.sin(c);
+        var cc = Math.cos(c);
+        
+        // 更新标签位置
+        mcList.forEach(function(mc) {
+            var rx = mc.x;
+            var ry = mc.y * ca + mc.z * sa;
+            var rz = mc.y * -sa + mc.z * ca;
+            
+            var nx = rx * cb + rz * sb;
+            var ny = ry;
+            var nz = rx * -sb + rz * cb;
+            
+            mc.x = nx;
+            mc.y = ny;
+            mc.z = nz;
+            
+            // 应用变换
+            mc.obj.style.transform = 'translate3d(' + nx + 'px, ' + ny + 'px, ' + nz + 'px)';
+            
+            // 根据z轴位置设置缩放和透明度
+            var scale = (nz + radius) / (2 * radius) * 0.6 + 0.7;
+            var weight = parseInt(mc.obj.getAttribute('data-weight'));
+            scale = scale * (0.6 + (weight * 0.12));
+            
+            mc.obj.style.transform += ' scale(' + scale + ')';
+            mc.obj.style.opacity = 0.7 + (nz + radius) / (2 * radius) * 0.3;
+            
+            // 设置z-index确保正确的层级显示
+            mc.obj.style.zIndex = Math.floor(nz + radius);
+        });
+        
+        requestAnimationFrame(update);
     }
-    container.style.transformStyle = 'preserve-3d';
-    requestAnimationFrame(animate);
+    
+    // 启动动画
+    requestAnimationFrame(update);
 }
 
 // 滚动效果
@@ -772,6 +1018,7 @@ function hideWechatQR() {
         modal.style.display = "none";
     }
 }
+
 function initThemeByTime() {
     var hour = new Date().getHours();
     var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -779,4 +1026,22 @@ function initThemeByTime() {
     var root = document.documentElement;
     root.classList.toggle('theme-night', night);
     root.classList.toggle('theme-day', !night);
+    
+    // 确保在主题切换时技术标签颜色正确更新
+    updateTechTagColors();
+}
+
+// 更新技术标签颜色以适配当前主题
+function updateTechTagColors() {
+    var root = document.documentElement;
+    var isDayTheme = root.classList.contains('theme-day');
+    
+    var tags = document.querySelectorAll('.cloud-tag');
+    tags.forEach(function(tag) {
+        if (isDayTheme) {
+            tag.style.color = 'var(--text-strong)';
+        } else {
+            tag.style.color = '#fff';
+        }
+    });
 }
