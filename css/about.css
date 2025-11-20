@@ -23,6 +23,58 @@
     --accent-lavender: #7B7AE6;
 }
 
+:root.theme-day {
+    --grad-a: #F6F7F9;
+    --grad-b: #EDEFF3;
+    --text-strong: #121417;
+    --text-soft: #2a2d34;
+    --glass-alpha: 0.10;
+    --glass-border: rgba(0, 0, 0, 0.12);
+}
+
+:root.theme-night {
+    --grad-a: #101216;
+    --grad-b: #171a1f;
+    --text-strong: #F2F3F5;
+    --text-soft: rgba(255, 255, 255, 0.9);
+    --glass-alpha: 0.14;
+    --glass-border: rgba(255, 255, 255, 0.16);
+}
+
+.theme-day .nav-logo {
+    background: linear-gradient(45deg, #121417, #2a2d34);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.theme-day .nav-links a { color: var(--text-soft); }
+
+.theme-day .hero-title,
+.theme-day .section-title,
+.theme-day .project-title,
+.theme-day .article-title {
+    background: linear-gradient(45deg, #121417, #2a2d34);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.theme-day .hero-subtitle,
+.theme-day .intro-text p,
+.theme-day .project-description,
+.theme-day .article-excerpt,
+.theme-day .timeline-content p,
+.theme-day .section-subtitle,
+.theme-day .location-info,
+.theme-day .stat-label { color: var(--text-soft); }
+
+.theme-day .cloud-tag {
+    color: var(--text-soft);
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
 body {
     font-family: 'Inter', 'SF Pro Text', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
@@ -795,6 +847,19 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     perspective: 1000px;
 }
 
+.cloud-wrapper.sphere {
+    height: 420px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    perspective: 800px;
+    transform-style: preserve-3d;
+}
+
+.cloud-wrapper.sphere .cloud-tag {
+    position: absolute;
+}
+
 /* 连接线动画 */
 .cloud-wrapper::before {
     content: '';
@@ -1379,11 +1444,12 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     top: 50%;
     left: 50%;
     overflow: hidden;
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
     justify-content: center;
     text-align: center;
     transform-origin: center;
+    z-index: 1;
 }
 
 @keyframes orbit {
@@ -1401,6 +1467,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     background: var(--social-color, #667eea);
     transform: scaleX(0);
     transition: transform 0.3s ease;
+    z-index: -1;
 }
 
 .social-card:hover {
@@ -1820,7 +1887,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     .hero-stats {
@@ -1926,9 +1993,9 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     .blog-waterfall-section,
     .contact-floating-section,
     .comments-section {
-        padding: 4rem 1rem;
-        margin: 1rem;
-        border-radius: 25px;
+        padding: 3rem 0.8rem;
+        margin: 0.8rem;
+        border-radius: 20px;
     }
     
     .cloud-tag {
@@ -2061,4 +2128,39 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     .avatar-ring {
         animation: none !important;
     }
+}
+.theme-day .profile-info h1,
+.theme-day .github-info h3,
+.theme-day .social-info h3 { color: var(--text-strong); }
+
+.theme-day .intro-quote p,
+.theme-day .intro-text p,
+.theme-day .timeline-content p,
+.theme-day .project-description,
+.theme-day .article-excerpt,
+.theme-day .article-meta,
+.theme-day .social-info p,
+.theme-day .github-bio { color: var(--text-soft); }
+
+.theme-day .stat-number {
+    background: linear-gradient(45deg, #121417, #2a2d34);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.theme-day .hero-description p { color: var(--text-soft); }
+.theme-day .project-stat,
+.theme-day .project-stats span { color: var(--text-soft); }
+.theme-day .article-meta { color: var(--text-soft); }
+.theme-day .view-all-link {
+    background: linear-gradient(45deg, #121417, #2a2d34);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.theme-day .timeline-content h3 {
+    background: linear-gradient(45deg, #121417, #2a2d34);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }

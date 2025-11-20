@@ -1,6 +1,7 @@
 // 关于页面JavaScript功能 - 现代动态版本
 
 $(document).ready(function() {
+    initThemeByTime();
     initMotionController();
     initGitHubStats();
     initProjects();
@@ -238,8 +239,8 @@ function displayProjects(repos) {
                            (updateDate.getMonth() + 1) + '/' + 
                            updateDate.getDate();
         
-        var starSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Star" role="img"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"></path></svg>';
-        var forkSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Fork" role="img"><path d="M7 4a3 3 0 106 0 3 3 0 00-6 0zm7 0a3 3 0 106 0 3 3 0 00-6 0zM7 20a3 3 0 106 0 3 3 0 00-6 0zm2-3.17V10a3 3 0 013-3h3"></path></svg>';
+        var starSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Star" role="img"><path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"></path></svg>';
+        var forkSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Fork" role="img"><path d="M7 4a3 3 0 106 0 3 3 0 00-6 0zm10 0a3 3 0 106 0 3 3 0 00-6 0v6a3 3 0 01-3 3H7"></path></svg>';
         projectsHtml += '<div class="project-card" onclick="window.open(\'' + repo.html_url + '\', \'_blank\')">' +
             '<div class="project-header">' +
                 '<div>' +
@@ -412,12 +413,79 @@ function initTechCloud() {
       
     ];
 
-    // 动态生成技术项目
-    techItems.forEach((tech, index) => {
-        var orbit = $('.orbit-' + tech.orbit);
-        var techElement = $('<div class="tech-item ' + tech.level + '">' + tech.name + '</div>');
-        orbit.append(techElement);
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var isMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
+    if (!reduced && !isMobile) {
+        initTechSphere(techItems);
+        return;
+    }
+    var container = $('.cloud-wrapper');
+    techItems.forEach(function(tech) {
+        var el = $('<span class="cloud-tag" data-category="' + (categoryOf(tech.level)) + '" data-weight="' + weightOf(tech.level) + '">' + tech.name + '</span>');
+        container.append(el);
     });
+}
+
+function categoryOf(level) {
+    if (level === 'primary') return 'core';
+    if (level === 'secondary') return 'backend';
+    return 'ops';
+}
+
+function weightOf(level) {
+    if (level === 'primary') return 5;
+    if (level === 'secondary') return 3;
+    return 2;
+}
+
+function initTechSphere(items) {
+    var container = document.querySelector('.cloud-wrapper');
+    if (!container) return;
+    container.classList.add('sphere');
+    var N = items.length;
+    var tags = [];
+    for (var i = 0; i < N; i++) {
+        var item = items[i];
+        var el = document.createElement('span');
+        el.className = 'cloud-tag';
+        el.textContent = item.name;
+        el.setAttribute('data-category', categoryOf(item.level));
+        el.setAttribute('data-weight', weightOf(item.level));
+        el.style.left = '50%';
+        el.style.top = '50%';
+        container.appendChild(el);
+        tags.push(el);
+    }
+    var radius = 220;
+    var phiStep = Math.PI * (3 - Math.sqrt(5)); // golden angle
+    tags.forEach(function(el, idx) {
+        var y = 1 - (idx / (N - 1)) * 2;
+        var r = Math.sqrt(1 - y * y);
+        var theta = idx * phiStep;
+        var x = Math.cos(theta) * r;
+        var z = Math.sin(theta) * r;
+        var tx = x * radius;
+        var ty = y * radius;
+        var tz = z * radius;
+        el.style.position = 'absolute';
+        el.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,' + tz + 'px) translate(-50%, -50%)';
+        el.style.willChange = 'transform';
+        var depth = (z + 1) / 2; // 0..1
+        var scale = 0.85 + depth * 0.3;
+        var opacity = 0.7 + depth * 0.3;
+        el.style.opacity = String(opacity);
+        el.style.transform += ' scale(' + scale + ')';
+        el.style.zIndex = String(Math.floor(100 + depth * 100));
+    });
+    var rotY = 0;
+    var rotX = 8;
+    function animate() {
+        rotY += 0.3;
+        container.style.transform = 'perspective(800px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+        requestAnimationFrame(animate);
+    }
+    container.style.transformStyle = 'preserve-3d';
+    requestAnimationFrame(animate);
 }
 
 // 滚动效果
@@ -703,4 +771,12 @@ function hideWechatQR() {
     if (modal) {
         modal.style.display = "none";
     }
+}
+function initThemeByTime() {
+    var hour = new Date().getHours();
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var night = hour >= 18 || prefersDark;
+    var root = document.documentElement;
+    root.classList.toggle('theme-night', night);
+    root.classList.toggle('theme-day', !night);
 }
