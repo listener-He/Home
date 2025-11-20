@@ -155,35 +155,7 @@ function displayGitHubProfile(data) {
     $('#github-profile').html(profileHtml);
     $('#github-repos').text(data.public_repos);
     $('#github-followers').text(data.followers);
-    
-    // 获取提交统计（使用GitHub API的限制，这里模拟数据）
-    var commitsHtml = '<div class="commits-stats">' +
-        '<h3>提交统计</h3>' +
-        '<div class="commits-chart">' +
-            '<div class="commit-item">' +
-                '<span class="commit-date">本周</span>' +
-                '<div class="commit-bar">' +
-                    '<div class="commit-fill" style="width: 80%"></div>' +
-                '</div>' +
-                '<span class="commit-count">24</span>' +
-            '</div>' +
-            '<div class="commit-item">' +
-                '<span class="commit-date">本月</span>' +
-                '<div class="commit-bar">' +
-                    '<div class="commit-fill" style="width: 65%"></div>' +
-                '</div>' +
-                '<span class="commit-count">156</span>' +
-            '</div>' +
-            '<div class="commit-item">' +
-                '<span class="commit-date">今年</span>' +
-                '<div class="commit-bar">' +
-                    '<div class="commit-fill" style="width: 90%"></div>' +
-                '</div>' +
-                '<span class="commit-count">1,247</span>' +
-            '</div>' +
-        '</div>' +
-    '</div>';
-    $('#github-commits').html(commitsHtml);
+    initCommitStats(data.login || 'listener-He');
 }
 
 // 优质项目展示
@@ -1044,4 +1016,91 @@ function updateTechTagColors() {
             tag.style.color = '#fff';
         }
     });
+}
+function initCommitStats(username) {
+    var cacheKey = 'github_commits_cache';
+    var cacheTimeKey = 'github_commits_cache_time';
+    var now = new Date().getTime();
+    var oneDay = 24 * 60 * 60 * 1000;
+    var cached = localStorage.getItem(cacheKey);
+    var cachedTime = localStorage.getItem(cacheTimeKey);
+    if (cached && cachedTime && (now - parseInt(cachedTime)) < oneDay) {
+        renderCommitStats(JSON.parse(cached));
+        return;
+    }
+    localStorage.removeItem(cacheKey);
+    localStorage.removeItem(cacheTimeKey);
+    fetchCommitCounts(username).then(function(stats){
+        localStorage.setItem(cacheKey, JSON.stringify(stats));
+        localStorage.setItem(cacheTimeKey, now.toString());
+        renderCommitStats(stats);
+    }).catch(function(){
+        fetch('data/github_commits.json')
+            .then(function(res){ return res.json(); })
+            .then(function(json){ renderCommitStats(json); })
+            .catch(function(){ renderCommitStats({week:0,month:0,year:0}); });
+    });
+}
+
+function fetchCommitCounts(username) {
+    function fmt(d){
+        var y=d.getFullYear();
+        var m=('0'+(d.getMonth()+1)).slice(-2);
+        var s=('0'+d.getDate()).slice(-2);
+        return y+'-'+m+'-'+s;
+    }
+    var today = new Date();
+    var weekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()-6);
+    var monthStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()-29);
+    var yearStart = new Date(today.getFullYear(), 0, 1);
+    var h = { 'Accept': 'application/vnd.github.cloak-preview+json' };
+    function q(start,end){
+        var url = 'https://api.github.com/search/commits?q=author:'+encodeURIComponent(username)+'+author-date:'+fmt(start)+'..'+fmt(end);
+        return fetch(url,{ headers: h, method:'GET' }).then(function(r){ return r.json(); }).then(function(j){ return (j && typeof j.total_count==='number')? j.total_count : 0; });
+    }
+    return Promise.all([
+        q(weekStart,today),
+        q(monthStart,today),
+        q(yearStart,today)
+    ]).then(function(arr){
+        return { week: arr[0], month: arr[1], year: arr[2], range: { week:{start:fmt(weekStart),end:fmt(today)}, month:{start:fmt(monthStart),end:fmt(today)}, year:{start:fmt(yearStart),end:fmt(today)} }, generated_at: new Date().toISOString() };
+    });
+}
+
+function renderCommitStats(stats) {
+    var w = parseInt(stats.week||0,10);
+    var m = parseInt(stats.month||0,10);
+    var y = parseInt(stats.year||0,10);
+    function pct(v){
+        var p = 0;
+        if (y>0) p = Math.min(100, Math.max(5, Math.round(v*100/Math.max(y,1))));
+        return p;
+    }
+    var commitsHtml = '<div class="commits-stats">'+
+        '<h3>提交统计</h3>'+
+        '<div class="commits-chart">'+
+            '<div class="commit-item">'+
+                '<span class="commit-date">本周</span>'+
+                '<div class="commit-bar">'+
+                    '<div class="commit-fill" style="width: '+pct(w)+'%"></div>'+
+                '</div>'+
+                '<span class="commit-count">'+w+'</span>'+
+            '</div>'+
+            '<div class="commit-item">'+
+                '<span class="commit-date">本月</span>'+
+                '<div class="commit-bar">'+
+                    '<div class="commit-fill" style="width: '+pct(m)+'%"></div>'+
+                '</div>'+
+                '<span class="commit-count">'+m+'</span>'+
+            '</div>'+
+            '<div class="commit-item">'+
+                '<span class="commit-date">今年</span>'+
+                '<div class="commit-bar">'+
+                    '<div class="commit-fill" style="width: 100%"></div>'+
+                '</div>'+
+                '<span class="commit-count">'+y+'</span>'+
+            '</div>'+
+        '</div>'+
+    '</div>';
+    $('#github-commits').html(commitsHtml);
 }
