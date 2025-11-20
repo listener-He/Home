@@ -42,7 +42,7 @@
 <!-- style="background: url(https://blog-file.hehouhui.cn/bj/1.jpg) center center / cover no-repeat rgb(102, 102, 102);" -->
 <header id="panel" class="panel-cover">
     <!--星空背景-->
-    <!-- <canvas id="bg"></canvas> -->
+<!--    <canvas id="bg"></canvas>-->
     <!--天气-->
     <!-- <div id="he-plugin-simple"></div> -->
     <script>
@@ -282,10 +282,10 @@
         <p class="power">
             <a class="icp" href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action" target="_blank">湘ICP备20014902号</a>
         </p>
-        <p class="power">Copyright © 2018
-            <script>document.write(' - ' + (new Date()).getFullYear())</script>
-            Honesty
-        </p>
+        <p class="power">Copyright © 2018<span id="currentYear"></span> Honesty</p>
+        <script>
+            document.getElementById("currentYear").textContent = ' - ' + new Date().getFullYear();
+        </script>
         <p class="power">Powered By
             <a href="https://pages.edgeone.ai/" target="_blank"> Tencent EdgeOne </a> And
             <a href="https://hitokoto.cn/" target="_blank"> Hitokoto </a>
@@ -303,8 +303,9 @@
 <!--黑暗主题-->
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/fetch.min.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
 <script type="text/javascript" src="js/main.js?version=3"></script>
-<script type="text/javascript" src="js/bj.js"></script>
+<!--<script type="text/javascript" src="js/bj.js"></script>-->
 <!--<script type="text/javascript" src="https://cdn.jsdmirror.com/gh/listener-He/Home/js/moments.js"></script>-->
 <script async src="https://analyse.hehouhui.cn/tracker.js" data-ackee-server="https://analyse.hehouhui.cn"
         data-ackee-domain-id="7887135f-a413-46e2-a98c-52d4f18d9973"></script>

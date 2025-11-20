@@ -3,7 +3,7 @@ var stars_count;
 var stars;
 ini();
 makeStars();
-var interval=setInterval(function(){drawStars();},50);//��ʱˢ����������
+var interval;
 
 function ini(){//初始化
     canvas = document.getElementById("bg");
@@ -14,12 +14,16 @@ function ini(){//初始化
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     context = canvas.getContext("2d");
-    stars = Array();//������������ɵ��������ݣ�x,y,��С����ɫ���ٶȣ�
-    stars_count = 300;//��������
-    clearInterval(interval);
+    stars = Array();//ɵݣx,y,Сɫٶȣ
+    stars_count = SiteConfig.stars.count;//
+    
+    // 清除可能存在的旧interval
+    if (interval) {
+        clearInterval(interval);
+    }
 }
 
-function makeStars(){//���������������
+function makeStars(){//
     if (!canvas) return;
     for(var i=0;i<stars_count;i++)
     {
@@ -28,12 +32,12 @@ function makeStars(){//���������������
         let radius = Math.random()*0.8;
         let color="rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+",0.8)";
         let speed=Math.random()*0.5;
-        let arr={'x':x,'y':y,'radius':radius,'color':color,'speed':speed};//��x,y,��С����ɫ���ٶȣ�
-        stars.push(arr);//������ɵ��������ݴ�������
+        let arr={'x':x,'y':y,'radius':radius,'color':color,'speed':speed};//x,y,Сɫٶȣ
+        stars.push(arr);//ɵݴ
     }
 }
 
-function drawStars(){//�����ǻ���������
+function drawStars(){//ǻ
     if (!canvas || !context) return;
     context.fillStyle = "#0e1729";
     context.fillRect(0,0,canvas.width,canvas.height);
@@ -50,8 +54,21 @@ function drawStars(){//�����ǻ���������
     }
 }
 
-window.onresize = function(){//���ڴ�С�����仯ʱ�������������������
+window.onresize = function(){//ڴС仯ʱ
     ini();
     makeStars();
-    interval=setInterval(function(){drawStars();},50);
+    // 只有当canvas存在时才设置interval
+    if (canvas && !interval) {
+        interval=setInterval(function(){drawStars();},SiteConfig.stars.refreshInterval);
+    }
 }
+
+// 页面加载完成后初始化星空效果
+document.addEventListener('DOMContentLoaded', function() {
+    ini();
+    makeStars();
+    // 只有当canvas存在时才设置interval
+    if (canvas) {
+        interval=setInterval(function(){drawStars();},SiteConfig.stars.refreshInterval);
+    }
+});

@@ -30,12 +30,20 @@ var iUp = (function () {
 $(document).ready(function () {
 
 	// 获取一言数据
-	fetch('https://v1.hitokoto.cn?c=c&c=d&c=i&c=k').then(function (res) {
+	// 检查是否在本地开发环境
+	var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+	var hitokotoUrl = isLocal ? 'https://v1.hitokoto.cn/' : SiteConfig.hitokoto.apiUrl;
+	
+	fetch(hitokotoUrl).then(function (res) {
 		return res.json();
 	}).then(function (e) {
 		$('#description').html(e.hitokoto + "<br/> -「<strong>" + e.from + "</strong>」")
 	}).catch(function (err) {
 		console.error("获取一言数据失败", err);
+		// 本地开发环境使用默认文本
+		if (isLocal) {
+			$('#description').html('人生天地之间，若白驹之过隙，忽然而已。<br/> -「<strong>Honesty</strong>」');
+		}
 	})
 
 	/**
@@ -49,9 +57,9 @@ $(document).ready(function () {
 	if (imgUrls == null) {
 		imgUrls = [];
 		index = 0;
-        for (let i = 1; i < 8; i++) {
-            imgUrls.push("/images/bj/"+i+".jpg");
-        }
+        SiteConfig.background.imagePaths.forEach(path => {
+            imgUrls.push(path);
+        });
         sessionStorage.setItem("imgUrls", JSON.stringify(imgUrls));
         // sessionStorage.setItem("index", index);
 	} else {
@@ -88,5 +96,3 @@ $('.btn-mobile-menu__icon').click(function () {
 	}
 	$('.btn-mobile-menu__icon').toggleClass('social iconfont icon-list social iconfont icon-ngleup animated fadeIn');
 });
-
-

@@ -17,9 +17,9 @@ $(document).ready(function() {
 // 初始化随机位置
 function initRandomPositions() {
     var cards = $('.social-card');
-    var rings = [130, 180, 230];
-    var golden = 137.5;
-    var speedBase = 16;
+    var rings = SiteConfig.socialCards.rings;
+    var golden = SiteConfig.socialCards.goldenAngle;
+    var speedBase = SiteConfig.socialCards.baseSpeed;
     cards.each(function(idx) {
         var ring = rings[idx % rings.length];
         var angle = (idx * golden) % 360;
@@ -76,15 +76,15 @@ function initMotionController() {
 
 // GitHub 统计信息
 function initGitHubStats() {
-    var username = 'listener-He';
-    var cacheKey = 'github_stats_cache';
-    var cacheTimeKey = 'github_stats_cache_time';
+    var username = SiteConfig.github.username;
+    var cacheKey = SiteConfig.github.cache.stats.key;
+    var cacheTimeKey = SiteConfig.github.cache.stats.timeKey;
     
     // 检查缓存（3天有效期）
     var cachedData = localStorage.getItem(cacheKey);
     var cacheTime = localStorage.getItem(cacheTimeKey);
     var now = new Date().getTime();
-    var threeDaysInMs = 3 * 24 * 60 * 60 * 1000; // 3天的毫秒数
+    var threeDaysInMs = SiteConfig.github.cache.stats.expirationDays * 24 * 60 * 60 * 1000; // 3天的毫秒数
     
     if (cachedData && cacheTime && (now - parseInt(cacheTime)) < threeDaysInMs) {
         // 使用缓存数据
@@ -115,7 +115,7 @@ function initGitHubStats() {
                 .catch(function() {
                     var fallbackData = {
                         name: 'Honesty',
-                        login: 'listener-He',
+                        login: SiteConfig.github.username,
                         bio: '开发者',
                         avatar_url: 'https://avatars.githubusercontent.com/u/39252579?v=4',
                         public_repos: 0,
@@ -160,15 +160,15 @@ function displayGitHubProfile(data) {
 
 // 优质项目展示
 function initProjects() {
-    var username = 'listener-He';
-    var cacheKey = 'github_projects_cache';
-    var cacheTimeKey = 'github_projects_cache_time';
+    var username = SiteConfig.github.username;
+    var cacheKey = SiteConfig.github.cache.projects.key;
+    var cacheTimeKey = SiteConfig.github.cache.projects.timeKey;
     
     // 检查缓存（3天有效期）
     var cachedData = localStorage.getItem(cacheKey);
     var cacheTime = localStorage.getItem(cacheTimeKey);
     var now = new Date().getTime();
-    var threeDaysInMs = 3 * 24 * 60 * 60 * 1000; // 3天的毫秒数
+    var threeDaysInMs = SiteConfig.github.cache.projects.expirationDays * 24 * 60 * 60 * 1000; // 3天的毫秒数
     
     if (cachedData && cacheTime && (now - parseInt(cacheTime)) < threeDaysInMs) {
         // 使用缓存数据
@@ -223,13 +223,20 @@ function displayProjects(repos) {
                            (updateDate.getMonth() + 1) + '/' + 
                            updateDate.getDate();
         
+        // 处理项目描述，如果超过一定字符数则添加折叠功能
+        var description = repo.description || '暂无描述';
+        var isLongDescription = description.length > 100;
+        var displayDescription = isLongDescription ? description.substring(0, 100) + '...' : description;
+        var descriptionClass = isLongDescription ? 'project-description collapsible' : 'project-description';
+        
         var starSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Star" role="img"><path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"></path></svg>';
         var forkSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-label="Fork" role="img"><path d="M7 4a3 3 0 106 0 3 3 0 00-6 0zm10 0a3 3 0 106 0 3 3 0 00-6 0v6a3 3 0 01-3 3H7"></path></svg>';
         projectsHtml += '<div class="project-card" onclick="window.open(\'' + repo.html_url + '\', \'_blank\')">' +
             '<div class="project-header">' +
                 '<div>' +
                     '<h3 class="project-title">' + repo.name + '</h3>' +
-                    '<p class="project-description">' + (repo.description || '暂无描述') + '</p>' +
+                    '<p class="' + descriptionClass + '" data-full-text="' + description + '" data-short-text="' + (isLongDescription ? description.substring(0, 100) + '...' : description) + '">' + displayDescription + '</p>' +
+                    (isLongDescription ? '<button class="toggle-description" onclick="toggleDescription(event, this)">显示更多</button>' : '') +
                 '</div>' +
                 '<div class="project-stats">' +
                     '<span>' + starSvg + ' ' + (repo.stargazers_count || 0) + '</span>' +
@@ -244,17 +251,36 @@ function displayProjects(repos) {
     $('#projects-container').html(projectsHtml);
 }
 
+// 切换项目描述显示状态
+function toggleDescription(event, button) {
+    event.stopPropagation(); // 阻止事件冒泡，避免触发项目卡片的点击事件
+    
+    var description = button.previousElementSibling;
+    var fullText = description.getAttribute('data-full-text');
+    var shortText = description.getAttribute('data-short-text');
+    
+    if (button.textContent === '显示更多') {
+        // 展开描述
+        description.textContent = fullText;
+        button.textContent = '收起';
+    } else {
+        // 收起描述
+        description.textContent = shortText;
+        button.textContent = '显示更多';
+    }
+}
+
 // 博客文章RSS解析
 function initBlogArticles() {
-    var rssUrl = 'https://blog.hehouhui.cn/rss/feed.xml';
-    var cacheKey = 'blog_articles_cache';
-    var cacheTimeKey = 'blog_articles_cache_time';
+    var rssUrl = SiteConfig.blog.rssUrl;
+    var cacheKey = SiteConfig.blog.cache.key;
+    var cacheTimeKey = SiteConfig.blog.cache.timeKey;
     
     // 检查缓存（3天有效期）
     var cachedData = localStorage.getItem(cacheKey);
     var cacheTime = localStorage.getItem(cacheTimeKey);
     var now = new Date().getTime();
-    var threeDaysInMs = 24 * 60 * 60 * 1000; // 1天的毫秒数
+    var threeDaysInMs = SiteConfig.blog.cache.expirationDays * 24 * 60 * 60 * 1000; // 1天的毫秒数
     
     if (cachedData && cacheTime && (now - parseInt(cacheTime)) < threeDaysInMs) {
         // 使用缓存数据
@@ -337,11 +363,11 @@ function initArtalkComments() {
                 el: '#artalk-container',
                 pageKey: window.location.pathname,
                 pageTitle: document.title,
-                server: 'https://artalk.hehouhui.cn',
-                site: 'Honesty的主页',
-                placeholder: '来说点什么吧...',
-                noComment: '暂无评论',
-                sendBtn: '发送',
+                server: SiteConfig.artalk.server,
+                site: SiteConfig.artalk.site,
+                placeholder: SiteConfig.artalk.placeholder,
+                noComment: SiteConfig.artalk.noComment,
+                sendBtn: SiteConfig.artalk.sendBtn,
                 darkMode: false,
                 gravatar: { mirror: 'https://cravatar.cn/avatar/' },
                 pagination: { pageSize: 20, readMore: true, autoLoad: true },
@@ -366,46 +392,7 @@ function renderCommentsFallback(msg) {
 // 技术云图初始化
 function initTechCloud() {
     // 技术栈数据
-    var techStack = [
-        { name: 'Java', category: 'core', weight: 5 },
-        { name: 'Spring Boot', category: 'backend', weight: 5 },
-        { name: 'JavaScript', category: 'core', weight: 5 },
-        { name: 'Python', category: 'core', weight: 4 },
-        { name: 'WebFlux', category: 'backend', weight: 5 },
-        { name: 'Reactor', category: 'backend', weight: 5 },
-        { name: 'TypeScript', category: 'core', weight: 4 },
-        { name: 'Spring Cloud', category: 'backend', weight: 4 },
-        { name: 'Go', category: 'core', weight: 3 },
-        { name: 'MySQL', category: 'data', weight: 4 },
-        { name: 'Redis', category: 'data', weight: 4 },
-        { name: 'MongoDB', category: 'data', weight: 3 },
-        { name: 'Docker', category: 'ops', weight: 4 },
-        { name: 'Kubernetes', category: 'ops', weight: 3 },
-        { name: 'OpenAI API', category: 'ai', weight: 3 },
-        { name: 'LangChain', category: 'ai', weight: 3 },
-        { name: 'TensorFlow', category: 'ai', weight: 2 },
-        { name: 'PyTorch', category: 'ai', weight: 2 },
-        { name: 'Elasticsearch', category: 'data', weight: 3 },
-        { name: 'RabbitMQ', category: 'data', weight: 2 },
-        { name: 'Kafka', category: 'data', weight: 2 },
-        { name: 'Jenkins', category: 'ops', weight: 3 },
-        { name: 'Git', category: 'ops', weight: 4 },
-        { name: 'Linux', category: 'ops', weight: 3 },
-        { name: 'AWS', category: 'ops', weight: 2 },
-        { name: 'Nginx', category: 'ops', weight: 2 },
-        { name: 'Spring Security', category: 'backend', weight: 3 },
-        { name: 'MyBatis', category: 'backend', weight: 3 },
-        { name: 'JPA', category: 'backend', weight: 2 },
-        { name: 'Dubbo', category: 'backend', weight: 2 },
-        { name: 'Netty', category: 'backend', weight: 2 },
-        { name: 'Transformers', category: 'ai', weight: 2 },
-        { name: 'Scikit-learn', category: 'ai', weight: 2 },
-        { name: 'Ollama', category: 'ai', weight: 1 },
-        { name: 'Dify', category: 'ai', weight: 1 },
-        { name: 'Spring AI', category: 'ai', weight: 1 },
-        { name: 'ClickHouse', category: 'data', weight: 1 },
-        { name: 'Postgresql', category: 'data', weight: 1 }
-    ];
+    var techStack = SiteConfig.techStack;
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var isMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
@@ -1017,11 +1004,12 @@ function updateTechTagColors() {
         }
     });
 }
+
 function initCommitStats(username) {
-    var cacheKey = 'github_commits_cache';
-    var cacheTimeKey = 'github_commits_cache_time';
+    var cacheKey = SiteConfig.github.cache.commits.key;
+    var cacheTimeKey = SiteConfig.github.cache.commits.timeKey;
     var now = new Date().getTime();
-    var oneDay = 24 * 60 * 60 * 1000;
+    var oneDay = SiteConfig.github.cache.commits.expirationHours * 60 * 60 * 1000;
     var cached = localStorage.getItem(cacheKey);
     var cachedTime = localStorage.getItem(cacheTimeKey);
     if (cached && cachedTime && (now - parseInt(cachedTime)) < oneDay) {
