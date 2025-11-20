@@ -1480,7 +1480,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 }
 
 .project-description.collapsible {
-    max-height: 80px;
+    /*max-height: 80px;*/
     overflow: hidden;
     position: relative;
 }
@@ -1526,6 +1526,8 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     display: inline-flex;
     align-items: center;
     gap: 3px;
+    position: relative;
+    z-index: 1;
 }
 
 .toggle-description:hover {
@@ -1535,6 +1537,13 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 .arrow {
     font-size: 0.8em;
     margin-left: 2px;
+}
+
+/* 确保按钮在文本末尾正确显示 */
+.project-description .toggle-description {
+    position: relative;
+    z-index: 1;
+    margin-left: 5px;
 }
 
 .project-stats {
