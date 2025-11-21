@@ -484,67 +484,57 @@ function initHorizontalTechCloud(items) {
     container.innerHTML = '';
     container.classList.remove('sphere');
 
-    // 按权重排序，确保重要的标签优先显示
-    var sortedItems = items.slice().sort(function(a, b) {
-        return b.weight - a.weight;
-    });
-
-    // 创建三行容器
-    var row1 = document.createElement('div');
-    var row2 = document.createElement('div');
-    var row3 = document.createElement('div');
-
-    row1.className = 'tech-row';
-    row2.className = 'tech-row';
-    row3.className = 'tech-row';
-
-    // 将标签分配到三行中（先放原始标签，避免相邻重复）
-    sortedItems.forEach(function(item, index) {
-        var el = document.createElement('span');
-        el.className = 'cloud-tag';
-        el.textContent = item.name;
-        el.setAttribute('data-category', item.category);
-        el.setAttribute('data-weight', item.weight);
-
-        // 根据索引分配到不同行
-        if (index % 3 === 0) {
-            row1.appendChild(el);
-        } else if (index % 3 === 1) {
-            row2.appendChild(el);
-        } else {
-            row3.appendChild(el);
-        }
-    });
-
-    // 追加克隆集合（在所有原始标签之后再追加一轮，用于无缝滚动）
-    function appendClones(row) {
-        var originals = Array.from(row.children);
-        originals.forEach(function(node) {
-            var clone = node.cloneNode(true);
-            clone.setAttribute('data-clone', 'true');
-            row.appendChild(clone);
-        });
+    var sortedItems = items.slice().sort(function(a, b) { return b.weight - a.weight; });
+    var unique = [];
+    var seen = new Set();
+    for (var i = 0; i < sortedItems.length; i++) {
+        var key = sortedItems[i].name + '|' + sortedItems[i].category;
+        if (!seen.has(key)) { seen.add(key); unique.push(sortedItems[i]); }
     }
-    appendClones(row1);
-    appendClones(row2);
-    appendClones(row3);
 
-    container.appendChild(row1);
-    container.appendChild(row2);
-    container.appendChild(row3);
+    function makeRow(itemsForRow, speed) {
+        var row = document.createElement('div');
+        row.className = 'tech-row';
+        var track = document.createElement('div');
+        track.className = 'tech-track';
+        row.appendChild(track);
+        for (var i = 0; i < itemsForRow.length; i++) {
+            var el = document.createElement('span');
+            el.className = 'cloud-tag';
+            el.textContent = itemsForRow[i].name;
+            el.setAttribute('data-category', itemsForRow[i].category);
+            el.setAttribute('data-weight', itemsForRow[i].weight);
+            track.appendChild(el);
+        }
+        var clones = track.cloneNode(true);
+        clones.className = 'tech-track';
+        row.appendChild(clones);
+        // 设置行高为单个轨道的高度，避免双轨叠加增高
+        requestAnimationFrame(function(){
+            row.style.height = track.offsetHeight + 'px';
+        });
+        container.appendChild(row);
+        var offset = 0;
+        var firstWidth = track.scrollWidth;
+        function step() {
+            offset -= speed;
+            if (offset <= -firstWidth) offset += firstWidth;
+            track.style.transform = 'translateX(' + offset + 'px)';
+            clones.style.transform = 'translateX(' + (offset + firstWidth) + 'px)';
+            requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
 
-    // 设置不同的初始延迟时间
-    setTimeout(function() {
-        row1.classList.add('scrolling');
-    }, 0);
-
-    setTimeout(function() {
-        row2.classList.add('scrolling');
-    }, 500);
-
-    setTimeout(function() {
-        row3.classList.add('scrolling');
-    }, 1000);
+    var rowA = [], rowB = [], rowC = [];
+    for (var j = 0; j < unique.length; j++) {
+        if (j % 3 === 0) rowA.push(unique[j]);
+        else if (j % 3 === 1) rowB.push(unique[j]);
+        else rowC.push(unique[j]);
+    }
+    makeRow(rowA, 0.4);
+    makeRow(rowB, 0.5);
+    makeRow(rowC, 0.6);
 }
 
 // PC端3D球状技术云

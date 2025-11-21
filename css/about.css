@@ -1165,8 +1165,8 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
         overflow: hidden;
         justify-content: center;
         align-items: center;
-        padding: 20px 0;
-        gap: 15px;
+        padding: 8px 0;
+        gap: 6px;
         min-height: 150px;
     }
 
@@ -1178,41 +1178,21 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
     /* 三行滚动容器 */
     .tech-row {
-        display: flex;
+        position: relative;
+        display: block;
         width: 100%;
-        animation: scroll linear infinite;
-        animation-play-state: paused;
-        gap: 15px;
-        padding: 10px 0;
+        overflow: hidden;
+        padding: 1px 0;
+        height: auto;
     }
 
-    .tech-row.scrolling {
-        animation-play-state: running;
-    }
-
-    /* 第一行滚动速度 - 增快10倍 */
-    .tech-row:nth-child(1) {
-        animation-duration: 3s;
-    }
-
-    /* 第二行滚动速度 - 增快10倍 */
-    .tech-row:nth-child(2) {
-        animation-duration: 3.5s;
-    }
-
-    /* 第三行滚动速度 - 增快10倍 */
-    .tech-row:nth-child(3) {
-        animation-duration: 4s;
-    }
-
-    /* 滚动动画 */
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
+    .tech-track {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-flex;
+        gap: 2px;
+        will-change: transform;
     }
 
     .cloud-tag {
