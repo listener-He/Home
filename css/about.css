@@ -2304,6 +2304,9 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 1rem;
+        justify-items: center;
+        justify-content: center;
+        align-items: start;
     }
 
     .social-card {
@@ -2473,6 +2476,9 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     .social-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
+        justify-items: center;
+        justify-content: center;
+        align-items: start;
     }
 
     .footer-content {
@@ -2556,7 +2562,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
     .project-card,
     .article-card {
-        padding: 0.2rem;
+        padding: 0.5rem;
     }
     .article-excerpt {
         font-size: 0.7rem;
