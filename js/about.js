@@ -1,5 +1,3 @@
-
-
 // 关于页面JavaScript功能 - 现代动态版本
 $(document).ready(function() {
     initThemeByTime();
@@ -875,94 +873,235 @@ function initPageAnimations() {
 // 添加GitHub统计的CSS样式
 var githubStyles = '<style>' +
     '.github-profile {' +
-    '    display: flex;' +
-    '    align-items: center;' +
-    '    gap: 1rem;' +
+        '    display: flex;' +
+        '    align-items: center;' +
+        '    gap: 1rem;' +
     '}' +
     '.github-avatar img {' +
-    '    width: 80px;' +
-    '    height: 80px;' +
-    '    border-radius: 50%;' +
-    '    object-fit: cover;' +
+        '    width: 80px;' +
+        '    height: 80px;' +
+        '    border-radius: 50%;' +
+        '    object-fit: cover;' +
     '}' +
     '.github-info h3 {' +
-    '    margin: 0 0 0.5rem 0;' +
-    '    color: #fff;' +
+        '    margin: 0 0 0.5rem 0;' +
+        '    color: var(--text-strong);' +
     '}' +
     '.github-bio {' +
-    '    color: rgba(255, 255, 255, 0.8);' +
-    '    margin-bottom: 1rem;' +
-    '    font-size: 0.9rem;' +
+        '    color: var(--text-soft);' +
+        '    margin-bottom: 1rem;' +
+        '    font-size: 0.9rem;' +
     '}' +
     '.github-stats-row {' +
-    '    display: flex;' +
-    '    gap: 1rem;' +
+        '    display: flex;' +
+        '    gap: 1rem;' +
     '}' +
     '.stat-item {' +
-    '    text-align: center;' +
+        '    text-align: center;' +
     '}' +
     '.stat-item .stat-number {' +
-    '    display: block;' +
-    '    font-size: 1.2rem;' +
-    '    font-weight: 600;' +
-    '    color: #fff;' +
+        '    display: block;' +
+        '    font-size: 1.2rem;' +
+        '    font-weight: 600;' +
+        '    color: var(--text-strong);' +
     '}' +
     '.stat-item .stat-label {' +
-    '    font-size: 0.8rem;' +
-    '    color: rgba(255, 255, 255, 0.8);' +
+        '    font-size: 0.8rem;' +
+        '    color: var(--text-soft);' +
     '}' +
     '.commits-stats h3 {' +
-    '    margin-bottom: 1rem;' +
-    '    color: #fff;' +
+        '    margin-bottom: 1rem;' +
+        '    color: var(--text-strong);' +
     '}' +
     '.commit-item {' +
-    '    display: flex;' +
-    '    align-items: center;' +
-    '    gap: 1rem;' +
-    '    margin-bottom: 0.8rem;' +
+        '    display: flex;' +
+        '    align-items: center;' +
+        '    gap: 1rem;' +
+        '    margin-bottom: 0.8rem;' +
     '}' +
     '.commit-date {' +
-    '    width: 60px;' +
-    '    font-size: 0.9rem;' +
-    '    color: rgba(255, 255, 255, 0.8);' +
+        '    width: 60px;' +
+        '    font-size: 0.9rem;' +
+        '    color: var(--text-soft);' +
     '}' +
     '.commit-bar {' +
-    '    flex: 1;' +
-    '    height: 8px;' +
-    '    background: rgba(255, 255, 255, 0.1);' +
-    '    border-radius: 4px;' +
-    '    overflow: hidden;' +
+        '    flex: 1;' +
+        '    height: 8px;' +
+        '    background: rgba(0, 0, 0, 0.1);' +
+        '    border-radius: 4px;' +
+        '    overflow: hidden;' +
     '}' +
     '.commit-fill {' +
-    '    height: 100%;' +
-    '    background: linear-gradient(135deg, #667eea, #764ba2);' +
-    '    border-radius: 4px;' +
-    '    transition: width 0.3s ease;' +
+        '    height: 100%;' +
+        '    background: linear-gradient(135deg, #667eea, #764ba2);' +
+        '    border-radius: 4px;' +
+        '    transition: width 0.3s ease;' +
     '}' +
     '.commit-count {' +
-    '    width: 40px;' +
-    '    text-align: right;' +
-    '    font-size: 0.9rem;' +
-    '    font-weight: 600;' +
-    '    color: #fff;' +
+        '    width: 40px;' +
+        '    text-align: right;' +
+        '    font-size: 0.9rem;' +
+        '    font-weight: 600;' +
+        '    color: var(--text-strong);' +
     '}' +
     '.error {' +
-    '    text-align: center;' +
-    '    color: rgba(255, 255, 255, 0.5);' +
-    '    font-style: italic;' +
-    '    padding: 2rem;' +
+        '    text-align: center;' +
+        '    color: var(--text-soft);' +
+        '    font-style: italic;' +
+        '    padding: 2rem;' +
     '}' +
     '.project-updated {' +
-    '    margin-top: 1rem;' +
-    '    font-size: 0.8rem;' +
-    '    color: rgba(255, 255, 255, 0.8);' +
+        '    margin-top: 1rem;' +
+        '    font-size: 0.8rem;' +
+        '    color: var(--text-soft);' +
     '}' +
     '.article-category {' +
-    '    background: rgba(102, 126, 234, 0.2);' +
-    '    color: #fff;' +
-    '    padding: 0.2rem 0.6rem;' +
-    '    border-radius: 12px;' +
-    '    font-size: 0.8rem;' +
+        '    background: rgba(102, 126, 234, 0.2);' +
+        '    color: #fff;' +
+        '    padding: 0.2rem 0.6rem;' +
+        '    border-radius: 12px;' +
+        '    font-size: 0.8rem;' +
+    '}' +
+    /* 提交统计两行横排：标题与矩阵 */ +
+    '.commit-inline-title {' +
+        '    margin-left: 12px;' +
+        '    font-weight: 600;' +
+        '    color: var(--text-strong);' +
+        '    font-size: 0.9rem;' +
+        '    opacity: 0.9;' +
+    '}' +
+    '.commit-inline-matrix {' +
+        '    display: grid;' +
+        '    grid-template-columns: repeat(3, max-content);' +
+        '    grid-template-rows: auto auto;' +
+        '    column-gap: 24px;' +
+        '    row-gap: 2px;' +
+        '    margin-top: 4px;' +
+    '}' +
+    '.commit-inline-matrix .commit-num {' +
+        '    font-size: 1.1rem;' +
+        '    font-weight: 700;' +
+        '    color: var(--text-strong);' +
+        '    text-align: left;' +
+    '}' +
+    '.commit-inline-matrix .commit-lab {' +
+        '    font-size: 0.8rem;' +
+        '    color: var(--text-soft);' +
+        '    text-align: left;' +
+    '}' +
+    '.commit-inline {' +
+        '    margin-top: 4px;' +
+    '}' +
+    '.commit-inline-nums,' +
+    '.commit-inline-labs {' +
+        '    display: flex;' +
+        '    gap: 24px;' +
+        '    align-items: baseline;' +
+    '}' +
+    '.commit-inline-nums .commit-num {' +
+        '    font-size: 1.1rem;' +
+        '    font-weight: 700;' +
+        '    color: var(--text-strong);' +
+    '}' +
+    '.commit-inline-labs .commit-lab {' +
+        '    font-size: 0.8rem;' +
+        '    color: var(--text-soft);' +
+    '}' +
+    /* 作者行内提交统计分组 */ +
+    '.commit-inline-group {' +
+        '    display: inline-block;' +
+        '    margin-left: 24px;' +
+        '    vertical-align: middle;' +
+    '}' +
+    '.commit-inline-row {' +
+        '    display: flex;' +
+        '    align-items: flex-end;' +
+        '    gap: 18px;' +
+    '}' +
+    '.commit-inline-group .commit-title {' +
+        '    font-weight: 600;' +
+        '    color: var(--text-strong);'
+        + '    font-size: 0.9rem;' +
+        '    opacity: 0.9;' +
+        '    margin: 0 0 6px 0;' +
+    '}' +
+    '.commit-inline-group .stat-item {' +
+        '    display: flex;' +
+        '    flex-direction: column;' +
+        '    align-items: center;' +
+        '    gap: 4px;' +
+    '}' +
+    '.commit-inline-group .stat-item .stat-number {' +
+        '    font-size: 1rem;' +
+        '    font-weight: 700;' +
+    '}' +
+    '.commit-inline-group .stat-item .stat-label {' +
+        '    font-size: 0.75rem;' +
+        '    color: var(--text-soft);' +
+    '}' +
+    /* 提交统计数字化样式 */ +
+    '.commits-stats {' +
+        '    margin-top: 1rem;' +
+    '}' +
+    '.commits-stats .commit-cards {' +
+        '    display: grid;' +
+        '    grid-template-columns: repeat(3, minmax(0,1fr));' +
+        '    gap: 12px;' +
+    '}' +
+    '.commits-stats .commit-card {' +
+        '    background: rgba(255, 255, 255, var(--glass-alpha));' +
+        '    backdrop-filter: blur(var(--glass-blur));' +
+        '    -webkit-backdrop-filter: blur(var(--glass-blur));' +
+        '    border: 1px solid var(--glass-border);' +
+        '    border-radius: 14px;' +
+        '    padding: 10px;' +
+        '    text-align: center;' +
+        '    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);' +
+    '}' +
+    '.commits-stats .commit-label {' +
+        '    display: block;' +
+        '    font-size: 0.85rem;' +
+        '    color: var(--text-soft);' +
+        '    margin-bottom: 6px;' +
+    '}' +
+    '.commits-stats .commit-value {' +
+        '    display: block;' +
+        '    font-size: 1.4rem;' +
+        '    font-weight: 700;' +
+        '    color: var(--text-strong);' +
+    '}' +
+    '.commit-module {' +
+        '    max-width: 1000px;' +
+        '    margin: 8px auto 24px;' +
+    '}' +
+    '.commit-module-title {' +
+        '    font-size: 1rem;' +
+        '    font-weight: 700;' +
+        '    color: var(--text-strong);' +
+        '    opacity: 0.9;' +
+        '    margin-bottom: 8px;' +
+    '}' +
+    '.commit-module-nums {' +
+        '    display: grid;' +
+        '    grid-template-columns: repeat(3, minmax(0,1fr));' +
+        '    gap: 16px;' +
+        '    align-items: end;' +
+    '}' +
+    '.commit-module-nums .commit-num {' +
+        '    display: flex;' +
+        '    flex-direction: column;' +
+        '    align-items: flex-start;' +
+    '}' +
+    '.commit-module-nums .commit-num .num {' +
+        '    font-size: 1.6rem;' +
+        '    font-weight: 800;' +
+        '    color: var(--text-strong);' +
+        '    line-height: 1;' +
+    '}' +
+    '.commit-module-nums .commit-num .lab {' +
+        '    margin-top: 4px;' +
+        '    font-size: 0.8rem;' +
+        '    color: var(--text-soft);' +
     '}' +
     '</style>';
 
@@ -1123,36 +1262,16 @@ function renderCommitStats(stats) {
     var w = parseInt(stats.week||0,10);
     var m = parseInt(stats.month||0,10);
     var y = parseInt(stats.year||0,10);
-    function pct(v){
-        var p = 0;
-        if (y>0) p = Math.min(100, Math.max(5, Math.round(v*100/Math.max(y,1))));
-        return p;
-    }
-    var commitsHtml = '<div class="commits-stats">'+
-        '<h3>提交统计</h3>'+
-        '<div class="commits-chart">'+
-        '<div class="commit-item">'+
-        '<span class="commit-date">本周</span>'+
-        '<div class="commit-bar">'+
-        '<div class="commit-fill" style="width: '+pct(w)+'%"></div>'+
-        '</div>'+
-        '<span class="commit-count">'+w+'</span>'+
-        '</div>'+
-        '<div class="commit-item">'+
-        '<span class="commit-date">本月</span>'+
-        '<div class="commit-bar">'+
-        '<div class="commit-fill" style="width: '+pct(m)+'%"></div>'+
-        '</div>'+
-        '<span class="commit-count">'+m+'</span>'+
-        '</div>'+
-        '<div class="commit-item">'+
-        '<span class="commit-date">今年</span>'+
-        '<div class="commit-bar">'+
-        '<div class="commit-fill" style="width: 100%"></div>'+
-        '</div>'+
-        '<span class="commit-count">'+y+'</span>'+
-        '</div>'+
-        '</div>'+
-        '</div>';
-    $('#github-commits').html(commitsHtml);
+
+    Array.from(document.querySelectorAll('.commit-inline-title, .commit-inline, .commit-inline-matrix, .commit-inline-group')).forEach(function(el){ el.remove(); });
+
+    var html = '<div class="commit-module">'+
+      '<div class="commit-module-title">提交统计</div>'+
+      '<div class="commit-module-nums">'+
+        '<div class="commit-num"><span class="num">'+w+'</span><span class="lab">本周</span></div>'+
+        '<div class="commit-num"><span class="num">'+m+'</span><span class="lab">本月</span></div>'+
+        '<div class="commit-num"><span class="num">'+y+'</span><span class="lab">今年</span></div>'+
+      '</div>'+
+    '</div>';
+    $('#github-commits').html(html);
 }
