@@ -756,6 +756,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 .hero-left {
     display: flex;
     justify-content: center;
+    margin-top: 1rem;
 }
 
 .profile-card {
@@ -1636,15 +1637,15 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     position: relative;
 }
 
-.theme-day .project-description.collapsible::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 30px;
-    background: linear-gradient(to bottom, transparent, rgba(248, 249, 250, 0.8));
-}
+/*.theme-day .project-description.collapsible::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    bottom: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    height: 30px;*/
+/*    background: linear-gradient(to bottom, transparent, rgba(248, 249, 250, 0.8));*/
+/*}*/
 
 .theme-night .project-description.collapsible::after {
     content: "";
@@ -1804,7 +1805,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 }
 
 .article-excerpt {
-    color: var(--text-soft); /* 使用主题文字颜色 */
+    color: var(--text-soft);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1rem;
@@ -1904,26 +1905,28 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
-    border-radius: 25px;
-    padding: 1rem;
+    border-radius: 24px;
+    padding: 16px;
     text-decoration: none;
-    color: var(--text-strong); /* 使用主题文字颜色 */
+    color: var(--text-strong);
     transition: all 0.3s ease;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     position: absolute;
     top: 50%;
     left: 50%;
-    overflow: visible; /* 修改为visible确保图标不会被遮挡 */
-    width: 110px;
-    height: 110px;
+    overflow: hidden;
+    width: 140px;
+    height: auto;
+    min-height: 140px;
     justify-content: center;
     text-align: center;
     transform-origin: center;
     z-index: 1;
+    box-sizing: border-box;
 }
 
 @keyframes orbit {
@@ -1971,9 +1974,10 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     color: #fff;
     font-size: 1.2rem;
     flex-shrink: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
 }
 
+.social-info { width: 100%; }
 .social-info h3 {
     margin: 0;
     font-size: 0.9rem;
@@ -1983,8 +1987,14 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
 .social-info p {
     margin: 0;
-    font-size: 0.7rem;
-    color: var(--text-soft); /* 使用主题文字颜色 */
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--text-soft);
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 /* 轨道围绕动画 - 每个卡片不同的轨道路径，优化避免碰撞 */
@@ -2391,6 +2401,7 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     .hero-left {
         display: flex;
         justify-content: center;
+        margin-top: 1rem;
     }
 
     .hero-right {
@@ -2480,8 +2491,8 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     }
 
     .social-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
     }
 
     .footer-content {
@@ -2495,12 +2506,12 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
     }
 
     .nav-links {
-        padding: 0.5rem 1rem;
+        padding: 0.1rem 0.3rem;
     }
 
     .nav-links a {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.9rem;
+        padding: 0.1rem 0.3rem;
+        font-size: 0.7rem;
     }
 
     .hero-section {
@@ -2565,7 +2576,19 @@ a:not(.nav-logo):not(.nav-links a):not(.social-link):not(.btn):not(.footer-info 
 
     .project-card,
     .article-card {
-        padding: 1rem;
+        padding: 0.2rem;
+    }
+    .article-excerpt {
+        font-size: 0.7rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    .article-title {
+        font-size: 1.3rem;
+        font-weight: 100;
+        margin-bottom: 0.2rem;
+        line-height: 1;
     }
 
     .modal-content {
