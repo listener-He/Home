@@ -498,7 +498,7 @@ function initHorizontalTechCloud(items) {
     row2.className = 'tech-row';
     row3.className = 'tech-row';
 
-    // 将标签分配到三行中
+    // 将标签分配到三行中（先放原始标签，避免相邻重复）
     sortedItems.forEach(function(item, index) {
         var el = document.createElement('span');
         el.className = 'cloud-tag';
@@ -514,17 +514,20 @@ function initHorizontalTechCloud(items) {
         } else {
             row3.appendChild(el);
         }
-
-        // 为每个标签复制一个副本，实现无缝滚动效果
-        var elClone = el.cloneNode(true);
-        if (index % 3 === 0) {
-            row1.appendChild(elClone);
-        } else if (index % 3 === 1) {
-            row2.appendChild(elClone);
-        } else {
-            row3.appendChild(elClone);
-        }
     });
+
+    // 追加克隆集合（在所有原始标签之后再追加一轮，用于无缝滚动）
+    function appendClones(row) {
+        var originals = Array.from(row.children);
+        originals.forEach(function(node) {
+            var clone = node.cloneNode(true);
+            clone.setAttribute('data-clone', 'true');
+            row.appendChild(clone);
+        });
+    }
+    appendClones(row1);
+    appendClones(row2);
+    appendClones(row3);
 
     container.appendChild(row1);
     container.appendChild(row2);
