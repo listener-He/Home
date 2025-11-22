@@ -347,7 +347,10 @@ body {
 }
 
 .theme-night .glow-text {
-    background: linear-gradient(45deg, var(--accent-coral), var(--accent-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 12px rgba(45deg, var(--accent-coral), var(--accent-b));
 }
 
 /* 动态背景 */
