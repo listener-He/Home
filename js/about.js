@@ -156,13 +156,13 @@ class DataManager {
             let allRepos = [];
             let page = 1;
             const perPage = 100;
-            while (page <= 5) { // 最多抓取500条，直到满足条件或为空
+            while (page <= 10) { // 最多抓取1000条，直到满足条件或为空
                 const rRes = await fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=${perPage}&page=${page}`);
                 if (!rRes.ok) break;
                 const repos = await rRes.json();
                 if (!Array.isArray(repos) || repos.length === 0) break;
                 allRepos = allRepos.concat(repos);
-                if (allRepos.length >= 200) break; // 足量
+                if (repos.length < perPage || allRepos.length >= 1000) break; // 足量
                 page++;
             }
             let repoData = allRepos.length ? allRepos : (window.SiteConfig?.defaults?.repos);
@@ -226,11 +226,12 @@ class DataManager {
     async fetchBlog() {
         const rssUrl = window.SiteConfig?.blog?.rssUrl || 'https://blog.hehouhui.cn/api/rss';
         const cacheKey = (window.SiteConfig?.cacheKeys?.blog?.key) || 'blog_data_v2';
+        const timeout = (window.SiteConfig?.cacheKeys?.blog?.ttlMs) || 3600000;
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
 
         // Check Cache (1 hour)
-        if(cached && (now - cached.time < 3600000)) {
+        if(cached && (now - cached.time < timeout)) {
             this.renderBlog(cached.posts);
             return;
         }
@@ -378,9 +379,25 @@ class UIManager {
     initBioToggle() {
         const el = document.querySelector('.bio-text');
         const btn = document.getElementById('bio-toggle');
+        const qEl = document.querySelector('.quote-box p');
         if(!el || !btn) return;
+        const assess = () => {
+            el.classList.add('collapsed');
+            if(qEl) qEl.classList.add('quote-collapsed');
+            const needsToggle = (el.scrollHeight > el.clientHeight) || (qEl && qEl.scrollHeight > qEl.clientHeight) || (window.innerWidth < 480 && ((el.textContent || '').length + (qEl?.textContent?.length || 0)) > 120);
+            if(needsToggle) {
+                btn.style.display = 'inline-block';
+            } else {
+                btn.style.display = 'none';
+                el.classList.remove('collapsed');
+                if(qEl) qEl.classList.remove('quote-collapsed');
+            }
+        };
+        assess();
+        window.addEventListener('resize', () => assess(), { passive: true });
         btn.addEventListener('click', () => {
             el.classList.toggle('collapsed');
+            if(qEl) qEl.classList.toggle('quote-collapsed');
         });
     }
 
@@ -398,8 +415,10 @@ class UIManager {
     initProfileGradient() {
         const name = document.querySelector('.hero-name');
         const role = document.querySelector('.hero-role');
-        if(name) name.classList.add('animated-gradient');
-        if(role) role.classList.add('animated-gradient');
+        const loc = document.querySelector('.location-tag');
+        if(name) name.classList.add('grad-text-1','night-glow','glow-cycle');
+        if(role) role.classList.add('grad-text-2','night-glow','glow-cycle');
+        if(loc) loc.classList.add('grad-text-3','night-glow','glow-cycle');
     }
 
     initTechCloud() {
@@ -509,7 +528,7 @@ class UIManager {
                     scale = Math.min(Math.max(scale, 0.7), 1.15);
                     let opacity = (tag.z + radius)/(2*radius) + 0.2;
 
-                    tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 0.85);
+                    tag.el.style.opacity = 1;
                     tag.el.style.zIndex = parseInt(scale*100);
                     let left = tag.x + container.offsetWidth/2 - tag.el.offsetWidth/2;
                     let top = tag.y + container.offsetHeight/2 - tag.el.offsetHeight/2;

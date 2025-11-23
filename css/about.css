@@ -409,6 +409,13 @@ body {
     margin-bottom: 10px;
 }
 
+.grad-text-1 { background: var(--gradient-1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.grad-text-2 { background: var(--gradient-2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.grad-text-3 { background: var(--gradient-3); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.night-glow { text-shadow: 0 0 10px var(--accent-glow); }
+.glow-cycle { animation: hueCycle 8s linear infinite; }
+@keyframes hueCycle { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
 .animated-gradient {
     background-image: linear-gradient(90deg, var(--text-primary), var(--accent), var(--text-primary));
     -webkit-background-clip: text;
@@ -443,8 +450,8 @@ body {
 }
 
 .s-icon {
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: rgba(128, 128, 128, 0.1);
     display: flex;
@@ -460,6 +467,17 @@ body {
     color: #fff;
     transform: translateY(-3px);
 }
+.s-icon:hover i { color: transparent !important; -webkit-text-fill-color: transparent; }
+.s-icon i { -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.s-icon[href*="github.com"] i { background: var(--gradient-7); }
+.s-icon[href^="mailto:"] i { background: var(--gradient-6); }
+.s-icon[href*="blog.hehouhui.cn"] i { background: var(--gradient-3); }
+.s-icon[href*="zhihu.com"] i { background: var(--gradient-4); }
+.s-icon[href*="juejin.cn"] i { background: var(--gradient-1); }
+.s-icon[onclick*="toggleWechat"] i { background: var(--gradient-5); }
+[data-theme="night"] .s-icon { box-shadow: 0 0 10px var(--accent-glow); }
+[data-theme="night"] .s-icon i { text-shadow: 0 0 25px var(--accent-glow); }
+[data-theme="night"] .social-dock .s-icon { filter: hue-rotate(0deg); animation: hueCycle 10s linear infinite; }
 
 /* --- Bio Card --- */
 .area-bio {
@@ -840,7 +858,9 @@ body {
 }
 
 .i-emoji {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
+    color: var(--text-primary);
+    -webkit-text-fill-color: initial;
 }
 
 .i-text {
@@ -861,7 +881,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-.i-text span {
+.i-text span:not(.i-emoji) {
     font-size: 0.75rem;
     color: var(--text-tertiary);
     /* 为兴趣描述添加渐变色彩 */
@@ -1385,8 +1405,11 @@ body {
         flex-direction: row;
         align-items: center;
         gap: 8px;
-        flex-wrap: wrap;
         overflow: hidden;
+        /** 超出宽度换行显示 */
+        word-break: break-all;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .i-text strong, .i-text span {
@@ -1419,13 +1442,33 @@ body {
         background: var(--gradient-2);
         -webkit-background-clip: text;
         background-clip: text;
-        color: transparent;
     }
 
     .comment-box {
         padding: 16px;
     }
+    .interest-item { padding: 12px; }
+    .i-text { display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .i-emoji { flex: 0 0 auto; margin-right: 6px; }
+    .i-text strong { flex: 0 1 auto; white-space: nowrap; }
+    .i-text span:not(.i-emoji) { flex: 1 1 100%; white-space: normal; }
 }
+
+@media (min-width: 769px) {
+    .social-dock { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
+    .s-icon { width: 42px; height: 42px; }
+    .s-icon i { font-size: 1.6rem; }
+}
+
+@media (max-width: 768px) {
+    .quote-box p.quote-collapsed { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
+.interest-list { grid-auto-rows: minmax(80px, auto); }
+.interest-item { padding: 14px; border-radius: 12px; gap: 12px; }
+.i-emoji { font-size: 1.6rem; }
+.i-text strong { display: block; }
+.i-text span:not(.i-emoji) { display: block; }
 
 /* =========================================
    8. Modal & Footer
@@ -1531,3 +1574,5 @@ body {
     color: var(--text-tertiary) !important;
     -webkit-text-fill-color: initial;
 }
+.social-dock .s-icon { color: var(--text-primary); }
+.social-dock .s-icon i { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; -webkit-text-fill-color: initial !important; color: currentColor !important; text-shadow: none !important; }
