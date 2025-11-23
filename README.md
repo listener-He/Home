@@ -118,8 +118,4 @@ open about.html
 <div align="center">
 
 欢迎提出改进建议，或将该站点作为你的个人主页模板进行自定义与二次开发。
-
-[![GitHub](https://img.shields.io/github/license/listener-He/Honesty-Home?color=blue)](https://github.com/listener-He/Honesty-Home/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/listener-He/Honesty-Home)](https://github.com/listener-He/Honesty-Home/stargazers)
-
 </div>
