@@ -35,6 +35,11 @@
     --gradient-3: linear-gradient(135deg, #ff9a9e, #f093fb);
     --gradient-4: linear-gradient(135deg, #a8edea, #4facfe);
     --gradient-5: linear-gradient(135deg, #d299c2, #fef9d7);
+    --gradient-6: linear-gradient(135deg, #f6d365, #fda085);
+    --gradient-7: linear-gradient(135deg, #84fab0, #8fd3f4);
+    --gradient-8: linear-gradient(135deg, #fccb90, #d57eeb);
+    --gradient-9: linear-gradient(135deg, #ffecd2, #fcb69f);
+    --gradient-10: linear-gradient(135deg, #cfd9df, #e2ebf0);
 }
 
 [data-theme="night"] {
@@ -252,7 +257,7 @@ body {
 .mbti-name { font-weight: 600; color: var(--text-secondary); }
 .mbti-icon { font-size: 1.5rem; }
 .mbti-desc { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.5; }
-.mbti-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.mbti-tags { display: flex; gap: 3px; flex-wrap: wrap; }
 .tag { font-size: 0.75rem; background: rgba(128,128,128,0.1); padding: 4px 10px; border-radius: 6px; color: var(--text-secondary); }
 
 /* --- Tech Stack (PC) --- */
@@ -275,51 +280,60 @@ body {
     /* 移除背景色和边框，只保留文字渐变效果 */
     background: none;
     border: none;
-    /* 添加文字渐变 */
-    background: var(--gradient-1);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    -webkit-text-fill-color: transparent;
     pointer-events: none; /* 禁用鼠标事件避免干扰 */
-}
-[data-theme="night"] .tech-tag-3d { 
-    color: #00cec9; 
 }
 
 /* 不同颜色的标签 */
 .tech-tag-3d.tag-color-1, .tech-tag-mobile.tag-color-1 {
     background: var(--gradient-1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
 }
 
 .tech-tag-3d.tag-color-2, .tech-tag-mobile.tag-color-2 {
     background: var(--gradient-2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
 }
 
 .tech-tag-3d.tag-color-3, .tech-tag-mobile.tag-color-3 {
     background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
 }
 
 .tech-tag-3d.tag-color-4, .tech-tag-mobile.tag-color-4 {
     background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
 }
 
 .tech-tag-3d.tag-color-5, .tech-tag-mobile.tag-color-5 {
     background: var(--gradient-5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+}
+/* 扩展更多渐变方案 */
+.tech-tag-3d.tag-color-6, .tech-tag-mobile.tag-color-6 { background: var(--gradient-6); }
+.tech-tag-3d.tag-color-7, .tech-tag-mobile.tag-color-7 { background: var(--gradient-7); }
+.tech-tag-3d.tag-color-8, .tech-tag-mobile.tag-color-8 { background: var(--gradient-8); }
+.tech-tag-3d.tag-color-9, .tech-tag-mobile.tag-color-9 { background: var(--gradient-9); }
+.tech-tag-3d.tag-color-10, .tech-tag-mobile.tag-color-10 { background: var(--gradient-10); }
+
+/* 渐变文字兼容处理：支持时启用文字渐变，不支持时使用纯色 */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+    .tech-tag-3d,
+    .tech-tag-mobile {
+        background: none !important;
+        color: var(--text-primary) !important;
+    }
+    .tech-tag-3d.tag-color-1,
+    .tech-tag-3d.tag-color-2,
+    .tech-tag-3d.tag-color-3,
+    .tech-tag-3d.tag-color-4,
+    .tech-tag-3d.tag-color-5,
+    .tech-tag-mobile.tag-color-1,
+    .tech-tag-mobile.tag-color-2,
+    .tech-tag-mobile.tag-color-3,
+    .tech-tag-mobile.tag-color-4,
+    .tech-tag-mobile.tag-color-5 {
+        background: none !important;
+        color: var(--text-primary) !important;
+    }
 }
 
 /* --- Interests --- */
@@ -328,20 +342,21 @@ body {
     display: grid; 
     grid-template-columns: 1fr 1fr; 
     gap: 15px; 
-    height: 100%; 
+    /*height: 100%; */
+    margin-top: 1rem;
     align-content: center;
 }
 .interest-item { 
     background: rgba(128,128,128,0.05); 
-    padding: 15px; 
-    border-radius: 12px; 
+    padding: 5px;
+    border-radius: 2px;
     display: flex; 
     align-items: center; 
-    gap: 12px; 
+    gap: 2px;
     transition: background 0.3s;
 }
 .interest-item:hover { background: rgba(128,128,128,0.1); }
-.i-emoji { font-size: 1.5rem; }
+.i-emoji { font-size: 1.2rem; }
 .i-text { display: flex; flex-direction: column; min-width: 0; } /* 添加 min-width: 0 防止溢出 */
 .i-text strong { 
     font-size: 0.9rem; 
@@ -724,22 +739,23 @@ body {
         100% { transform: translateX(-50%); }
     }
     
-    .tech-tag-mobile {
-        scroll-snap-align: start;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-family: var(--font-mono);
-        white-space: nowrap;
-        border: none;
-        font-weight: bold;
-        /* 添加文字渐变效果 */
-        background: var(--gradient-1);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        pointer-events: none;
-    }
+.tech-tag-mobile {
+    scroll-snap-align: start;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    border: none;
+    font-weight: bold;
+    /* 添加文字渐变效果 */
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    pointer-events: none;
+}
 
     /* Mobile Social */
     .mobile-social { 

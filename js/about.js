@@ -26,15 +26,15 @@ class I18nManager {
                 "status.online": "在线", "profile.name": "Honesty", "profile.role": "Java后端 & AI探索者", "profile.location": "上海, 中国",
                 "bio.label": "关于我",
                 "bio.text": "我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。",
-                "bio.quote": "我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。",
+                "bio.quote": "我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。作为INFJ人格类型，我善于深度思考，注重细节，喜欢通过代码创造有意义的产品。我相信技术的力量能够改变世界，也热衷于在开源社区中分享知识与经验。",
                 "stats.exp": "编程年限", "stats.repos": "开源项目", "stats.followers": "关注者",
-                "mbti.name": "提倡者", "mbti.desc": "理想主义与道德感，果断决绝的行动力。深度洞察与创意，关怀与同理心。",
+                "mbti.name": "提倡者", "mbti.desc": "提倡者人格类型的人非常稀少，只有不到1%的人口属于这种类型，但他们对世界的贡献不容忽视。",
                 "mbti.tag1": "理想主义", "mbti.tag2": "深度洞察", "mbti.tag3": "同理心",
                 "tech.title": "技术栈宇宙", "interest.title": "个人兴趣",
-                "interest.cycling": "骑行", "interest.cycling_desc": "用车轮丈量世界",
-                "interest.reading": "阅读", "interest.reading_desc": "记录思考的轨迹",
-                "interest.opensource": "开源", "interest.opensource_desc": "分享代码与力量",
-                "interest.learning": "持续学习", "interest.learning_desc": "保持好奇心",
+                "interest.cycling": "骑行", "interest.cycling_desc": "享受在路上的自由感，用车轮丈量世界，在风景中寻找灵感",
+                "interest.reading": "阅读", "interest.reading_desc": "通过文字记录思考轨迹，分享技术见解，用代码诠释创意",
+                "interest.opensource": "开源", "interest.opensource_desc": "热衷于开源项目，相信分享的力量，用代码连接世界",
+                "interest.learning": "持续学习", "interest.learning_desc": "保持对新技术的好奇心，在变化中成长，在挑战中进步",
                 "github.title": "开源贡献", "blog.title": "最新文章", "blog.more": "查看更多",
                 "comment.title": "留言板", "modal.wechat": "微信公众号", "modal.desc": "扫码关注获取干货"
             },
@@ -43,15 +43,15 @@ class I18nManager {
                 "status.online": "Available", "profile.name": "Honesty", "profile.role": "Java Backend & AI Dev", "profile.location": "Shanghai, China",
                 "bio.label": "About Me",
                 "bio.text": "I am a passionate Java Backend Engineer focused on AI exploration. Based in Shanghai, originally from Hunan, I enjoy pursuing my technical dreams in this vibrant city.",
-                "bio.quote": "I seek deep understanding over broad stacking. Every skill I learn is driven by the need to solve real problems.",
+                "bio.quote": "I pursue a deep understanding of technology rather than a broad accumulation, and the learning of every technology stems from the intrinsic drive to solve practical problems. As an INFJ personality type, I am good at deep thinking, pay attention to details, and enjoy creating meaningful products through code. I believe in the power of technology to change the world, and I am passionate about sharing knowledge and experience in the open source community.",
                 "stats.exp": "Years Exp", "stats.repos": "Projects", "stats.followers": "Followers",
-                "mbti.name": "Advocate", "mbti.desc": "Idealism and morality, decisive action. Deep insight and creativity, care and empathy.",
+                "mbti.name": "Advocate", "mbti.desc": "Advocates of this personality type are very rare, with less than 1% of the population belonging to this type, but their contributions to the world cannot be ignored.",
                 "mbti.tag1": "Idealism", "mbti.tag2": "Insight", "mbti.tag3": "Empathy",
                 "tech.title": "Tech Universe", "interest.title": "Interests",
-                "interest.cycling": "Cycling", "interest.cycling_desc": "Measuring the world",
-                "interest.reading": "Reading", "interest.reading_desc": "Tracks of thought",
-                "interest.opensource": "Open Source", "interest.opensource_desc": "Sharing power",
-                "interest.learning": "Learning", "interest.learning_desc": "Stay curious",
+                "interest.cycling": "Cycling", "interest.cycling_desc": "Enjoy the freedom on the road, measure the world with wheels, and find inspiration in the scenery",
+                "interest.reading": "Reading", "interest.reading_desc": "Record thinking trajectories through text, share technical insights, and interpret creativity with code",
+                "interest.opensource": "Open Source", "interest.opensource_desc": "Passionate about open source projects, believing in the power of sharing, connecting the world with code",
+                "interest.learning": "Learning", "interest.learning_desc": "Maintain curiosity about new technologies, grow through change, and progress through challenges",
                 "github.title": "Open Source", "blog.title": "Latest Posts", "blog.more": "View All",
                 "comment.title": "Message Board", "modal.wechat": "WeChat Account", "modal.desc": "Scan for tech insights"
             }
@@ -371,12 +371,20 @@ class UIManager {
         const container = document.getElementById('tech-container');
         if(!container) return;
 
-        const techStack = window.SiteConfig?.techStack || [
+        const techStackRaw = window.SiteConfig?.techStack || [
             {name:'Java'},{name:'Spring'},{name:'Docker'},{name:'K8s'},{name:'Python'},{name:'Redis'},
             {name:'React'},{name:'Vue'},{name:'MySQL'},{name:'MongoDB'},{name:'Linux'},{name:'Git'}
         ];
+        const techStack = techStackRaw.map((item, idx) => {
+            const name = item.name || '';
+            const hash = Array.from(name).reduce((a,c)=>a+c.charCodeAt(0),0);
+            const gid = Number(item.gradientId) && Number.isFinite(Number(item.gradientId))
+                ? Math.max(1, Math.min(10, Number(item.gradientId)))
+                : (hash % 10) + 1;
+            return { ...item, gradientId: gid };
+        });
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
         container.innerHTML = '';
 
         if(isMobile) {
@@ -388,7 +396,7 @@ class UIManager {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
                 // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${(index % 5) + 1}`;
+                const colorClass = `tag-color-${item.gradientId}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
                 el.style.gridRow = `${(index % 3) + 1}`;
@@ -405,11 +413,9 @@ class UIManager {
                 const el = document.createElement('a');
                 el.className = 'tech-tag-3d';
                 // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${(index % 5) + 1}`;
+                const colorClass = `tag-color-${item.gradientId}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
-                // 移除背景和边框样式
-                el.style.background = 'none';
                 el.style.border = 'none';
                 container.appendChild(el);
                 tags.push({ el, x:0, y:0, z:0 });

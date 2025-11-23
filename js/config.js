@@ -135,6 +135,17 @@ const SiteConfig = {
   }
 };
 
+if (Array.isArray(SiteConfig.techStack)) {
+  SiteConfig.techStack = SiteConfig.techStack.map((item, idx) => {
+    const name = item.name || '';
+    const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
+    const gid = (item.gradientId && Number.isFinite(Number(item.gradientId)))
+      ? Math.max(1, Math.min(10, Number(item.gradientId)))
+      : (hash % 10) + 1;
+    return { ...item, gradientId: gid };
+  });
+}
+
 // 导出配置
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = SiteConfig;
