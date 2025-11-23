@@ -639,8 +639,12 @@ class UIManager {
             if (this.audio) {
                 if (this.audio.paused) {
                     this.audio.play().catch(() => {});
+                    // 清除暂停时间记录，允许下次自动播放
+                    localStorage.removeItem('musicPauseTime');
                 } else {
                     this.audio.pause();
+                    // 记录暂停时间
+                    localStorage.setItem('musicPauseTime', new Date().getTime().toString());
                 }
             }
             updateLabels();
@@ -653,7 +657,17 @@ class UIManager {
         if (!el) return;
         this.audio = el;
         this.audio.loop = true;
-        const tryPlay = () => { this.audio.play().catch(() => {}); };
+        
+        // 检查是否在24小时内用户暂停过音乐
+        const pauseTime = localStorage.getItem('musicPauseTime');
+        const now = new Date().getTime();
+        const shouldAutoPlay = !(pauseTime && (now - parseInt(pauseTime)) < 24 * 60 * 60 * 1000);
+        
+        const tryPlay = () => { 
+            if (shouldAutoPlay) {
+                this.audio.play().catch(() => {});
+            }
+        };
         tryPlay();
     }
 
