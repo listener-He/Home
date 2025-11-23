@@ -1,15 +1,14 @@
 /* about.css - Aurora Nexus v2.0 */
 
+
 /* =========================================
    1. Design Tokens (Variables)
    ========================================= */
 :root {
-    /* Fonts: System preferred for speed & legibility */
     --font-main: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
     --font-serif: "Georgia", "Times New Roman", "Songti SC", serif;
     --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-    /* Day Theme (晨曦) */
     --bg-base: #f2f4f7;
     --bg-grad-1: #a1c4fd;
     --bg-grad-2: #c2e9fb;
@@ -29,7 +28,6 @@
     --dock-bg: rgba(255, 255, 255, 0.85);
     --radius: 24px;
 
-    /* 渐变色彩 */
     --gradient-1: linear-gradient(135deg, #a1c4fd, #6c5ce7);
     --gradient-2: linear-gradient(135deg, #c2e9fb, #00cec9);
     --gradient-3: linear-gradient(135deg, #ff9a9e, #f093fb);
@@ -43,7 +41,6 @@
 }
 
 [data-theme="night"] {
-    /* Night Theme (霓虹) */
     --bg-base: #0f0f12;
     --bg-grad-1: #2d3436;
     --bg-grad-2: #000000;
@@ -71,9 +68,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-html {
-    font-size: 16px;
-}
+html { font-size: 16px; }
 
 body {
     font-family: var(--font-main);
@@ -86,54 +81,15 @@ body {
 }
 
 /* Ambient Background */
-.aurora-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-}
+.aurora-canvas { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.glow-spot { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 20s infinite alternate; }
+.spot-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--bg-grad-1); }
+.spot-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--bg-grad-2); animation-delay: -5s; }
+.noise-layer { position: absolute; inset: 0; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+@keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 50px); } }
 
-.glow-spot {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.5;
-    animation: float 20s infinite alternate;
-}
 
-.spot-1 {
-    top: -10%;
-    left: -10%;
-    width: 50vw;
-    height: 50vw;
-    background: var(--bg-grad-1);
-}
 
-.spot-2 {
-    bottom: -10%;
-    right: -10%;
-    width: 60vw;
-    height: 60vw;
-    background: var(--bg-grad-2);
-    animation-delay: -5s;
-}
-
-.noise-layer {
-    position: absolute;
-    inset: 0;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-@keyframes float {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(30px, 50px);
-    }
-}
 
 /* =========================================
    2. Universal Glass Components
@@ -185,15 +141,6 @@ body {
     text-shadow: 0 0 10px var(--accent);
 }
 
-.glow-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-}
 
 /* =========================================
    3. Navigation
@@ -903,83 +850,7 @@ body {
     padding: 20px;
 }
 
-@media (min-width: 769px) {
-  .interest-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 1rem;
-  }
 
-  .interest-item {
-      background: rgba(128, 128, 128, 0.05);
-      padding: 12px 16px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      transition: background 0.3s;
-  }
-
-  .interest-item:hover {
-      background: rgba(128, 128, 128, 0.1);
-  }
-
-  .i-emoji {
-      font-size: 2rem;
-      color: var(--text-primary);
-      -webkit-text-fill-color: initial;
-  }
-
-  .i-text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      gap: 4px;
-  }
-
-  /* 添加 min-width: 0 防止溢出 */
-  .i-text strong {
-      font-size: 1.1rem;
-      color: var(--text-primary);
-      /* 为兴趣标签添加渐变色彩 */
-      background: var(--gradient-1);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      white-space: nowrap;
-  }
-
-  .i-text span:not(.i-emoji) {
-      font-size: 0.9rem;
-      color: var(--text-tertiary);
-      /* 为兴趣描述添加渐变色彩 */
-      background: var(--gradient-2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      white-space: normal;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .interest-list {
-      grid-template-columns: 1fr;
-      max-height: none;
-  }
-
-  .i-text {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-  }
-
-  .i-text strong, .i-text span {
-      white-space: normal;
-  }
-}
 
 /* =========================================
    5. Content Sections (Blog/Github)
@@ -998,14 +869,6 @@ body {
     margin-bottom: 20px;
 }
 
-.glow-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-primary);
-}
 
 .more-link {
     font-size: 0.9rem;
@@ -1110,30 +973,6 @@ body {
     white-space: nowrap;
 }
 
-.b-title {
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.b-cat {
-    background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.b-date {
-    background: var(--gradient-5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-[data-theme="night"] .b-title, [data-theme="night"] .b-cat, [data-theme="night"] .b-date {
-    text-shadow: 0 0 12px var(--accent-glow);
-}
 
 /* Loading Skeleton */
 .skeleton-card {
@@ -1610,13 +1449,6 @@ body {
 
 
 
-.interest-list { grid-auto-rows: minmax(80px, auto); }
-.interest-item { padding: 14px; border-radius: 12px; gap: 12px; }
-.i-emoji { font-size: 1.6rem; }
-.i-text strong { display: block; }
-
-
-.i-text span:not(.i-emoji) { display: block; }
 
 /* =========================================
    8. Modal & Footer
@@ -1865,200 +1697,10 @@ body {
 .site-audio { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; display: none; }
 /* music module removed *//* about.css - Aurora Nexus v2.0 */
 
-/* =========================================
-   1. Design Tokens (Variables)
-   ========================================= */
-:root {
-    /* Fonts: System preferred for speed & legibility */
-    --font-main: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-    --font-serif: "Georgia", "Times New Roman", "Songti SC", serif;
-    --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-    /* Day Theme (晨曦) */
-    --bg-base: #f2f4f7;
-    --bg-grad-1: #a1c4fd;
-    --bg-grad-2: #c2e9fb;
 
-    --glass-bg: rgba(255, 255, 255, 0.55);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.9);
-    --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
-    --glass-blur: 28px;
 
-    --text-primary: #2d3436;
-    --text-secondary: #636e72;
-    --text-tertiary: #b2bec3;
 
-    --accent: #6c5ce7;
-    --accent-glow: rgba(108, 92, 231, 0.2);
-
-    --dock-bg: rgba(255, 255, 255, 0.85);
-    --radius: 24px;
-
-    /* 渐变色彩 */
-    --gradient-1: linear-gradient(135deg, #a1c4fd, #6c5ce7);
-    --gradient-2: linear-gradient(135deg, #c2e9fb, #00cec9);
-    --gradient-3: linear-gradient(135deg, #ff9a9e, #f093fb);
-    --gradient-4: linear-gradient(135deg, #a8edea, #4facfe);
-    --gradient-5: linear-gradient(135deg, #d299c2, #fef9d7);
-    --gradient-6: linear-gradient(135deg, #f6d365, #fda085);
-    --gradient-7: linear-gradient(135deg, #84fab0, #8fd3f4);
-    --gradient-8: linear-gradient(135deg, #fccb90, #d57eeb);
-    --gradient-9: linear-gradient(135deg, #ffecd2, #fcb69f);
-    --gradient-10: linear-gradient(135deg, #cfd9df, #e2ebf0);
-}
-
-[data-theme="night"] {
-    /* Night Theme (霓虹) */
-    --bg-base: #0f0f12;
-    --bg-grad-1: #2d3436;
-    --bg-grad-2: #000000;
-
-    --glass-bg: rgba(30, 30, 35, 0.55);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
-
-    --text-primary: #dfe6e9;
-    --text-secondary: #b2bec3;
-    --text-tertiary: #636e72;
-
-    --accent: #00cec9;
-    --accent-glow: rgba(0, 206, 201, 0.4);
-
-    --dock-bg: rgba(30, 30, 35, 0.9);
-}
-
-/* Global Reset */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html {
-    font-size: 16px;
-}
-
-body {
-    font-family: var(--font-main);
-    background: var(--bg-base);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-    transition: background 0.5s, color 0.3s;
-    min-height: 100vh;
-}
-
-/* Ambient Background */
-.aurora-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.glow-spot {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.5;
-    animation: float 20s infinite alternate;
-}
-
-.spot-1 {
-    top: -10%;
-    left: -10%;
-    width: 50vw;
-    height: 50vw;
-    background: var(--bg-grad-1);
-}
-
-.spot-2 {
-    bottom: -10%;
-    right: -10%;
-    width: 60vw;
-    height: 60vw;
-    background: var(--bg-grad-2);
-    animation-delay: -5s;
-}
-
-.noise-layer {
-    position: absolute;
-    inset: 0;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-@keyframes float {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(30px, 50px);
-    }
-}
-
-/* =========================================
-   2. Universal Glass Components
-   ========================================= */
-.glass-nav, .bento-card, .glass-panel, .modal-glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-    border: var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    border-radius: var(--radius);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
-}
-
-.bento-card:hover, .glass-panel:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.15);
-    border-color: var(--accent);
-}
-
-/* Typography Effects */
-.gradient-text {
-    background: linear-gradient(135deg, var(--text-primary), var(--accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-[data-theme="night"] .gradient-text {
-    text-shadow: 0 0 20px var(--accent-glow);
-}
-
-[data-theme="night"] .tech-tag-3d {
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.12), 0 0 12px var(--accent-glow);
-}
-
-[data-theme="night"] .tech-tag-mobile {
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.12), 0 0 12px var(--accent-glow);
-}
-
-.neon-font {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-[data-theme="night"] .neon-font {
-    color: #fff;
-    text-shadow: 0 0 10px var(--accent);
-}
-
-.glow-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-}
 
 /* =========================================
    3. Navigation
@@ -2922,6 +2564,8 @@ body {
     align-items: center;
     gap: 8px;
     color: var(--text-primary);
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
 }
 
 .more-link {
@@ -3027,30 +2671,6 @@ body {
     white-space: nowrap;
 }
 
-.b-title {
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.b-cat {
-    background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.b-date {
-    background: var(--gradient-5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-[data-theme="night"] .b-title, [data-theme="night"] .b-cat, [data-theme="night"] .b-date {
-    text-shadow: 0 0 12px var(--accent-glow);
-}
 
 /* Loading Skeleton */
 .skeleton-card {
