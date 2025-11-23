@@ -665,19 +665,21 @@ body {
     overflow: hidden;
 }
 
-.card-header {
-    padding: 20px 25px;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+.card-header { 
+    padding: 20px 25px; 
+    border-bottom: 1px solid rgba(128,128,128,0.1); 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
-.card-header h3 {
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    margin: 0;
+.card-header h3 { 
+    font-size: 1.1rem; 
+    color: var(--text-primary); 
+    margin: 0; 
 }
-
-.card-header h3 {
-    background: var(--gradient-2);
+.card-subtitle {
+    font-size: 0.8rem;
+    background: var(--gradient-3);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
