@@ -9,6 +9,7 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.css">
     <!-- Artalk 评论样式 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.css">
     <link rel="icon" href="favicon.ico">
@@ -188,6 +189,23 @@
                 </div>
             </div>
 
+            <!-- [7] 音乐模块 (Music) -->
+            <div class="bento-card area-music">
+                <div class="card-header">
+                    <h3 class="glow-title"><i class="ri-music-2-line"></i> <span data-i18n="music.title">Music</span></h3>
+                </div>
+                <div class="vinyl-player">
+                    <div class="vinyl-disc" id="vinyl-disc"></div>
+                    <div class="vinyl-arm"></div>
+                    <div class="vinyl-info">
+                        <span class="vinyl-title" data-i18n="music.playlist">My Playlist</span>
+                        <button id="music-toggle" class="link-btn" aria-label="Toggle Music">Play</button>
+                        <span id="music-status" class="vinyl-status" style="display:none;" data-i18n="music.unavailable">Player under maintenance</span>
+                    </div>
+                    <div id="aplayer" class="aplayer" style="flex:1;"></div>
+                </div>
+            </div>
+
             <!-- 移动端显示的社交栏 (6个链接) -->
             <div class="bento-card area-social-mobile mobile-social">
                 <a href="https://github.com/listener-He" class="ms-btn"><i class="ri-github-fill"></i></a>
@@ -242,6 +260,15 @@
             </div>
         </div>
 
+        <!-- 移动端悬浮功能按钮 -->
+        <div class="mobile-fab">
+            <button id="fab-main" class="fab-main" aria-label="Actions"><i class="ri-magic-line"></i><span class="fab-label">More</span></button>
+            <div class="fab-menu" id="fab-menu">
+                <button id="fab-lang" class="fab-item"><i class="ri-translate-2"></i><span class="fab-text">Lang</span></button>
+                <button id="fab-theme" class="fab-item"><i class="ri-moon-line"></i><span class="fab-text">Theme</span></button>
+                <button id="fab-music" class="fab-item"><i class="ri-music-2-line"></i><span class="fab-text">Music</span></button>
+            </div>
+        </div>
     </main>
 
     <!-- 微信弹窗 -->
@@ -262,10 +289,11 @@
     </footer>
 </div>
 
-<!-- 脚本：BootCDN jQuery -->
+<!-- 脚本：BootCDN jQuery / Artalk / APlayer -->
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="js/config.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
 <script src="js/about.js"></script>
 </body>
 </html>
