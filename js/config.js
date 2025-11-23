@@ -62,6 +62,12 @@ const SiteConfig = {
       expirationDays: 1
     }
   },
+
+  // 通用缓存键与TTL（毫秒）
+  cacheKeys: {
+    github: { key: 'gh_data_v2', ttlMs: 3600000 },
+    blog: { key: 'blog_data_v2', ttlMs: 3600000 }
+  },
   
   techStack: [
     { name: 'Java', category: 'core', weight: 5 },
@@ -103,6 +109,21 @@ const SiteConfig = {
     { name: 'ClickHouse', category: 'data', weight: 1 },
     { name: 'Postgresql', category: 'data', weight: 1 }
   ],
+
+  // 默认数据（当API或RSS不可用时使用）
+  defaults: {
+    repos: [
+      {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
+      {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
+      {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
+    ],
+    posts: [
+      {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
+      {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
+      {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
+    ],
+    user: { repos: 165, followers: 6, created: "2018-05-14" }
+  },
   
   socialCards: {
     rings: [130, 180, 230],
@@ -136,13 +157,26 @@ const SiteConfig = {
 };
 
 if (Array.isArray(SiteConfig.techStack)) {
-  SiteConfig.techStack = SiteConfig.techStack.map((item, idx) => {
+  const categoryGradientMap = {
+    core: 7,
+    backend: 4,
+    data: 9,
+    ops: 10,
+    ai: 3
+  };
+  const vividSet = [1, 4, 7, 8];
+
+  SiteConfig.techStack = SiteConfig.techStack.map((item) => {
     const name = item.name || '';
     const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
-    const gid = (item.gradientId && Number.isFinite(Number(item.gradientId)))
-      ? Math.max(1, Math.min(10, Number(item.gradientId)))
-      : (hash % 10) + 1;
-    return { ...item, gradientId: gid };
+    if (item.gradientId && Number.isFinite(Number(item.gradientId))) {
+      return { ...item, gradientId: Math.max(1, Math.min(10, Number(item.gradientId))) };
+    }
+    let base = categoryGradientMap[item.category] || ((hash % 10) + 1);
+    if (Number(item.weight) >= 5) {
+      base = vividSet[hash % vividSet.length];
+    }
+    return { ...item, gradientId: base };
   });
 }
 

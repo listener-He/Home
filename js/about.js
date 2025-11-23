@@ -117,20 +117,6 @@ class ThemeManager {
    =========================== */
 class DataManager {
     constructor() {
-        // Fallback Data if APIs fail
-        this.defaults = {
-            repos: [
-                {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
-                {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
-                {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
-            ],
-            posts: [
-                {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
-                {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
-                {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
-            ],
-            user: { repos: 165, followers: 6, created: "2018-05-14" }
-        };
         this.init();
     }
 
@@ -142,7 +128,7 @@ class DataManager {
     // 优先缓存 -> API -> 默认值
     async fetchGithub() {
         const user = (window.SiteConfig?.github?.username) || 'listener-He';
-        const cacheKey = (window.SiteConfig?.github?.cache?.cacheKey) || 'gh_data_v2';
+        const cacheKey = (window.SiteConfig?.cacheKeys?.github?.key) || 'gh_data_v2';
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
 
@@ -160,8 +146,8 @@ class DataManager {
                 fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=100`)
             ]);
 
-            const userData = uRes.status === 'fulfilled' ? await uRes.value.json() : this.defaults.user;
-            let repoData = rRes.status === 'fulfilled' ? await rRes.value.json() : this.defaults.repos;
+            const userData = uRes.status === 'fulfilled' ? await uRes.value.json() : (window.SiteConfig?.defaults?.user);
+            let repoData = rRes.status === 'fulfilled' ? await rRes.value.json() : (window.SiteConfig?.defaults?.repos);
 
             // 过滤掉fork项目并按星数排序
             if (Array.isArray(repoData)) {
@@ -180,38 +166,39 @@ class DataManager {
 
         } catch (e) {
             console.warn("GH API Fail", e);
-            this.renderUser(this.defaults.user);
-            this.renderRepos(this.defaults.repos);
+            this.renderUser(window.SiteConfig?.defaults?.user);
+            this.renderRepos(window.SiteConfig?.defaults?.repos);
         }
     }
 
     renderUser(data) {
-        const years = new Date().getFullYear() - new Date(data.created_at || this.defaults.user.created).getFullYear();
+        const years = new Date().getFullYear() - new Date(data.created_at || (window.SiteConfig?.defaults?.user?.created)).getFullYear();
         $('#coding-years').text(years + "+");
-        $('#github-repos').text(data.public_repos || this.defaults.user.repos);
-        $('#github-followers').text(data.followers || this.defaults.user.followers);
+        $('#github-repos').text(data.public_repos || (window.SiteConfig?.defaults?.user?.repos));
+        $('#github-followers').text(data.followers || (window.SiteConfig?.defaults?.user?.followers));
     }
 
     renderRepos(list) {
-        if(!Array.isArray(list)) list = this.defaults.repos;
+        if(!Array.isArray(list)) list = window.SiteConfig?.defaults?.repos;
         let html = '';
-        list.slice(0, 5).forEach(repo => {
+        list.slice(0, 12).forEach(repo => {
             // Fix: API field compatibility
             const stars = repo.stargazers_count !== undefined ? repo.stargazers_count : (repo.stars || 0);
             const forks = repo.forks_count !== undefined ? repo.forks_count : (repo.forks || 0);
             const desc = repo.description || repo.desc || 'No description.';
             const url = repo.html_url || repo.url || '#';
+            const dShort = (desc || '').length > 120 ? (desc.slice(0, 117) + '...') : desc;
 
             html += `
             <div class="repo-card" onclick="window.open('${url}')">
                 <div class="repo-head">
-                    <span>${repo.name}</span>
+                    <span class="gradient-text">${repo.name}</span>
                     <span>
                         <i class="ri-star-fill"></i> ${stars}
                         <i class="ri-git-branch-fill"></i> ${forks}
                     </span>
                 </div>
-                <div class="repo-desc">${desc}</div>
+                <div class="repo-desc">${dShort}</div>
             </div>`;
         });
         $('#projects-container').html(html);
@@ -220,7 +207,7 @@ class DataManager {
     // 从RSS获取博客文章
     async fetchBlog() {
         const rssUrl = window.SiteConfig?.blog?.rssUrl || 'https://blog.hehouhui.cn/api/rss';
-        const cacheKey = window.SiteConfig?.blog?.cache?.key || 'blog_data_v2';
+        const cacheKey = (window.SiteConfig?.cacheKeys?.blog?.key) || 'blog_data_v2';
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
 
@@ -279,7 +266,7 @@ class DataManager {
                 this.renderBlog(data);
             } catch (e2) {
                 console.warn("Local JSON Fail", e2);
-                this.renderBlog(this.defaults.posts);
+                this.renderBlog(window.SiteConfig?.defaults?.posts);
             }
         }
     }
@@ -371,10 +358,7 @@ class UIManager {
         const container = document.getElementById('tech-container');
         if(!container) return;
 
-        const techStackRaw = window.SiteConfig?.techStack || [
-            {name:'Java'},{name:'Spring'},{name:'Docker'},{name:'K8s'},{name:'Python'},{name:'Redis'},
-            {name:'React'},{name:'Vue'},{name:'MySQL'},{name:'MongoDB'},{name:'Linux'},{name:'Git'}
-        ];
+        const techStackRaw = window.SiteConfig?.techStack || [];
         const techStack = techStackRaw.map((item, idx) => {
             const name = item.name || '';
             const hash = Array.from(name).reduce((a,c)=>a+c.charCodeAt(0),0);
@@ -395,14 +379,10 @@ class UIManager {
             extendedTechStack.forEach((item, index) => {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
-                // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${(index % 5) + 1}`;
+                const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
-                // 确保只显示文字，没有背景和边框
-                el.style.background = 'none';
                 el.style.border = 'none';
-                el.style.color = 'transparent';
                 container.appendChild(el);
             });
         } else {
@@ -415,20 +395,16 @@ class UIManager {
             techStack.forEach((item, index) => {
                 const el = document.createElement('a');
                 el.className = 'tech-tag-3d';
-                // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${(index % 5) + 1}`;
+                const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
-                // 移除背景和边框样式，只保留文字
-                el.style.background = 'none';
                 el.style.border = 'none';
-                el.style.color = 'transparent';
                 container.appendChild(el);
                 tags.push({ el, x:0, y:0, z:0 });
             });
 
-            // 增大球体半径以避免标签重叠
-            let radius = 300;
+            // 动态半径，避免容器溢出
+            let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
             const dtr = Math.PI/180;
             let lasta=1, lastb=1;
             let active=false, mouseX=0, mouseY=0;
@@ -471,7 +447,8 @@ class UIManager {
                     let rx2=rx1*cb + rz1*sb, ry2=ry1, rz2=rx1*-sb + rz1*cb;
                     tag.x=rx2; tag.y=ry2; tag.z=rz2;
 
-                    let scale = (tag.z + radius)/(2*radius) + 0.5;
+                    let scale = (tag.z + radius)/(2*radius) + 0.45;
+                    scale = Math.min(Math.max(scale, 0.7), 1.15);
                     let opacity = (tag.z + radius)/(2*radius) + 0.2;
 
                     tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 1);
