@@ -69,7 +69,7 @@ class I18nManager {
                 "nav.home": "首页",
                 "nav.about": "关于",
                 "nav.blog": "博客",
-                "status.online": "在线",
+                "status.online": "活跃",
                 "profile.name": "Honesty",
                 "profile.role": "Java后端 & AI探索者",
                 "profile.location": "上海, 中国",

@@ -1329,41 +1329,7 @@ body {
     box-shadow: var(--glass-shadow);
 }
 
-/* 添加Artalk评论组件的自定义样式 */
-.artalk-comment {
-  --at-color-main: var(--accent) !important;
-  --at-color-font: var(--text-primary) !important;
-  --at-color-meta: var(--text-secondary) !important;
-  --at-color-border: rgba(128, 128, 128, 0.1) !important;
-  --at-color-bg: var(--glass-bg) !important;
-  --at-color-bg-grey: rgba(128, 128, 128, 0.05) !important;
-  --at-color-bg-hover: rgba(128, 128, 128, 0.1) !important;
-  --at-color-bg-light: var(--glass-bg) !important;
-  --at-color-shadow: var(--glass-shadow) !important;
-}
-
-[data-theme="night"] .artalk-comment {
-  --at-color-font: var(--text-primary) !important;
-  --at-color-meta: var(--text-secondary) !important;
-  --at-color-border: rgba(255, 255, 255, 0.08) !important;
-  --at-color-bg: var(--glass-bg) !important;
-  --at-color-bg-grey: rgba(255, 255, 255, 0.05) !important;
-  --at-color-bg-hover: rgba(255, 255, 255, 0.1) !important;
-  --at-color-bg-light: var(--glass-bg) !important;
-  --at-color-shadow: var(--glass-shadow) !important;
-}
-
-.artalk-comment .atk-main-editor {
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--radius) !important;
-}
-
-.artalk-comment .atk-comment-wrap {
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--radius) !important;
-}
+/* Artalk 组件（按容器选择器统一覆盖，移除无效类选择器） */
 
 /* 确保评论区域适配白天/黑夜模式 */
 #artalk-container {
@@ -1375,6 +1341,10 @@ body {
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
+#artalk-container .atk-editor, #artalk-container .atk-editor textarea, #artalk-container .atk-editor input {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
 
 #artalk-container .atk-comment-wrap {
   background: var(--glass-bg);
@@ -1382,6 +1352,17 @@ body {
   box-shadow: var(--glass-shadow);
   opacity: 0.9;
   transition: opacity 0.2s;
+}
+#artalk-container .atk-dialog, #artalk-container .atk-layer .atk-dialog { background: var(--glass-bg); color: var(--text-primary); border: var(--glass-border); box-shadow: var(--glass-shadow); }
+[data-theme="night"] #artalk-container .atk-main-editor,
+[data-theme="night"] #artalk-container .atk-editor,
+[data-theme="night"] #artalk-container .atk-comment-wrap,
+[data-theme="night"] #artalk-container .atk-dialog,
+[data-theme="night"] #artalk-container .atk-layer .atk-dialog {
+  background: rgba(30,30,35,0.55);
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: var(--glass-shadow);
 }
 
 #artalk-container.atk-mobile .atk-main-editor { padding: 12px; font-size: 0.95rem; }
