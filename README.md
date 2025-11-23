@@ -1,98 +1,91 @@
-<div align="center">
-
 # Honesty's Personal Website
 
-现代化个人主页，融合科技感与个性化元素，展示个人技术栈、开源项目和博客文章。
+一个轻量、优雅、现代化个人主页，融合科技感与个性化元素，展示个人技术栈、开源项目和博客文章。白天模式强调阅读与信息密度，夜间模式带来渐变与微光的沉浸视觉。
 
-[![License](https://img.shields.io/github/license/lqbby/Tech-Home?color=blue)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/lqbby/Tech-Home)](https://github.com/lqbby/Tech-Home/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/lqbby/Tech-Home)](https://github.com/lqbby/Tech-Home/network/members)
+<div align="center">
 
-[在线预览](https://www.hehouhui.cn) | [关于我](https://about.hehouhui.cn)
-
-![首页预览](images/home.png)
+[![GitHub](https://img.shields.io/github/license/listener-He/Home?color=blue)](https://github.com/listener-He/Home/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/listener-He/Home)](https://github.com/listener-He/Home/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/listener-He/Home)](https://github.com/listener-He/Home/issues)
 
 </div>
 
-## 🌟 简介
+## 🌟 项目亮点
 
-这是一个现代化的个人主页项目，融合了科技感设计和个性化元素，用于展示个人信息、技术栈、开源项目和博客文章等内容。项目设计美观、响应式布局，支持白天/黑夜模式切换，为访问者提供良好的浏览体验。
+现代、响应式个人站点，融合美学设计与技术实力，打造专业个人品牌形象。
 
-## ✨ 特性
+### 🎨 视觉设计特色
 
-- 🎨 现代化UI设计，融合科技感与个性化元素
-- 🌗 白天/黑夜模式自动切换
-- 📱 完全响应式设计，适配PC、平板和手机设备
-- 🌀 3D交互式技术标签云
-- 📊 动态展示GitHub项目和博客文章
-- 🌈 个性化的INFJ人格特质展示
-- 📞 多种联系方式集成（GitHub、邮箱、微信、知乎等）
-- ⚡ 高性能优化，快速加载体验
-- 🔧 易于定制和扩展
+- **渐变美学**：精心设计的渐变色彩方案，营造现代感视觉体验
+- **玻璃态效果**：白天柔和透明，夜间深色半透明，层次分明
+- **沉浸式夜间模式**：微光特效与深色主题，保护视力同时提升质感
+- **响应式布局**：完美适配桌面、平板、手机等各种设备
 
-## 🚀 技术栈
+### 🚀 核心功能
 
-- HTML5 + CSS3 + JavaScript
-- jQuery
-- Artalk (评论系统)
-- GitHub API
-- 和风天气 API
-- Hitokoto 一言
+- ✨ **渐变标题与微光夜间视觉**：仅标题保留渐变，正文统一实色，确保阅读清晰
+- 🧊 **玻璃态卡片**：白天柔和、夜间半透明深色，兼顾层次与审美
+- 🪐 **技术栈宇宙**：PC 端 3D 标签球；移动端三行无缝横向滚动
+- 📦 **内容聚合**：GitHub 开源仓库（星标/分支信息）、RSS 最新文章聚合
+- 💬 **评论互动**：Artalk 评论组件，移动端支持折叠/展开，桌/移端自适配样式
+- 🌗 **主题与语言**：一键切换 Day/Night 与 CN/EN，自动缓存记忆
+- ⚡ **性能与体验**：缓存字段精简、骨架占位与淡入过渡、异步抓取避免阻塞
 
-## 📁 项目结构
+## 🖼️ 页面预览
 
-```
-Home/
-├── index.html          # 首页
-├── about.html          # 关于我页面
-├── 404.html            # 404页面
-├── css/
-│   ├── style.css       # 首页样式
-│   ├── about.css       # 关于我页面样式
-│   └── iconfont.css    # 图标字体
-├── js/
-│   ├── main.js         # 首页主逻辑
-│   ├── about.js        # 关于我页面逻辑
-│   ├── config.js       # 配置文件
-│   └── ...
-├── images/             # 图片资源
-├── data/               # 数据文件
-└── ...
-```
+<div align="center">
+  <img src="images/home.png" alt="主页" width="32%" />
+  <img src="images/about-day.png" alt="关于 · 白天" width="32%" />
+  <img src="images/about-night.png" alt="关于 · 夜间" width="32%" />
+</div>
 
-## 🎯 功能模块
+## 🧩 页面结构
 
-### 首页 (index.html)
-- 个人简介展示
-- 头像翻页动画
-- Hitokoto一言
-- 日期及时间显示
-- 实时天气信息
-- 星空背景动画
-- 社交媒体链接
+### 🏠 主页（index）
+- 简洁直观的内容入口与导航
+- 轻量、清晰、直达的用户体验
 
-### 关于我 (about.html)
-- 个人信息展示
-- 技术栈3D云图
-- INFJ人格特质展示
-- GitHub开源项目展示
-- 博客文章瀑布流
-- 个人时间线
-- 联系方式集成
-- 留言评论系统
+### 👤 关于页面（about）
+- **Profile**：头像、在线状态、个性化标题与社交链接
+- **Bio**：简介与格言，支持折叠/展开
+- **Stats**：编程年限、开源项目数、关注者
+- **MBTI**：人格代码、名称与四元素标签（白天实色高对比；夜间渐变微光）
+- **Tech Universe**：PC 3D 标签球；移动端三行滚动标签
+- **Interests**：两列卡片，圆角玻璃态，白天清爽、夜间半透明深色
+- **Open Source**：GitHub 仓库列表，星标与分支信息
+- **Latest Posts**：RSS 文章列表，标题/日期/分类
+- **Comments**：Artalk 评论区域，桌/移端响应式优化
 
-## 🛠️ 部署
+## ⚙️ 技术栈与工程细节
 
-1. 克隆项目到本地：
+- **前端技术**：原生 JS、CSS 与 HTML，无框架依赖
+- **评论系统**：Artalk 评论组件（HTTPS 环境启用；本地或非 HTTPS 显示关闭提示）
+- **数据获取**：GitHub REST API 拉取用户与仓库信息（写缓存前字段精简）
+- **内容聚合**：RSS 解析通过 DOMParser，失败时降级本地 JSON 或默认数据
+- **交互体验**：骨架加载与淡入动画、移动端可拖拽悬浮工具、ARIA 辅助属性
+
+## 🚀 快速开始
+
 ```bash
-git clone https://github.com/lqbby/Tech-Home.git
+# 克隆项目
+git clone https://github.com/listener-He/Honesty-Home.git
+
+# 进入项目目录
+cd Honesty-Home
+
+# 直接打开 HTML 文件预览
+open index.html
+open about.html
 ```
 
-2. 修改配置文件 `js/config.js` 中的API密钥和个人信息
+站点配置位于 `js/config.js`，用于设置 GitHub 用户名、RSS 地址、缓存策略、Artalk 服务等。
 
-3. 部署到你喜欢的静态网站托管服务（GitHub Pages、Vercel、Netlify等）
+## 📦 部署与自定义
 
-## 🙏 致谢
+请阅读《部署与自定义指南》获取详细说明：
+- [DEPLOY.md](./DEPLOY.md)
+
+## 🙏 鸣谢与致敬
 
 本项目在开发过程中参考和借鉴了以下开源项目：
 
@@ -101,14 +94,32 @@ git clone https://github.com/lqbby/Tech-Home.git
 
 向这些项目的作者表示诚挚的感谢！
 
+同时感谢以下开源项目的支持：
+
+- [Artalk](https://artalk.js.org/) - 评论系统
+- [Remix Icon](https://remixicon.com/) - 图标库
+- [Normalize.css](https://necolas.github.io/normalize.css/) 与 [BootCDN](https://www.bootcdn.cn/) - 页面基础与加速
+- [GitHub](https://github.com/) 与 [RSS](https://www.rssboard.org/) 生态 - 内容聚合支持
+
 ## 📄 许可证
 
-本项目采用 MIT 许可证，详情请参见 [LICENSE](LICENSE) 文件。
+本项目采用 [MIT](./LICENSE) 许可证。
 
-## 👤 作者
+## 👨‍💻 作者
 
 **Honesty (HeHouHui)**
 
 - 博客: [blog.hehouhui.cn](https://blog.hehouhui.cn)
 - GitHub: [@listener-He](https://github.com/listener-He)
-- 邮箱: hehouhui@foxmail.com
+- 邮箱: [hehouhui@foxmail.com](mailto:hehouhui@foxmail.com)
+
+---
+
+<div align="center">
+
+欢迎提出改进建议，或将该站点作为你的个人主页模板进行自定义与二次开发。
+
+[![GitHub](https://img.shields.io/github/license/listener-He/Honesty-Home?color=blue)](https://github.com/listener-He/Honesty-Home/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/listener-He/Honesty-Home)](https://github.com/listener-He/Honesty-Home/stargazers)
+
+</div>
