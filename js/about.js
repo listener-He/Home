@@ -142,7 +142,7 @@ class DataManager {
     // 优先缓存 -> API -> 默认值
     async fetchGithub() {
         const user = (window.SiteConfig?.github?.username) || 'listener-He';
-        const cacheKey = 'gh_data_v2';
+        const cacheKey = (window.SiteConfig?.github?.cache?.cacheKey) || 'gh_data_v2';
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
 
@@ -220,7 +220,7 @@ class DataManager {
     // 从RSS获取博客文章
     async fetchBlog() {
         const rssUrl = window.SiteConfig?.blog?.rssUrl || 'https://blog.hehouhui.cn/api/rss';
-        const cacheKey = 'blog_data_v2';
+        const cacheKey = window.SiteConfig?.blog?.cache?.key || 'blog_data_v2';
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
 
@@ -332,6 +332,11 @@ class UIManager {
         this.initTechCloud();
         this.initModal();
         this.initArtalk();
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => this.initTechCloud(), 150);
+        });
     }
 
     initModal() {
@@ -392,6 +397,8 @@ class UIManager {
         } else {
             // PC: 3D Sphere
             container.classList.remove('mobile-scroll');
+            const token = Date.now();
+            container.__animToken = token;
             const tags = [];
 
             techStack.forEach((item, index) => {
@@ -431,6 +438,7 @@ class UIManager {
             };
 
             const update = () => {
+                if (container.__animToken !== token) return;
                 let a, b;
                 if(active) {
                     a = (-Math.min(Math.max(-mouseY, -200), 200)/radius) * 2 + autoAx;
@@ -458,7 +466,7 @@ class UIManager {
                     let top = tag.y + container.offsetHeight/2 - tag.el.offsetHeight/2;
                     tag.el.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
                 });
-                requestAnimationFrame(update);
+                container.__animId = requestAnimationFrame(update);
             };
             update();
         }

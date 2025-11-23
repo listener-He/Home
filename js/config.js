@@ -36,6 +36,7 @@ const SiteConfig = {
   github: {
     username: 'listener-He',
     cache: {
+      cacheKey: "gh_data_v2",
       stats: {
         key: 'github_stats_cache',
         timeKey: 'github_stats_cache_time',
@@ -58,7 +59,6 @@ const SiteConfig = {
     rssUrl: 'https://blog.hehouhui.cn/api/rss',
     cache: {
       key: 'blog_articles_cache',
-      timeKey: 'blog_articles_cache_time',
       expirationDays: 1
     }
   },
