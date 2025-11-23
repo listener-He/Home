@@ -470,8 +470,8 @@ class UIManager {
             try {
                 Artalk.init({
                     el: '#artalk-container',
-                    pageKey: '/about',
-                    pageTitle: 'About Me',
+                    pageKey: '/about.html',
+                    pageTitle: '关于我 - Honesty',
                     server: window.SiteConfig.artalk.server,
                     site: window.SiteConfig.artalk.site,
                     darkMode: document.documentElement.getAttribute('data-theme') === 'night'
@@ -485,50 +485,7 @@ class UIManager {
         }
     }
 
-    initBioToggle() {
-        const el = document.querySelector('.bio-text');
-        const btn = document.getElementById('bio-toggle');
-        const qEl = document.querySelector('.quote-box p');
-        if (!el || !btn) return;
-        const assess = () => {
-            el.classList.add('collapsed');
-            if (qEl) qEl.classList.add('quote-collapsed');
-            const needsToggle = (el.scrollHeight > el.clientHeight) || (qEl && qEl.scrollHeight > qEl.clientHeight) || (window.innerWidth < 480 && ((el.textContent || '').length + (qEl?.textContent?.length || 0)) > 120);
-            if (needsToggle) {
-                btn.style.display = 'inline-block';
-            } else {
-                btn.style.display = 'none';
-                el.classList.remove('collapsed');
-                if (qEl) qEl.classList.remove('quote-collapsed');
-            }
-        };
-        assess();
-        window.addEventListener('resize', () => assess(), {passive: true});
-        btn.addEventListener('click', () => {
-            el.classList.toggle('collapsed');
-            if (qEl) qEl.classList.toggle('quote-collapsed');
-        });
-    }
 
-    initNavInteraction() {
-        const nav = document.querySelector('.glass-nav');
-        if (!nav) return;
-        const onScroll = () => {
-            const y = window.scrollY || document.documentElement.scrollTop;
-            nav.classList.toggle('nav-scrolled', y > 30);
-        };
-        onScroll();
-        window.addEventListener('scroll', onScroll, {passive: true});
-    }
-
-    initProfileGradient() {
-        const name = document.querySelector('.hero-name');
-        const role = document.querySelector('.hero-role');
-        const loc = document.querySelector('.location-tag');
-        if (name) name.classList.add('grad-text-1', 'night-glow', 'glow-cycle');
-        if (role) role.classList.add('grad-text-2', 'night-glow', 'glow-cycle');
-        if (loc) loc.classList.add('grad-text-3', 'night-glow', 'glow-cycle');
-    }
 
     initTechCloud() {
         const container = document.getElementById('tech-container');
@@ -662,11 +619,14 @@ class UIManager {
         const fTheme = document.getElementById('fab-theme');
         const fMusic = document.getElementById('fab-music');
         if (!main || !menu || !fLang || !fTheme || !fMusic) return;
+        
+        // 添加拖拽功能
+        this.initDraggableFab();
+        
         const updateLabels = () => {
             const lang = getStoredLanguage();
             const theme = getStoredTheme();
             fLang.querySelector('.fab-text').textContent = lang === 'zh' ? 'English' : '中文';
-            console.log('updateLabels >>>>>>> ', theme);
             fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Day' : 'Night';
             const playing = (this.audio && !this.audio.paused);
             fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
@@ -699,6 +659,104 @@ class UIManager {
             updateLabels();
         });
         updateLabels();
+    }
+
+    // 初始化可拖拽悬浮按钮
+    initDraggableFab() {
+        const fab = document.querySelector('.mobile-fab');
+        if (!fab) return;
+        
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        let fabWidth = fab.offsetWidth;
+        let fabHeight = fab.offsetHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+        
+        // 设置初始位置为距离底部1/3处
+        function setInitialPosition() {
+            windowWidth = window.innerWidth;
+            windowHeight = window.innerHeight;
+            fabWidth = fab.offsetWidth;
+            fabHeight = fab.offsetHeight;
+            
+            // 初始位置：右侧16px，距离底部1/3
+            const initialYPos = windowHeight - (windowHeight / 3) - fabHeight / 2;
+            xOffset = windowWidth - 16 - fabWidth; // 距离右边16px
+            yOffset = initialYPos;
+            
+            setTranslate(xOffset, yOffset, fab);
+        }
+        
+        // 页面加载时设置初始位置
+        setInitialPosition();
+        
+        // 窗口大小改变时更新位置
+        window.addEventListener('resize', setInitialPosition);
+        
+        // 触摸开始事件
+        fab.addEventListener('touchstart', dragStart, false);
+        fab.addEventListener('mousedown', dragStart, false);
+        
+        // 拖拽移动事件
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('mousemove', drag);
+        
+        // 拖拽结束事件
+        document.addEventListener('touchend', dragEnd, false);
+        document.addEventListener('mouseup', dragEnd, false);
+        
+        function dragStart(e) {
+            if (e.type === 'touchstart') {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            
+            if (e.target === fab || fab.contains(e.target)) {
+                isDragging = true;
+            }
+        }
+        
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                
+                if (e.type === 'touchmove') {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+                
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                // 限制在屏幕范围内
+                currentX = Math.max(0, Math.min(currentX, windowWidth - fabWidth));
+                currentY = Math.max(0, Math.min(currentY, windowHeight - fabHeight));
+                
+                setTranslate(currentX, currentY, fab);
+            }
+        }
+        
+        function dragEnd() {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+        
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = 'translate3d(' + xPos + 'px, ' + yPos + 'px, 0)';
+        }
     }
 
     initAudio() {
