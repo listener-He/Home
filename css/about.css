@@ -676,174 +676,7 @@ body {
     overflow: hidden;
 }
 
-.card-header {
-    padding: 20px 25px;
-    border-bottom: 1px solid rgba(128,128,128,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.card-header h3 {
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    margin: 0;
-}
-.card-subtitle {
-    font-size: 0.8rem;
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
 
-[data-theme="night"] .card-header h3 {
-    text-shadow: 0 0 10px var(--accent-glow);
-}
-
-.card-header h3 {
-    background: var(--gradient-2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-/* PC 3D Container */
-.tech-wrapper {
-    flex: 1;
-    position: relative;
-    min-height: 280px;
-    width: 100%;
-    overflow: hidden;
-}
-
-.tech-tag-3d {
-    position: absolute;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    padding: 6px 12px;
-    border-radius: 6px;
-    user-select: none;
-    white-space: nowrap;
-    backface-visibility: hidden;
-    will-change: transform;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    background-color: transparent !important;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none;
-    pointer-events: none; /* 禁用鼠标事件避免干扰 */
-    z-index: 10;
-}
-
-/* 不同颜色的标签 */
-.tech-tag-3d.tag-color-1, .tech-tag-mobile.tag-color-1 {
-    background: var(--gradient-1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-2, .tech-tag-mobile.tag-color-2 {
-    background: var(--gradient-2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-3, .tech-tag-mobile.tag-color-3 {
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-4, .tech-tag-mobile.tag-color-4 {
-    background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-5, .tech-tag-mobile.tag-color-5 {
-    background: var(--gradient-5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-/* 扩展更多渐变方案 */
-.tech-tag-3d.tag-color-6, .tech-tag-mobile.tag-color-6 {
-    background: var(--gradient-6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-7, .tech-tag-mobile.tag-color-7 {
-    background: var(--gradient-7);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-8, .tech-tag-mobile.tag-color-8 {
-    background: var(--gradient-8);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-9, .tech-tag-mobile.tag-color-9 {
-    background: var(--gradient-9);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.tech-tag-3d.tag-color-10, .tech-tag-mobile.tag-color-10 {
-    background: var(--gradient-10);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-/* 渐变文字兼容处理：支持时启用文字渐变，不支持时使用纯色 */
-@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
-    .tech-tag-3d,
-    .tech-tag-mobile {
-        background: none !important;
-        color: var(--text-primary) !important;
-    }
-
-    .tech-tag-3d.tag-color-1,
-    .tech-tag-3d.tag-color-2,
-    .tech-tag-3d.tag-color-3,
-    .tech-tag-3d.tag-color-4,
-    .tech-tag-3d.tag-color-5,
-    .tech-tag-3d.tag-color-6,
-    .tech-tag-3d.tag-color-7,
-    .tech-tag-3d.tag-color-8,
-    .tech-tag-3d.tag-color-9,
-    .tech-tag-3d.tag-color-10,
-    .tech-tag-mobile.tag-color-1,
-    .tech-tag-mobile.tag-color-2,
-    .tech-tag-mobile.tag-color-3,
-    .tech-tag-mobile.tag-color-4,
-    .tech-tag-mobile.tag-color-5,
-    .tech-tag-mobile.tag-color-6,
-    .tech-tag-mobile.tag-color-7,
-    .tech-tag-mobile.tag-color-8,
-    .tech-tag-mobile.tag-color-9,
-    .tech-tag-mobile.tag-color-10 {
-        background: none !important;
-        color: var(--text-primary) !important;
-    }
-}
 
 /* --- Interests --- */
 .area-interests {
@@ -950,49 +783,9 @@ body {
     margin-right: 15px;
 }
 
-.b-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.b-date {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-}
-
-.b-cat {
-    font-size: 0.75rem;
-    color: var(--accent);
-    background: none;
-    padding: 0;
-    border-radius: 0;
-    white-space: nowrap;
-}
 
 
 /* Loading Skeleton */
-.skeleton-card {
-    height: 60px;
-    background: rgba(128, 128, 128, 0.1);
-    border-radius: 10px;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 0.6;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.6;
-    }
-}
 
 /* Comments */
 .comments-wrapper {
@@ -1276,27 +1069,6 @@ body {
         100% { transform: translateX(-50%); }
     }
 
-    .tech-tag-mobile {
-        scroll-snap-align: start;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-family: var(--font-mono);
-        white-space: nowrap;
-        border: none;
-        outline: none;
-        box-shadow: none;
-        background-color: transparent !important;
-        font-weight: bold;
-        /* 渐变由 tag-color-* 提供 */
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        -webkit-text-fill-color: transparent;
-        text-decoration: none;
-        pointer-events: none;
-        z-index: 10;
-    }
 
     /* Mobile Social */
     .mobile-social {
@@ -1505,55 +1277,7 @@ body {
     color: var(--text-tertiary);
 }
 
-.b-title {
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
 
-.b-cat {
-    background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.b-date {
-    background: var(--gradient-5);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-[data-theme="night"] .b-title, [data-theme="night"] .b-cat, [data-theme="night"] .b-date {
-    text-shadow: 0 0 8px var(--accent-glow);
-}
-
-/* 阅读友好：blog-container 内文本使用常规颜色覆盖渐变 */
-#blog-container .b-title {
-    background: none !important;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-    color: var(--text-primary) !important;
-    -webkit-text-fill-color: initial;
-}
-
-#blog-container .b-cat {
-    background: none !important;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-    color: var(--text-secondary) !important;
-    -webkit-text-fill-color: initial;
-}
-
-#blog-container .b-date {
-    background: none !important;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-    color: var(--text-tertiary) !important;
-    -webkit-text-fill-color: initial;
-}
 .social-dock .s-icon { color: var(--text-primary); }
 .social-dock .s-icon i { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; -webkit-text-fill-color: initial !important; color: currentColor !important; text-shadow: none !important; }
 
@@ -3101,11 +2825,6 @@ body {
     .quote-box p.quote-collapsed { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 }
 
-.interest-list { grid-auto-rows: minmax(80px, auto); }
-.interest-item { padding: 14px; border-radius: 12px; gap: 12px; }
-.i-emoji { font-size: 1.6rem; }
-.i-text strong { display: block; }
-.i-text span:not(.i-emoji) { display: block; }
 
 /* =========================================
    8. Modal & Footer
