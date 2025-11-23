@@ -42,7 +42,8 @@ class I18nManager {
                 "mbti.tag3": "深度洞察与创意",
                 "mbti.tag4": "关怀与同理心",
                 "tech.title": "技术栈宇宙",
-                "interest.title": "个人兴趣",
+                "interest.title": "兴趣",
+                "interest.subtitle": "INFJ · 创造者 · 探索者",
                 "interest.cycling": "骑行",
                 "interest.cycling_desc": "享受在路上的自由感，用车轮丈量世界，在风景中寻找灵感",
                 "interest.reading": "阅读",
@@ -81,6 +82,7 @@ class I18nManager {
                 "mbti.tag4": "Care & Empathy",
                 "tech.title": "Tech Universe",
                 "interest.title": "Interests",
+                "interest.subtitle": "INFJ · Creator · Explorer",
                 "interest.cycling": "Cycling",
                 "interest.cycling_desc": "Enjoy the freedom on the road, measure the world with wheels, and find inspiration in the scenery",
                 "interest.reading": "Reading",
@@ -390,6 +392,7 @@ class UIManager {
         this.initBioToggle();
         this.initNavInteraction();
         this.initProfileGradient();
+        this.initAudio();
         this.initFab();
         let resizeTimer = null;
         window.addEventListener('resize', () => {
@@ -610,12 +613,15 @@ class UIManager {
         const menu = document.getElementById('fab-menu');
         const fLang = document.getElementById('fab-lang');
         const fTheme = document.getElementById('fab-theme');
-        if (!main || !menu || !fLang || !fTheme) return;
+        const fMusic = document.getElementById('fab-music');
+        if (!main || !menu || !fLang || !fTheme || !fMusic) return;
         const updateLabels = () => {
             const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
             const theme = (localStorage.getItem('theme') === 'night') ? 'night' : 'day';
             fLang.querySelector('.fab-text').textContent = lang === 'zh' ? '中文' : 'English';
             fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Night' : 'Day';
+            const playing = (this.audio && !this.audio.paused);
+            fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
         };
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
@@ -629,7 +635,26 @@ class UIManager {
             document.getElementById('theme-btn')?.click();
             updateLabels();
         });
+        fMusic.addEventListener('click', () => {
+            if (this.audio) {
+                if (this.audio.paused) {
+                    this.audio.play().catch(() => {});
+                } else {
+                    this.audio.pause();
+                }
+            }
+            updateLabels();
+        });
         updateLabels();
+    }
+
+    initAudio() {
+        const el = document.getElementById('site-audio');
+        if (!el) return;
+        this.audio = el;
+        this.audio.loop = true;
+        const tryPlay = () => { this.audio.play().catch(() => {}); };
+        tryPlay();
     }
 
     _t(key) {

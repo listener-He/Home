@@ -14,10 +14,10 @@
     --bg-grad-1: #a1c4fd;
     --bg-grad-2: #c2e9fb;
 
-    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-bg: rgba(255, 255, 255, 0.55);
     --glass-border: 1px solid rgba(255, 255, 255, 0.9);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-    --glass-blur: 20px;
+    --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+    --glass-blur: 28px;
 
     --text-primary: #2d3436;
     --text-secondary: #636e72;
@@ -48,9 +48,9 @@
     --bg-grad-1: #2d3436;
     --bg-grad-2: #000000;
 
-    --glass-bg: rgba(30, 30, 35, 0.65);
+    --glass-bg: rgba(30, 30, 35, 0.55);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    --glass-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
 
     --text-primary: #dfe6e9;
     --text-secondary: #b2bec3;
@@ -140,8 +140,8 @@ body {
    ========================================= */
 .glass-nav, .bento-card, .glass-panel, .modal-glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
     border: var(--glass-border);
     box-shadow: var(--glass-shadow);
     border-radius: var(--radius);
@@ -150,7 +150,7 @@ body {
 
 .bento-card:hover, .glass-panel:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.15);
     border-color: var(--accent);
 }
 
@@ -1586,4 +1586,5 @@ body {
 .fab-menu { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
 .fab-item { display: flex; align-items: center; gap: 6px; background: var(--glass-bg); border-radius: 18px; padding: 8px 12px; border: var(--glass-border); box-shadow: var(--glass-shadow); }
 .fab-menu.open { display: flex; }
+.site-audio { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; display: none; }
 /* music module removed */
