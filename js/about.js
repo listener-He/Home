@@ -505,6 +505,7 @@ class UIManager {
                     site: window.SiteConfig.artalk.site,
                     darkMode: document.documentElement.getAttribute('data-theme') === 'night'
                 });
+                this.enhanceArtalkUI();
             } catch (e) {
                 console.error("Artalk Error", e);
                 const lang = getStoredLanguage();
@@ -515,6 +516,37 @@ class UIManager {
             const lang = getStoredLanguage();
             const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
+        }
+    }
+
+    enhanceArtalkUI() {
+        const container = document.getElementById('artalk-container');
+        if (!container) return;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        container.classList.toggle('atk-mobile', isMobile);
+        container.classList.toggle('atk-desktop', !isMobile);
+        const lang = getStoredLanguage();
+        if (isMobile) {
+            const apply = () => {
+                container.querySelectorAll('.atk-comment-wrap .atk-content').forEach(el => {
+                    if (el.dataset.clamped) return;
+                    el.classList.add('clamped');
+                    const btn = document.createElement('button');
+                    btn.className = 'atk-expand-btn';
+                    const expandText = lang === 'zh' ? '展开' : 'Expand';
+                    const collapseText = lang === 'zh' ? '收起' : 'Collapse';
+                    btn.textContent = expandText;
+                    btn.addEventListener('click', () => {
+                        const clamped = el.classList.toggle('clamped');
+                        btn.textContent = clamped ? expandText : collapseText;
+                    });
+                    el.parentElement.appendChild(btn);
+                    el.dataset.clamped = '1';
+                });
+            };
+            apply();
+            const obs = new MutationObserver(apply);
+            obs.observe(container, { childList: true, subtree: true });
         }
     }
 

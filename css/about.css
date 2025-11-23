@@ -1384,6 +1384,16 @@ body {
   transition: opacity 0.2s;
 }
 
+#artalk-container.atk-mobile .atk-main-editor { padding: 12px; font-size: 0.95rem; }
+#artalk-container.atk-mobile .atk-comment-wrap { padding: 12px 14px; font-size: 0.95rem; }
+#artalk-container.atk-mobile .atk-avatar { width: 28px; height: 28px; }
+#artalk-container.atk-mobile .atk-meta { font-size: 12px; }
+#artalk-container.atk-desktop .atk-main-editor { padding: 18px 22px; }
+#artalk-container.atk-desktop .atk-comment-wrap { padding: 18px 22px; line-height: 1.7; }
+#artalk-container .atk-content.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+#artalk-container .atk-expand-btn { margin-top: 8px; padding: 6px 10px; border-radius: 14px; border: none; cursor: pointer; background: var(--accent); color: #fff; box-shadow: 0 4px 10px rgba(108,92,231,0.25); }
+[data-theme="night"] #artalk-container .atk-expand-btn { background: linear-gradient(135deg, #a1c4fd, #6c5ce7); box-shadow: 0 4px 12px rgba(108,92,231,0.35); }
+
 .fab-menu.open {
     display: flex;
 }

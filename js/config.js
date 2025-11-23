@@ -51,11 +51,11 @@ const SiteConfig = {
   techStack: [
     { name: 'Java', category: 'core', weight: 5 },
     { name: 'Spring Boot', category: 'backend', weight: 5 },
-    { name: 'JavaScript', category: 'core', weight: 5 },
+    { name: 'JavaScript', category: 'frontend', weight: 5 },
     { name: 'Python', category: 'core', weight: 4 },
     { name: 'WebFlux', category: 'backend', weight: 5 },
     { name: 'Reactor', category: 'backend', weight: 5 },
-    { name: 'TypeScript', category: 'core', weight: 4 },
+    { name: 'TypeScript', category: 'frontend', weight: 4 },
     { name: 'Spring Cloud', category: 'backend', weight: 4 },
     { name: 'Go', category: 'core', weight: 3 },
     { name: 'MySQL', category: 'data', weight: 4 },
@@ -69,6 +69,7 @@ const SiteConfig = {
     { name: 'PyTorch', category: 'ai', weight: 2 },
     { name: 'Elasticsearch', category: 'data', weight: 3 },
     { name: 'RabbitMQ', category: 'data', weight: 2 },
+    { name: 'RocketMQ', category: 'data', weight: 2 },
     { name: 'Kafka', category: 'data', weight: 2 },
     { name: 'Jenkins', category: 'ops', weight: 3 },
     { name: 'Git', category: 'ops', weight: 4 },
@@ -86,7 +87,17 @@ const SiteConfig = {
     { name: 'Dify', category: 'ai', weight: 1 },
     { name: 'Spring AI', category: 'ai', weight: 1 },
     { name: 'ClickHouse', category: 'data', weight: 1 },
-    { name: 'Postgresql', category: 'data', weight: 1 }
+    { name: 'Postgresql', category: 'data', weight: 1 },
+    { name: "Hexo", category: "frontend", weight: 5},
+    { name: "NextJs", category: "frontend", weight: 1},
+    { name: "HuggingFace", category: "ai", weight: 1},
+    { name: "Vue", category: "frontend", weight: 3},
+    { name: "React", category: "frontend", weight: 1},
+    { name: "R2dbc", category: "data", weight: 1},
+    { name: "Proto", category: "core", weight: 1},
+    { name: "Mqtt", category: "core", weight: 2},
+    { name: "Grpc", category: "core", weight: 1},
+    { name: "Figma", category: "frontend", weight: 1}
   ],
 
 
