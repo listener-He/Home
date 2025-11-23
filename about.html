@@ -2,303 +2,229 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>关于我 - Honesty</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/about.css">
-    <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.css">
     <link rel="icon" href="favicon.ico">
-    <link rel="apple-touch-icon" href="./images/logo.png">
-    <meta name="description" content="了解更多关于Honesty的信息 - 技术栈、项目经验、个人兴趣">
 </head>
 <body>
-    <div class="about-container">
-        <!-- 导航栏 -->
-        <nav class="navbar">
-            <div class="nav-container">
-                <a href="index.html" class="nav-logo">Honesty</a>
-                <div class="nav-links">
-                    <a href="index.html">首页</a>
-                    <a href="javascript:void(0);" class="active">关于我</a>
-                    <a href="https://blog.hehouhui.cn">博客</a>
-                </div>
+<div class="ambient-canvas">
+    <div class="light-orb orb-1"></div>
+    <div class="light-orb orb-2"></div>
+    <div class="light-orb orb-3"></div>
+    <div class="noise-overlay"></div>
+</div>
+
+<div class="app-wrapper">
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <a href="index.html" class="brand">
+                <span class="brand-text">Honesty</span>
+                <span class="brand-dot"></span>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="nav-btn" title="Home">
+                    <i class="ri-home-4-line"></i>
+                    <span data-i18n="nav.home">首页</span>
+                </a>
+                <a href="javascript:void(0);" class="nav-btn active" title="About">
+                    <i class="ri-user-smile-line"></i>
+                    <span data-i18n="nav.about">关于</span>
+                </a>
+                <a href="https://blog.hehouhui.cn" class="nav-btn" title="Blog">
+                    <i class="ri-article-line"></i>
+                    <span data-i18n="nav.blog">博客</span>
+                </a>
+                <div class="divider"></div>
+                <button id="lang-toggle" class="icon-btn" title="Switch Language">
+                    <span class="lang-text">EN/中</span>
+                </button>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <i class="ri-sun-line show-light"></i>
+                    <i class="ri-moon-line show-dark"></i>
+                </button>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- 主要内容 -->
-        <main class="about-main">
-            <!-- 英雄区域 -->
-            <section class="hero-section">
-                
-                <div class="hero-container">
-                    <div class="hero-left">
-                        <div class="profile-card glass-card">
-                            <div class="profile-avatar">
-                                <img src="https://blog-file.hehouhui.cn/202507171929231.jpeg" alt="Honesty" class="avatar-image">
-                                <div class="status-indicator"></div>
-                            </div>
-                            <div class="profile-info">
-                                <h1 class="hero-title">Honesty</h1>
-                                <p class="hero-subtitle">Java后端 + AI开发工程师</p>
-                                <div class="location-info">
-                                    <span class="location-item">
-                                        <i class="iconfont icon-location"></i>
-                                        现居上海
-                                    </span>
-                                </div>
-                            </div>
+    <main class="main-stage">
+
+        <div class="bento-layout">
+
+            <div class="bento-box area-profile">
+                <div class="profile-inner">
+                    <div class="avatar-wrapper">
+                        <img src="https://blog-file.hehouhui.cn/202507171929231.jpeg" alt="Avatar" class="avatar-img">
+                        <div class="status-badge" data-i18n="profile.status">Available</div>
+                    </div>
+                    <div class="profile-meta">
+                        <h1 class="gradient-name" data-i18n="profile.name">Honesty</h1>
+                        <p class="role-text" data-i18n="profile.role">Java Backend + AI Developer</p>
+                        <div class="meta-tags">
+                            <span class="glass-pill"><i class="ri-map-pin-user-line"></i> <span data-i18n="profile.location">Shanghai</span></span>
+                            <span class="glass-pill"><i class="ri-time-line"></i> 7+ Years</span>
                         </div>
                     </div>
-                    <div class="hero-right hero-right-grid">
-                        <div class="intro-content">
-                            <div class="intro-text">
-                                <div class="quote-section">
-                                    <div class="quote-line"></div>
-                                    <div class="quote-content">
-                                        <h2><span class="gradient-text">关于我</span></h2>
-                                        <blockquote class="intro-quote">
-                                            <p>"我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。"</p>
-                                        </blockquote>
-                                        <blockquote class="intro-quote">
-                                            <p>"作为INFJ人格类型，我善于深度思考，注重细节，喜欢通过代码创造有意义的产品。我相信技术的力量能够改变世界，也热衷于在开源社区中分享知识与经验。"</p>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                        </div>
-                            <div class="personality-section">
-                                <div class="mbti-card glass-card">
-                                    <div class="mbti-header">
-                                        <img src="https://blog-file.hehouhui.cn/INFJ.png" alt="INFJ" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.4)">
-                                        <span class="mbti-tag">INFJ</span>
-                                        <span class="mbti-name"><span class="gradient-text">提倡者人格</span></span>
-                                    </div>
-                                    <div class="mbti-traits">
-                                        <span class="trait">理想主义与道德感</span>
-                                        <span class="trait">果断决绝的行动力</span>
-                                        <span class="trait">深度洞察与创意</span>
-                                        <span class="trait">关怀与同理心</span>
-                                    </div>
-                                    <div class="infj-quote">
-                                        <p style="margin-top: 1.5rem; color: #2a2d34; font-style: italic">"提倡者人格类型的人非常稀少，只有不到1%的人口属于这种类型，但他们对世界的贡献不容忽视。"</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="hero-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number glow-text" id="github-repos">--</span>
-                                    <span class="stat-label">开源项目</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number glow-text" id="github-followers">--</span>
-                                    <span class="stat-label">GitHub关注</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number glow-text" id="coding-years">7+</span>
-                                    <span class="stat-label">编程年限</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 技术栈云图 -->
-            <section class="tech-cloud-section">
-                <div class="section-header">
-                    <h2 class="section-title">技术栈</h2>
-                    <p class="section-subtitle">技术探索之旅 - 追求深度与完美的技术实践</p>
-                </div>
-                <div class="tech-cloud-container">
-                    <div class="cloud-wrapper" id="tech-cloud-wrapper">
-                        <!-- 技术标签将通过JavaScript动态生成 -->
-                    </div>
-                </div>
-                <div class="tech-philosophy">
-                    <p class="philosophy-text">"我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。"</p>
-                </div>
-            </section>
-
-            <!-- 个性特质时间线 -->
-            <section class="personality-timeline-section">
-                <div class="section-header">
-                    <h2 class="section-title">兴趣</h2>
-                    <p class="section-subtitle">INFJ · 创造者 · 探索者</p>
-                </div>
-                <div class="personality-timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-icon">🚴‍♂️</div>
-                                    <div class="timeline-content glass-card">
-                            <h3>骑行爱好者</h3>
-                            <p>享受在路上的自由感，用车轮丈量世界，在风景中寻找灵感</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-icon">📚</div>
-                        <div class="timeline-content">
-                            <h3>阅读与写作</h3>
-                            <p>通过文字记录思考轨迹，分享技术见解，用代码诠释创意</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-icon">🔍</div>
-                        <div class="timeline-content">
-                            <h3>开源探索</h3>
-                            <p>热衷于开源项目，相信分享的力量，用代码连接世界</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-icon">💡</div>
-                        <div class="timeline-content">
-                            <h3>持续学习</h3>
-                            <p>保持对新技术的好奇心，在变化中成长，在挑战中进步</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- GitHub项目展示 -->
-            <section class="github-showcase-section">
-                <div class="section-header">
-                    <h2 class="section-title">开源项目</h2>
-                    <p class="section-subtitle">用代码改变世界</p>
-                </div>
-                <div id="github-profile"></div>
-                <div id="github-commits"></div>
-                <div class="projects-masonry" id="projects-container">
-                    <div class="loading-placeholder">
-                        <div class="loading-spinner"></div>
-                        <p>正在加载项目...</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 博客文章瀑布流 -->
-            <section class="blog-waterfall-section">
-                <div class="section-header">
-                    <h2 class="section-title">最新文章</h2>
-                    <p class="section-subtitle">思考的足迹</p>
-                    <a href="https://blog.hehouhui.cn" class="view-all-link" target="_blank">
-                        查看全部 <i class="iconfont icon-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="articles-waterfall" id="blog-container">
-                    <div class="loading-placeholder">
-                        <div class="loading-spinner"></div>
-                        <p>正在加载文章...</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 联系方式浮动区域 -->
-            <section class="contact-floating-section">
-                <div class="contact-container">
-                    <div class="contact-title">
-                        <h2>让我们连接</h2>
-                        <p>欢迎交流技术、分享想法</p>
-                    </div>
-                    <div class="social-grid">
-                        <a href="https://github.com/listener-He" class="social-card github" target="_blank">
-                            <div class="social-icon">
-                                <i class="iconfont icon-github"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>GitHub</h3>
-                                <p>开源项目与代码</p>
-                            </div>
-                        </a>
-                        <a href="mailto:hehouhui@foxmail.com" class="social-card email">
-                            <div class="social-icon">
-                                <i class="iconfont icon-email"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>邮箱</h3>
-                                <p>商务合作联系</p>
-                            </div>
-                        </a>
-                        <a href="https://blog.hehouhui.cn" class="social-card blog" target="_blank">
-                            <div class="social-icon">
-                                <i class="iconfont icon-blog"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>技术博客</h3>
-                                <p>技术文章分享</p>
-                            </div>
-                        </a>
-                        <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="social-card zhihu" target="_blank">
-                            <div class="social-icon">
-                                <i class="iconfont icon-zhihu"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>知乎</h3>
-                                <p>技术问答交流</p>
-                            </div>
-                        </a>
-                        <a href="javascript:void(0);" class="social-card wechat" onclick="showWechatQR()">
-                            <div class="social-icon">
-                                <i class="iconfont icon-wechat"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>微信公众号</h3>
-                                <p>技术干货推送</p>
-                            </div>
-                        </a>
-                        <a href="https://juejin.cn/user/3659591622878503" class="social-card juejin" target="_blank">
-                            <div class="social-icon">
-                                <i class="iconfont icon-juejin"></i>
-                            </div>
-                            <div class="social-info">
-                                <h3>掘金</h3>
-                                <p>前端技术社区</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <!-- 微信二维码弹窗 -->
-                <div id="wechat-modal" class="modal" style="display: none;">
-                    <div class="modal-content">
-                        <span class="close" onclick="hideWechatQR()">&times;</span>
-                        <h3>微信公众号</h3>
-                        <div class="qr-code">
-                            <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="微信公众号二维码" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuW+ruS/oeS6jOe7tOeggeWNs+WwhuS4iue6vzwvdGV4dD48L3N2Zz4='">
-                        </div>
-                        <p>扫码关注获取最新技术文章</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 评论系统 -->
-            <section class="comments-section">
-                <div class="comments-container">
-                    <h2 class="section-title">留言板</h2>
-                    <p class="section-subtitle">分享你的想法</p>
-                    <div id="artalk-container"></div>
-                </div>
-            </section>
-        </main>
-
-        <!-- 页脚 -->
-        <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-bottom">
-                    <div class="footer-info">
-                        <p>&copy; 2024 Honesty. All rights reserved.</p>
-                        <p>ICP备案号：<a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备20014902号</a></p>
-                        <p>Powered by <a href="https://github.com/features/actions" target="_blank">GitHub Actions</a></p>
+                    <div class="social-dock desktop-only">
+                        <a href="https://github.com/listener-He" target="_blank" class="s-icon"><i class="ri-github-fill"></i></a>
+                        <a href="mailto:hehouhui@foxmail.com" class="s-icon"><i class="ri-mail-send-fill"></i></a>
+                        <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon"><i class="ri-wechat-fill"></i></a>
+                        <a href="https://www.zhihu.com/people/wen-xin-92-2-57" target="_blank" class="s-icon"><i class="ri-zhihu-line"></i></a>
                     </div>
                 </div>
             </div>
-        </footer>
+
+            <div class="bento-box area-bio">
+                <div class="bio-content">
+                    <h2 class="section-label" data-i18n="bio.title">About Me</h2>
+                    <p class="bio-text" data-i18n="bio.desc">
+                        "我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用..."
+                    </p>
+                    <div class="quote-block">
+                        <i class="ri-double-quotes-l"></i>
+                        <p data-i18n="bio.quote">"我追求技术的深度理解而非广度堆砌..."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-box area-stats">
+                <div class="stat-grid">
+                    <div class="stat-cell">
+                        <span class="stat-num neon-text" id="coding-years">7+</span>
+                        <span class="stat-label" data-i18n="stats.exp">Years Exp</span>
+                    </div>
+                    <div class="stat-cell">
+                        <span class="stat-num neon-text" id="github-repos">--</span>
+                        <span class="stat-label" data-i18n="stats.repos">Repositories</span>
+                    </div>
+                    <div class="stat-cell">
+                        <span class="stat-num neon-text" id="github-followers">--</span>
+                        <span class="stat-label" data-i18n="stats.followers">Followers</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-box area-mbti">
+                <div class="mbti-card">
+                    <div class="mbti-visual">
+                        <span class="mbti-big">INFJ</span>
+                        <span class="mbti-sub" data-i18n="mbti.type">Advocate</span>
+                    </div>
+                    <div class="mbti-traits">
+                        <p data-i18n="mbti.desc">"善于深度思考，注重细节，通过代码创造有意义的产品..."</p>
+                        <div class="trait-tags">
+                            <span class="trait" data-i18n="mbti.tag1">Idealism</span>
+                            <span class="trait" data-i18n="mbti.tag2">Insight</span>
+                            <span class="trait" data-i18n="mbti.tag3">Altruism</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-box area-tech">
+                <div class="box-header">
+                    <h3 data-i18n="tech.title">Tech Stack</h3>
+                    <div class="header-line"></div>
+                </div>
+                <div id="tech-cloud-container" class="tech-viewport"></div>
+            </div>
+
+            <div class="bento-box area-interests">
+                <div class="box-header">
+                    <h3 data-i18n="interest.title">Interests</h3>
+                </div>
+                <div class="timeline-list">
+                    <div class="tl-item">
+                        <div class="tl-icon">🚴‍♂️</div>
+                        <div class="tl-info">
+                            <h4 data-i18n="interest.cycling">Cycling</h4>
+                            <span data-i18n="interest.cycling_desc">Exploring the world on wheels</span>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-icon">📚</div>
+                        <div class="tl-info">
+                            <h4 data-i18n="interest.reading">Reading</h4>
+                            <span data-i18n="interest.reading_desc">Recording thoughts via text</span>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-icon">💡</div>
+                        <div class="tl-info">
+                            <h4 data-i18n="interest.opensource">Open Source</h4>
+                            <span data-i18n="interest.opensource_desc">Connecting the world with code</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-box area-social mobile-only-box">
+                <a href="https://github.com/listener-He" target="_blank" class="s-btn"><i class="ri-github-fill"></i></a>
+                <a href="mailto:hehouhui@foxmail.com" class="s-btn"><i class="ri-mail-send-fill"></i></a>
+                <a href="javascript:void(0);" onclick="toggleWechat()" class="s-btn"><i class="ri-wechat-fill"></i></a>
+            </div>
+        </div>
+
+        <div class="content-columns">
+            <section class="col-section">
+                <div class="col-head">
+                    <h3 class="glow-title"><i class="ri-github-line"></i> <span data-i18n="github.title">Open Source</span></h3>
+                </div>
+                <div class="glass-panel">
+                    <div id="github-commits" class="commits-chart"></div>
+                    <div class="projects-list" id="projects-container">
+                        <div class="skeleton-loader"></div>
+                        <div class="skeleton-loader"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-section">
+                <div class="col-head">
+                    <h3 class="glow-title"><i class="ri-article-line"></i> <span data-i18n="blog.title">Latest Posts</span></h3>
+                    <a href="https://blog.hehouhui.cn" class="more-link" data-i18n="blog.more">View All →</a>
+                </div>
+                <div class="glass-list" id="blog-container">
+                    <div class="skeleton-loader"></div>
+                    <div class="skeleton-loader"></div>
+                </div>
+            </section>
+        </div>
+
+        <section class="comments-area">
+            <div class="col-head">
+                <h3 class="glow-title"><i class="ri-message-3-line"></i> <span data-i18n="comment.title">Message Board</span></h3>
+            </div>
+            <div class="glass-panel comment-box">
+                <div id="artalk-container"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2024 Honesty. All rights reserved. <a href="https://beian.miit.gov.cn/">湘ICP备20014902号</a></p>
+    </footer>
+</div>
+
+<div id="wechat-modal" class="modal-backdrop">
+    <div class="modal-card">
+        <button class="close-modal" onclick="toggleWechat()"><i class="ri-close-line"></i></button>
+        <h3 data-i18n="modal.wechat_title">Official Account</h3>
+        <div class="qr-wrapper">
+            <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="WeChat QR">
+        </div>
+        <p data-i18n="modal.wechat_desc">Scan to follow for tech insights</p>
     </div>
+</div>
 
-    <!-- 脚本文件 -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/config.js"></script>
-    <!-- Artalk 评论系统 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.js"></script>
-    <script src="js/about.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.js"></script>
+<script src="js/about.js"></script>
 </body>
 </html>
