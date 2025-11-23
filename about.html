@@ -4,224 +4,259 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>关于我 - Honesty</title>
+    <!-- 核心资源：使用 BootCDN 加速 -->
     <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/about.css">
+    <!-- Artalk 评论样式 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.css">
     <link rel="icon" href="favicon.ico">
 </head>
 <body>
-<div class="ambient-canvas">
-    <div class="light-orb orb-1"></div>
-    <div class="light-orb orb-2"></div>
-    <div class="light-orb orb-3"></div>
-    <div class="noise-overlay"></div>
+<!-- 动态背景层 -->
+<div class="aurora-canvas">
+    <div class="glow-spot spot-1"></div>
+    <div class="glow-spot spot-2"></div>
+    <div class="glow-spot spot-3"></div>
+    <div class="noise-layer"></div>
 </div>
 
-<div class="app-wrapper">
+<div class="app-root">
+    <!-- 导航栏：PC顶栏 / 移动端底栏 -->
     <nav class="glass-nav">
-        <div class="nav-content">
-            <a href="index.html" class="brand">
-                <span class="brand-text">Honesty</span>
-                <span class="brand-dot"></span>
+        <div class="nav-inner">
+            <a href="index.html" class="logo-brand">
+                <span class="logo-text">Honesty</span>
+                <span class="logo-accent">.</span>
             </a>
-            <div class="nav-actions">
-                <a href="index.html" class="nav-btn" title="Home">
-                    <i class="ri-home-4-line"></i>
-                    <span data-i18n="nav.home">首页</span>
+
+            <div class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="ri-home-smile-2-line"></i>
+                    <span class="nav-label" data-i18n="nav.home">首页</span>
                 </a>
-                <a href="javascript:void(0);" class="nav-btn active" title="About">
-                    <i class="ri-user-smile-line"></i>
-                    <span data-i18n="nav.about">关于</span>
+                <a href="javascript:void(0);" class="nav-item active">
+                    <i class="ri-user-3-line"></i>
+                    <span class="nav-label" data-i18n="nav.about">关于</span>
                 </a>
-                <a href="https://blog.hehouhui.cn" class="nav-btn" title="Blog">
-                    <i class="ri-article-line"></i>
-                    <span data-i18n="nav.blog">博客</span>
+                <a href="https://blog.hehouhui.cn" class="nav-item">
+                    <i class="ri-quill-pen-line"></i>
+                    <span class="nav-label" data-i18n="nav.blog">博客</span>
                 </a>
-                <div class="divider"></div>
-                <button id="lang-toggle" class="icon-btn" title="Switch Language">
-                    <span class="lang-text">EN/中</span>
+
+                <div class="nav-divider"></div>
+
+                <!-- 功能按钮 -->
+                <button id="lang-btn" class="action-btn" aria-label="Switch Language">
+                    <i class="ri-translate-2"></i>
+                    <span class="btn-text">CN/EN</span>
                 </button>
-                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
-                    <i class="ri-sun-line show-light"></i>
-                    <i class="ri-moon-line show-dark"></i>
+                <button id="theme-btn" class="action-btn" aria-label="Toggle Theme">
+                    <i class="ri-sun-line icon-sun"></i>
+                    <i class="ri-moon-line icon-moon"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="main-stage">
+    <main class="main-container">
 
-        <div class="bento-layout">
+        <!-- 第一部分：Bento Grid 核心展示 -->
+        <div class="bento-grid">
 
-            <div class="bento-box area-profile">
-                <div class="profile-inner">
-                    <div class="avatar-wrapper">
-                        <img src="https://blog-file.hehouhui.cn/202507171929231.jpeg" alt="Avatar" class="avatar-img">
-                        <div class="status-badge" data-i18n="profile.status">Available</div>
+            <!-- [1] 个人卡片 (Profile) -->
+            <div class="bento-card area-profile">
+                <div class="profile-content">
+                    <div class="avatar-ring">
+                        <img src="https://blog-file.hehouhui.cn/202507171929231.jpeg" alt="Honesty" class="avatar-img">
+                        <div class="status-dot" data-i18n="status.online">Online</div>
                     </div>
-                    <div class="profile-meta">
-                        <h1 class="gradient-name" data-i18n="profile.name">Honesty</h1>
-                        <p class="role-text" data-i18n="profile.role">Java Backend + AI Developer</p>
-                        <div class="meta-tags">
-                            <span class="glass-pill"><i class="ri-map-pin-user-line"></i> <span data-i18n="profile.location">Shanghai</span></span>
-                            <span class="glass-pill"><i class="ri-time-line"></i> 7+ Years</span>
+                    <div class="profile-info">
+                        <h1 class="hero-name" data-i18n="profile.name">Honesty</h1>
+                        <p class="hero-role" data-i18n="profile.role">Java Backend & AI Engineer</p>
+                        <div class="location-tag">
+                            <i class="ri-map-pin-user-fill"></i> <span data-i18n="profile.location">Shanghai, China</span>
                         </div>
                     </div>
-                    <div class="social-dock desktop-only">
+                    <!-- 6个社交链接 (PC端显示) -->
+                    <div class="social-dock desktop-social">
                         <a href="https://github.com/listener-He" target="_blank" class="s-icon"><i class="ri-github-fill"></i></a>
                         <a href="mailto:hehouhui@foxmail.com" class="s-icon"><i class="ri-mail-send-fill"></i></a>
-                        <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon"><i class="ri-wechat-fill"></i></a>
+                        <a href="https://blog.hehouhui.cn" target="_blank" class="s-icon"><i class="ri-pages-line"></i></a>
                         <a href="https://www.zhihu.com/people/wen-xin-92-2-57" target="_blank" class="s-icon"><i class="ri-zhihu-line"></i></a>
+                        <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon"><i class="ri-wechat-fill"></i></a>
+                        <a href="https://juejin.cn/user/3659591622878503" target="_blank" class="s-icon"><i class="ri-code-box-line"></i></a>
                     </div>
                 </div>
             </div>
 
-            <div class="bento-box area-bio">
-                <div class="bio-content">
-                    <h2 class="section-label" data-i18n="bio.title">About Me</h2>
-                    <p class="bio-text" data-i18n="bio.desc">
-                        "我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用..."
-                    </p>
-                    <div class="quote-block">
-                        <i class="ri-double-quotes-l"></i>
-                        <p data-i18n="bio.quote">"我追求技术的深度理解而非广度堆砌..."</p>
+            <!-- [2] 简介与格言 (Bio) -->
+            <div class="bento-card area-bio">
+                <div class="card-label" data-i18n="bio.label">About Me</div>
+                <p class="bio-text" data-i18n="bio.text">
+                    "我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。"
+                </p>
+                <div class="quote-box">
+                    <i class="ri-double-quotes-l"></i>
+                    <p data-i18n="bio.quote">"我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。"</p>
+                </div>
+            </div>
+
+            <!-- [3] 数据统计 (Stats) -->
+            <div class="bento-card area-stats">
+                <div class="stat-item">
+                    <span class="stat-val neon-font" id="coding-years">7+</span>
+                    <span class="stat-key" data-i18n="stats.exp">Years</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val neon-font" id="github-repos">--</span>
+                    <span class="stat-key" data-i18n="stats.repos">Projects</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val neon-font" id="github-followers">--</span>
+                    <span class="stat-key" data-i18n="stats.followers">Followers</span>
+                </div>
+            </div>
+
+            <!-- [4] MBTI 人格 (Personality) -->
+            <div class="bento-card area-mbti">
+                <div class="mbti-inner">
+                    <div class="mbti-head">
+                        <span class="mbti-code gradient-text">INFJ</span>
+                        <span class="mbti-name" data-i18n="mbti.name">Advocate</span>
+                    </div>
+                    <p class="mbti-desc" data-i18n="mbti.desc">"理想主义与道德感，果断决绝的行动力。深度洞察与创意，关怀与同理心。"</p>
+                    <div class="mbti-tags">
+                        <span class="tag" data-i18n="mbti.tag1">Idealism</span>
+                        <span class="tag" data-i18n="mbti.tag2">Insight</span>
+                        <span class="tag" data-i18n="mbti.tag3">Empathy</span>
                     </div>
                 </div>
             </div>
 
-            <div class="bento-box area-stats">
-                <div class="stat-grid">
-                    <div class="stat-cell">
-                        <span class="stat-num neon-text" id="coding-years">7+</span>
-                        <span class="stat-label" data-i18n="stats.exp">Years Exp</span>
-                    </div>
-                    <div class="stat-cell">
-                        <span class="stat-num neon-text" id="github-repos">--</span>
-                        <span class="stat-label" data-i18n="stats.repos">Repositories</span>
-                    </div>
-                    <div class="stat-cell">
-                        <span class="stat-num neon-text" id="github-followers">--</span>
-                        <span class="stat-label" data-i18n="stats.followers">Followers</span>
-                    </div>
+            <!-- [5] 技术栈宇宙 (Tech Stack) -->
+            <div class="bento-card area-tech">
+                <div class="card-header">
+                    <h3 data-i18n="tech.title">Tech Universe</h3>
+                </div>
+                <!-- 容器：PC端3D球，移动端横向滚动条 -->
+                <div id="tech-container" class="tech-wrapper">
+                    <!-- JS 动态注入 -->
                 </div>
             </div>
 
-            <div class="bento-box area-mbti">
-                <div class="mbti-card">
-                    <div class="mbti-visual">
-                        <span class="mbti-big">INFJ</span>
-                        <span class="mbti-sub" data-i18n="mbti.type">Advocate</span>
-                    </div>
-                    <div class="mbti-traits">
-                        <p data-i18n="mbti.desc">"善于深度思考，注重细节，通过代码创造有意义的产品..."</p>
-                        <div class="trait-tags">
-                            <span class="trait" data-i18n="mbti.tag1">Idealism</span>
-                            <span class="trait" data-i18n="mbti.tag2">Insight</span>
-                            <span class="trait" data-i18n="mbti.tag3">Altruism</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bento-box area-tech">
-                <div class="box-header">
-                    <h3 data-i18n="tech.title">Tech Stack</h3>
-                    <div class="header-line"></div>
-                </div>
-                <div id="tech-cloud-container" class="tech-viewport"></div>
-            </div>
-
-            <div class="bento-box area-interests">
-                <div class="box-header">
+            <!-- [6] 兴趣爱好 (Interests) -->
+            <div class="bento-card area-interests">
+                <div class="card-header">
                     <h3 data-i18n="interest.title">Interests</h3>
                 </div>
-                <div class="timeline-list">
-                    <div class="tl-item">
-                        <div class="tl-icon">🚴‍♂️</div>
-                        <div class="tl-info">
-                            <h4 data-i18n="interest.cycling">Cycling</h4>
-                            <span data-i18n="interest.cycling_desc">Exploring the world on wheels</span>
+                <div class="interest-list">
+                    <div class="interest-item">
+                        <span class="i-emoji">🚴‍♂️</span>
+                        <div class="i-text">
+                            <strong data-i18n="interest.cycling">Cycling</strong>
+                            <span data-i18n="interest.cycling_desc">Measuring the world</span>
                         </div>
                     </div>
-                    <div class="tl-item">
-                        <div class="tl-icon">📚</div>
-                        <div class="tl-info">
-                            <h4 data-i18n="interest.reading">Reading</h4>
-                            <span data-i18n="interest.reading_desc">Recording thoughts via text</span>
+                    <div class="interest-item">
+                        <span class="i-emoji">📚</span>
+                        <div class="i-text">
+                            <strong data-i18n="interest.reading">Reading</strong>
+                            <span data-i18n="interest.reading_desc">Thinking tracks</span>
                         </div>
                     </div>
-                    <div class="tl-item">
-                        <div class="tl-icon">💡</div>
-                        <div class="tl-info">
-                            <h4 data-i18n="interest.opensource">Open Source</h4>
-                            <span data-i18n="interest.opensource_desc">Connecting the world with code</span>
+                    <div class="interest-item">
+                        <span class="i-emoji">🔍</span>
+                        <div class="i-text">
+                            <strong data-i18n="interest.opensource">Open Source</strong>
+                            <span data-i18n="interest.opensource_desc">Sharing power</span>
+                        </div>
+                    </div>
+                    <div class="interest-item">
+                        <span class="i-emoji">💡</span>
+                        <div class="i-text">
+                            <strong data-i18n="interest.learning">Learning</strong>
+                            <span data-i18n="interest.learning_desc">Always curious</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bento-box area-social mobile-only-box">
-                <a href="https://github.com/listener-He" target="_blank" class="s-btn"><i class="ri-github-fill"></i></a>
-                <a href="mailto:hehouhui@foxmail.com" class="s-btn"><i class="ri-mail-send-fill"></i></a>
-                <a href="javascript:void(0);" onclick="toggleWechat()" class="s-btn"><i class="ri-wechat-fill"></i></a>
+            <!-- 移动端显示的社交栏 (6个链接) -->
+            <div class="bento-card area-social-mobile mobile-social">
+                <a href="https://github.com/listener-He" class="ms-btn"><i class="ri-github-fill"></i></a>
+                <a href="mailto:hehouhui@foxmail.com" class="ms-btn"><i class="ri-mail-send-fill"></i></a>
+                <a href="https://blog.hehouhui.cn" class="ms-btn"><i class="ri-pages-line"></i></a>
+                <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="ms-btn"><i class="ri-zhihu-line"></i></a>
+                <a href="javascript:void(0);" onclick="toggleWechat()" class="ms-btn"><i class="ri-wechat-fill"></i></a>
+                <a href="https://juejin.cn/user/3659591622878503" class="ms-btn"><i class="ri-code-box-line"></i></a>
             </div>
         </div>
 
-        <div class="content-columns">
-            <section class="col-section">
-                <div class="col-head">
+        <!-- 第二部分：开源与博客 (瀑布流/列表) -->
+        <div class="content-section">
+            <!-- 左侧：GitHub -->
+            <div class="content-col">
+                <div class="col-header">
                     <h3 class="glow-title"><i class="ri-github-line"></i> <span data-i18n="github.title">Open Source</span></h3>
                 </div>
                 <div class="glass-panel">
+                    <!-- 贡献图 placeholder -->
                     <div id="github-commits" class="commits-chart"></div>
-                    <div class="projects-list" id="projects-container">
-                        <div class="skeleton-loader"></div>
-                        <div class="skeleton-loader"></div>
+                    <div id="projects-container" class="projects-list">
+                        <!-- Loading State -->
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section class="col-section">
-                <div class="col-head">
+            <!-- 右侧：Blog -->
+            <div class="content-col">
+                <div class="col-header">
                     <h3 class="glow-title"><i class="ri-article-line"></i> <span data-i18n="blog.title">Latest Posts</span></h3>
                     <a href="https://blog.hehouhui.cn" class="more-link" data-i18n="blog.more">View All →</a>
                 </div>
-                <div class="glass-list" id="blog-container">
-                    <div class="skeleton-loader"></div>
-                    <div class="skeleton-loader"></div>
+                <div id="blog-container" class="blog-list glass-panel">
+                    <!-- Loading State -->
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
                 </div>
-            </section>
+            </div>
         </div>
 
-        <section class="comments-area">
-            <div class="col-head">
-                <h3 class="glow-title"><i class="ri-message-3-line"></i> <span data-i18n="comment.title">Message Board</span></h3>
+        <!-- 第三部分：评论 -->
+        <div class="comments-wrapper">
+            <div class="col-header">
+                <h3 class="glow-title"><i class="ri-discuss-line"></i> <span data-i18n="comment.title">Message Board</span></h3>
             </div>
             <div class="glass-panel comment-box">
                 <div id="artalk-container"></div>
             </div>
-        </section>
+        </div>
 
     </main>
 
+    <!-- 微信弹窗 -->
+    <div id="wechat-modal" class="modal-overlay">
+        <div class="modal-glass">
+            <button class="modal-close" onclick="toggleWechat()"><i class="ri-close-line"></i></button>
+            <h3 data-i18n="modal.wechat">Official Account</h3>
+            <div class="qr-box">
+                <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="WeChat QR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <div class="qr-fallback">QR Load Failed</div>
+            </div>
+            <p data-i18n="modal.desc">Scan to follow Tech Share</p>
+        </div>
+    </div>
+
     <footer class="site-footer">
-        <p>&copy; 2024 Honesty. All rights reserved. <a href="https://beian.miit.gov.cn/">湘ICP备20014902号</a></p>
+        <p>&copy; 2024 Honesty. All rights reserved. <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备20014902号</a></p>
     </footer>
 </div>
 
-<div id="wechat-modal" class="modal-backdrop">
-    <div class="modal-card">
-        <button class="close-modal" onclick="toggleWechat()"><i class="ri-close-line"></i></button>
-        <h3 data-i18n="modal.wechat_title">Official Account</h3>
-        <div class="qr-wrapper">
-            <img src="https://blog-file.hehouhui.cn/wechat/mp-honesy.jpg" alt="WeChat QR">
-        </div>
-        <p data-i18n="modal.wechat_desc">Scan to follow for tech insights</p>
-    </div>
-</div>
-
+<!-- 脚本：BootCDN jQuery -->
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="js/config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/artalk/2.9.1/Artalk.js"></script>
