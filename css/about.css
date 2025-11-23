@@ -261,11 +261,11 @@ body {
 .tag { font-size: 0.75rem; background: rgba(128,128,128,0.1); padding: 4px 10px; border-radius: 6px; color: var(--text-secondary); }
 
 /* --- Tech Stack (PC) --- */
-.area-tech { display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.area-tech { display: flex; flex-direction: column; position: relative; overflow: visible; }
 .card-header { padding: 20px 25px; border-bottom: 1px solid rgba(128,128,128,0.1); }
 .card-header h3 { font-size: 1.1rem; color: var(--text-primary); margin: 0; }
 /* PC 3D Container */
-.tech-wrapper { flex: 1; position: relative; min-height: 250px; width: 100%; }
+.tech-wrapper { flex: 1; position: relative; min-height: 250px; width: 100%; overflow: visible; }
 .tech-tag-3d {
     position: absolute; 
     font-size: 0.85rem; 
@@ -277,35 +277,50 @@ body {
     white-space: nowrap;
     backface-visibility: hidden;
     will-change: transform;
-    /* 移除背景色和边框，只保留文字渐变效果 */
+    /* 只保留文字渐变效果 */
     background: none;
     border: none;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-fill-color: transparent;
     pointer-events: none; /* 禁用鼠标事件避免干扰 */
+    z-index: 10;
 }
 
 /* 不同颜色的标签 */
 .tech-tag-3d.tag-color-1, .tech-tag-mobile.tag-color-1 {
     background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .tech-tag-3d.tag-color-2, .tech-tag-mobile.tag-color-2 {
     background: var(--gradient-2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .tech-tag-3d.tag-color-3, .tech-tag-mobile.tag-color-3 {
     background: var(--gradient-3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .tech-tag-3d.tag-color-4, .tech-tag-mobile.tag-color-4 {
     background: var(--gradient-4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .tech-tag-3d.tag-color-5, .tech-tag-mobile.tag-color-5 {
     background: var(--gradient-5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 /* 扩展更多渐变方案 */
 .tech-tag-3d.tag-color-6, .tech-tag-mobile.tag-color-6 { background: var(--gradient-6); }
@@ -730,13 +745,6 @@ body {
             black 90%,
             transparent 100%
         );
-        /* 添加持续滚动动画 */
-        animation: scrollLine 15s linear infinite;
-    }
-    
-    @keyframes scrollLine {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
     }
     
 .tech-tag-mobile {
@@ -753,8 +761,8 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-fill-color: transparent;
     pointer-events: none;
+    z-index: 10;
 }
 
     /* Mobile Social */

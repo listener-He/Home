@@ -396,10 +396,13 @@ class UIManager {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
                 // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${item.gradientId}`;
+                const colorClass = `tag-color-${(index % 5) + 1}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
-                el.style.gridRow = `${(index % 3) + 1}`;
+                // 确保只显示文字，没有背景和边框
+                el.style.background = 'none';
+                el.style.border = 'none';
+                el.style.color = 'transparent';
                 container.appendChild(el);
             });
         } else {
@@ -413,17 +416,21 @@ class UIManager {
                 const el = document.createElement('a');
                 el.className = 'tech-tag-3d';
                 // 添加不同颜色的渐变类
-                const colorClass = `tag-color-${item.gradientId}`;
+                const colorClass = `tag-color-${(index % 5) + 1}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
+                // 移除背景和边框样式，只保留文字
+                el.style.background = 'none';
                 el.style.border = 'none';
+                el.style.color = 'transparent';
                 container.appendChild(el);
                 tags.push({ el, x:0, y:0, z:0 });
             });
 
-            let radius = Math.max(180, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
+            // 增大球体半径以避免标签重叠
+            let radius = 300;
             const dtr = Math.PI/180;
-            const autoAx = 0.6, autoBx = 0.5;
+            let lasta=1, lastb=1;
             let active=false, mouseX=0, mouseY=0;
 
             // Init positions
@@ -444,15 +451,17 @@ class UIManager {
             };
 
             const update = () => {
-                if (container.__animToken !== token) return;
                 let a, b;
                 if(active) {
-                    a = (-Math.min(Math.max(-mouseY, -200), 200)/radius) * 2 + autoAx;
-                    b = (Math.min(Math.max(-mouseX, -200), 200)/radius) * 2 + autoBx;
+                    a = (-Math.min(Math.max(-mouseY, -200), 200)/radius) * 2;
+                    b = (Math.min(Math.max(-mouseX, -200), 200)/radius) * 2;
                 } else {
-                    a = autoAx;
-                    b = autoBx;
+                    a = lasta * 0.98; // Auto rotate
+                    b = lastb * 0.98;
                 }
+                lasta=a; lastb=b;
+
+                if(Math.abs(a)<=0.01 && Math.abs(b)<=0.01 && !active) a=0.5; // Keep spinning slowly
 
                 let sa=Math.sin(a*dtr), ca=Math.cos(a*dtr);
                 let sb=Math.sin(b*dtr), cb=Math.cos(b*dtr);
@@ -462,8 +471,7 @@ class UIManager {
                     let rx2=rx1*cb + rz1*sb, ry2=ry1, rz2=rx1*-sb + rz1*cb;
                     tag.x=rx2; tag.y=ry2; tag.z=rz2;
 
-                    let scale = (tag.z + radius)/(2*radius) + 0.45;
-                    scale = Math.min(Math.max(scale, 0.7), 1.2);
+                    let scale = (tag.z + radius)/(2*radius) + 0.5;
                     let opacity = (tag.z + radius)/(2*radius) + 0.2;
 
                     tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 1);
@@ -472,7 +480,7 @@ class UIManager {
                     let top = tag.y + container.offsetHeight/2 - tag.el.offsetHeight/2;
                     tag.el.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
                 });
-                container.__animId = requestAnimationFrame(update);
+                requestAnimationFrame(update);
             };
             update();
         }
