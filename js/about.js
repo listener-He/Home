@@ -153,7 +153,7 @@ class I18nManager {
             this.lang = this.lang === 'zh' ? 'en' : 'zh';
             setStoredLanguage(this.lang);
             this.apply();
-            const label = this.lang === 'zh' ? 'CN' : 'EN';
+            const label = this.lang === 'zh' ? 'EN' : 'CN';
             $('#lang-btn .btn-text').text(label);
             $('#lang-btn').attr('title', label);
         });
@@ -165,7 +165,7 @@ class I18nManager {
             const k = $(this).data('i18n');
             if (t[k]) $(this).text(t[k]);
         });
-        const label = this.lang === 'zh' ? 'CN' : 'EN';
+        const label = this.lang === 'zh' ? 'EN' : 'CN';
         $('#lang-btn .btn-text').text(label);
         $('#lang-btn').attr('title', label);
     }
@@ -184,6 +184,9 @@ class ThemeManager {
         let theme = getStoredTheme();
         if (theme === 'night') this.root.setAttribute('data-theme', 'night');
         $('#theme-btn').toggleClass('is-active', theme === 'night');
+        const langForTitle = getStoredLanguage();
+        const titleText = theme === 'night' ? (langForTitle === 'zh' ? '白天模式' : 'Day') : (langForTitle === 'zh' ? '黑夜模式' : 'Night');
+        $('#theme-btn').attr('title', titleText);
 
         $('#theme-btn').on('click', () => {
             const curr = this.root.getAttribute('data-theme');
@@ -192,6 +195,9 @@ class ThemeManager {
             else this.root.removeAttribute('data-theme');
             setStoredTheme(next)
             $('#theme-btn').toggleClass('is-active', next === 'night');
+            const lang = getStoredLanguage();
+            const t = next === 'night' ? (lang === 'zh' ? '白天模式' : 'Day') : (lang === 'zh' ? '黑夜模式' : 'Night');
+            $('#theme-btn').attr('title', t);
 
             // 更新Artalk主题
             if (typeof Artalk !== 'undefined') {
