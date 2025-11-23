@@ -95,6 +95,11 @@ class ThemeManager {
             if(next === 'night') this.root.setAttribute('data-theme', 'night');
             else this.root.removeAttribute('data-theme');
             localStorage.setItem('theme', next);
+            
+            // 更新Artalk主题
+            if (typeof Artalk !== 'undefined') {
+                Artalk.reload();
+            }
         });
     }
 }
@@ -144,11 +149,19 @@ class DataManager {
             // Parallel Fetch
             const [uRes, rRes] = await Promise.allSettled([
                 fetch(`https://api.github.com/users/${user}`),
-                fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=6`)
+                fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=100`)
             ]);
 
             const userData = uRes.status === 'fulfilled' ? await uRes.value.json() : this.defaults.user;
-            const repoData = rRes.status === 'fulfilled' ? await rRes.value.json() : this.defaults.repos;
+            let repoData = rRes.status === 'fulfilled' ? await rRes.value.json() : this.defaults.repos;
+
+            // 过滤掉fork项目并按星数排序
+            if (Array.isArray(repoData)) {
+                repoData = repoData
+                    .filter(repo => !repo.fork && (repo.stargazers_count > 0 || repo.forks_count > 0))
+                    .sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0))
+                    .slice(0, 12); // 只取前12个
+            }
 
             // Cache & Render
             localStorage.setItem(cacheKey, JSON.stringify({
@@ -177,6 +190,7 @@ class DataManager {
         list.slice(0, 5).forEach(repo => {
             // Fix: API field compatibility
             const stars = repo.stargazers_count !== undefined ? repo.stargazers_count : (repo.stars || 0);
+            const forks = repo.forks_count !== undefined ? repo.forks_count : (repo.forks || 0);
             const desc = repo.description || repo.desc || 'No description.';
             const url = repo.html_url || repo.url || '#';
 
@@ -184,7 +198,10 @@ class DataManager {
             <div class="repo-card" onclick="window.open('${url}')">
                 <div class="repo-head">
                     <span>${repo.name}</span>
-                    <span style="color:#f1c40f"><i class="ri-star-fill"></i> ${stars}</span>
+                    <span>
+                        <i class="ri-star-fill"></i> ${stars}
+                        <i class="ri-git-branch-fill"></i> ${forks}
+                    </span>
                 </div>
                 <div class="repo-desc">${desc}</div>
             </div>`;
@@ -192,11 +209,70 @@ class DataManager {
         $('#projects-container').html(html);
     }
 
-    fetchBlog() {
-        fetch('data/articles.json')
-            .then(r => r.json())
-            .then(data => this.renderBlog(data))
-            .catch(() => this.renderBlog(this.defaults.posts));
+    // 从RSS获取博客文章
+    async fetchBlog() {
+        const rssUrl = window.SiteConfig?.blog?.rssUrl || 'https://blog.hehouhui.cn/api/rss';
+        const cacheKey = 'blog_data_v2';
+        const cached = JSON.parse(localStorage.getItem(cacheKey));
+        const now = Date.now();
+
+        // Check Cache (1 hour)
+        if(cached && (now - cached.time < 3600000)) {
+            this.renderBlog(cached.posts);
+            return;
+        }
+
+        try {
+            // 尝试从RSS获取
+            const response = await fetch(rssUrl);
+            if (!response.ok) throw new Error('RSS fetch failed');
+            
+            const xmlText = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+            
+            if (xmlDoc.documentElement.nodeName === "parsererror") {
+                throw new Error('RSS XML parse error');
+            }
+
+            // 解析RSS项目
+            const items = xmlDoc.getElementsByTagName("item");
+            const posts = [];
+            
+            for (let i = 0; i < Math.min(items.length, 5); i++) {
+                const item = items[i];
+                const title = item.querySelector("title")?.textContent || "无标题";
+                const link = item.querySelector("link")?.textContent || "#";
+                const pubDate = item.querySelector("pubDate")?.textContent || "";
+                const category = item.querySelector("category")?.textContent || "Tech";
+                
+                posts.push({
+                    title,
+                    link,
+                    date: pubDate,
+                    cat: category
+                });
+            }
+
+            // Cache & Render
+            localStorage.setItem(cacheKey, JSON.stringify({
+                posts,
+                time: now
+            }));
+            this.renderBlog(posts);
+
+        } catch (e) {
+            console.warn("RSS API Fail", e);
+            // 降级到本地JSON文件
+            try {
+                const response = await fetch('data/articles.json');
+                const data = await response.json();
+                this.renderBlog(data);
+            } catch (e2) {
+                console.warn("Local JSON Fail", e2);
+                this.renderBlog(this.defaults.posts);
+            }
+        }
     }
 
     renderBlog(list) {
@@ -272,9 +348,14 @@ class UIManager {
         if(isMobile) {
             // Mobile: Horizontal Scroll Snap (Compact 3 rows)
             container.classList.add('mobile-scroll');
-            techStack.forEach(item => {
+            // 创建多个标签副本以实现无缝滚动效果
+            const extendedTechStack = [...techStack, ...techStack, ...techStack];
+            extendedTechStack.forEach((item, index) => {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
+                // 添加不同颜色的渐变类
+                const colorClass = `tag-color-${(index % 5) + 1}`;
+                el.classList.add(colorClass);
                 el.innerText = item.name;
                 container.appendChild(el);
             });
@@ -283,15 +364,22 @@ class UIManager {
             container.classList.remove('mobile-scroll');
             const tags = [];
 
-            techStack.forEach(item => {
+            techStack.forEach((item, index) => {
                 const el = document.createElement('a');
                 el.className = 'tech-tag-3d';
+                // 添加不同颜色的渐变类
+                const colorClass = `tag-color-${(index % 5) + 1}`;
+                el.classList.add(colorClass);
                 el.innerText = item.name;
+                // 移除背景和边框样式
+                el.style.background = 'none';
+                el.style.border = 'none';
                 container.appendChild(el);
                 tags.push({ el, x:0, y:0, z:0 });
             });
 
-            let radius = 120; // Smaller radius to fit
+            // 增大球体半径以避免标签重叠
+            let radius = 220;
             const dtr = Math.PI/180;
             let lasta=1, lastb=1;
             let active=false, mouseX=0, mouseY=0;
