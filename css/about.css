@@ -409,6 +409,9 @@ body {
     margin-bottom: 10px;
 }
 
+.animated-gradient { background-image: linear-gradient(90deg, var(--text-primary), var(--accent), var(--text-primary)); -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 6s linear infinite; text-shadow: 0 0 8px rgba(108,92,231,0.2); }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+
 .location-tag {
     font-size: 0.85rem;
     color: var(--text-tertiary);
@@ -464,6 +467,16 @@ body {
     font-size: 1rem;
     color: var(--text-primary);
     margin-bottom: 20px;
+    text-align: justify;
+}
+.bio-text.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.link-btn {
+    background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.85rem;
 }
 
 .quote-box {
@@ -1032,6 +1045,7 @@ body {
         background-clip: text;
         color: transparent;
     }
+    .comment-box { padding: 24px; }
 }
 
 /* =========================================
@@ -1204,19 +1218,25 @@ body {
         scroll-snap-type: x mandatory;
         /* 添加淡入淡出效果 */
         mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 10%,
-                black 90%,
-                transparent 100%
+            to right,
+            transparent 0%,
+            black 10%,
+            black 90%,
+            transparent 100%
         );
         -webkit-mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 10%,
-                black 90%,
-                transparent 100%
+            to right,
+            transparent 0%,
+            black 10%,
+            black 90%,
+            transparent 100%
         );
+        animation: techMarquee 18s linear infinite;
+    }
+
+    @keyframes techMarquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-33.333%); }
     }
 
     .tech-tag-mobile {
@@ -1319,6 +1339,7 @@ body {
         background-clip: text;
         color: transparent;
     }
+    .comment-box { padding: 16px; }
 }
 
 /* =========================================

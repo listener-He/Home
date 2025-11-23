@@ -34,33 +34,11 @@ const SiteConfig = {
 
   // about.js 配置
   github: {
-    username: 'listener-He',
-    cache: {
-      cacheKey: "gh_data_v2",
-      stats: {
-        key: 'github_stats_cache',
-        timeKey: 'github_stats_cache_time',
-        expirationDays: 3
-      },
-      projects: {
-        key: 'github_projects_cache',
-        timeKey: 'github_projects_cache_time',
-        expirationDays: 3
-      },
-      commits: {
-        key: 'github_commits_cache',
-        timeKey: 'github_commits_cache_time',
-        expirationHours: 24
-      }
-    }
+    username: 'listener-He'
   },
   
   blog: {
-    rssUrl: 'https://blog.hehouhui.cn/api/rss',
-    cache: {
-      key: 'blog_articles_cache',
-      expirationDays: 1
-    }
+    rssUrl: 'https://blog.hehouhui.cn/api/rss'
   },
 
   // 通用缓存键与TTL（毫秒）

@@ -141,13 +141,21 @@ class DataManager {
 
         try {
             // Parallel Fetch
-            const [uRes, rRes] = await Promise.allSettled([
-                fetch(`https://api.github.com/users/${user}`),
-                fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=100`)
-            ]);
-
-            const userData = uRes.status === 'fulfilled' ? await uRes.value.json() : (window.SiteConfig?.defaults?.user);
-            let repoData = rRes.status === 'fulfilled' ? await rRes.value.json() : (window.SiteConfig?.defaults?.repos);
+            const uRes = await fetch(`https://api.github.com/users/${user}`);
+            const userData = uRes.ok ? await uRes.json() : (window.SiteConfig?.defaults?.user);
+            let allRepos = [];
+            let page = 1;
+            const perPage = 100;
+            while (page <= 5) { // 最多抓取500条，直到满足条件或为空
+                const rRes = await fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=${perPage}&page=${page}`);
+                if (!rRes.ok) break;
+                const repos = await rRes.json();
+                if (!Array.isArray(repos) || repos.length === 0) break;
+                allRepos = allRepos.concat(repos);
+                if (allRepos.length >= 200) break; // 足量
+                page++;
+            }
+            let repoData = allRepos.length ? allRepos : (window.SiteConfig?.defaults?.repos);
 
             // 过滤掉fork项目并按星数排序
             if (Array.isArray(repoData)) {
@@ -319,6 +327,9 @@ class UIManager {
         this.initTechCloud();
         this.initModal();
         this.initArtalk();
+        this.initBioToggle();
+        this.initNavInteraction();
+        this.initProfileGradient();
         let resizeTimer = null;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -352,6 +363,33 @@ class UIManager {
         } else {
             $('#artalk-container').html('<div style="text-align:center;color:#999;padding:20px;">Message board loading...</div>');
         }
+    }
+
+    initBioToggle() {
+        const el = document.querySelector('.bio-text');
+        const btn = document.getElementById('bio-toggle');
+        if(!el || !btn) return;
+        btn.addEventListener('click', () => {
+            el.classList.toggle('collapsed');
+        });
+    }
+
+    initNavInteraction() {
+        const nav = document.querySelector('.glass-nav');
+        if(!nav) return;
+        const onScroll = () => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            nav.classList.toggle('nav-scrolled', y > 30);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    initProfileGradient() {
+        const name = document.querySelector('.hero-name');
+        const role = document.querySelector('.hero-role');
+        if(name) name.classList.add('animated-gradient');
+        if(role) role.classList.add('animated-gradient');
     }
 
     initTechCloud() {
@@ -388,8 +426,7 @@ class UIManager {
         } else {
             // PC: 3D Sphere
             container.classList.remove('mobile-scroll');
-            const token = Date.now();
-            container.__animToken = token;
+            container.__animToken = Date.now();
             const tags = [];
 
             techStack.forEach((item, index) => {
