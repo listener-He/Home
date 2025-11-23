@@ -1580,15 +1580,24 @@ body {
 .social-dock .s-icon i { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; -webkit-text-fill-color: initial !important; color: currentColor !important; text-shadow: none !important; }
 .area-music { padding: 20px; display: flex; flex-direction: column; }
 .vinyl-player { position: relative; display: flex; align-items: center; gap: 16px; }
-.vinyl-disc { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(#222 0%, #111 30%, #000 60%, #111 100%); box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.2); position: relative; }
+.vinyl-disc { width: clamp(110px, 26vw, 160px); height: clamp(110px, 26vw, 160px); border-radius: 50%; background:
+    radial-gradient(#222 0%, #111 30%, #000 60%, #111 100%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 3px, transparent 6px),
+    repeating-conic-gradient(from 0deg, rgba(255,215,0,0.05) 0deg, rgba(255,215,0,0.0) 8deg);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.2);
+    position: relative; }
 .vinyl-disc::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: 32px; height: 32px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-.vinyl-arm { width: 80px; height: 8px; background: #888; border-radius: 8px; transform-origin: left center; transform: rotate(12deg); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.vinyl-disc::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(108,92,231,0.15); animation: pulseWave 2.4s ease-out infinite; }
+.vinyl-arm { display: none !important; }
 .vinyl-info { display: flex; flex-direction: column; gap: 6px; }
 .vinyl-title { font-weight: 700; background: var(--gradient-4); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .vinyl-status { font-size: 0.85rem; color: var(--text-secondary); }
-.netease-embed { position: absolute; right: 20px; bottom: 10px; width: 340px; height: 86px; border-radius: 12px; overflow: hidden; }
 .spinning { animation: spinDisc 8s linear infinite; }
 @keyframes spinDisc { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.vinyl-lyrics { flex: 1; min-width: 160px; max-width: 240px; padding: 8px 12px; }
+.vinyl-lyrics #lyric-current { font-size: 0.95rem; line-height: 1.6; background: var(--gradient-3); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@keyframes pulseWave { 0% { box-shadow: 0 0 0 2px rgba(108,92,231,0.0); } 50% { box-shadow: 0 0 0 10px rgba(108,92,231,0.25); } 100% { box-shadow: 0 0 0 2px rgba(108,92,231,0.0); } }
+.aplayer { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 .mobile-fab { position: fixed; right: 16px; bottom: 88px; z-index: 1100; }
 .fab-main { display: flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; border: none; border-radius: 22px; padding: 10px 14px; box-shadow: 0 8px 18px rgba(0,0,0,0.25); }
 .fab-label { font-size: 12px; }

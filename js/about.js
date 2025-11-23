@@ -616,17 +616,34 @@ class UIManager {
     }
 
     initMusic() {
-        const embed = null; // 不再使用 iframe 嵌入
         const disc = document.getElementById('vinyl-disc');
-        const btn = document.getElementById('music-toggle');
         const statusEl = document.getElementById('music-status');
-        if (!disc || !btn) return;
+        const lyricEl = document.getElementById('lyric-current');
+        if (!disc) return;
         let playing = true;
         let loaded = false;
+        let rafId = null; let lyricIdx = 0; this._lyricLines = [];
+        const stopLyricLoop = () => { if (rafId) cancelAnimationFrame(rafId); rafId = null; };
+        const startLyricLoop = () => {
+            stopLyricLoop();
+            const loop = () => {
+                if (!this.aplayer || !playing) return;
+                const ct = this.aplayer.audio.currentTime || 0;
+                while (lyricIdx + 1 < this._lyricLines.length && this._lyricLines[lyricIdx + 1].t <= ct) { lyricIdx++; }
+                const line = this._lyricLines[lyricIdx];
+                if (line && lyricEl && lyricEl.dataset.last !== String(lyricIdx)) {
+                    lyricEl.textContent = line.text || '';
+                    lyricEl.dataset.last = String(lyricIdx);
+                }
+                rafId = requestAnimationFrame(loop);
+            };
+            rafId = requestAnimationFrame(loop);
+        };
         const fail = () => {
             playing = false;
-            embed.style.display = 'none';
             if (statusEl) statusEl.style.display = 'inline';
+            stopLyricLoop();
+            if (lyricEl) { lyricEl.textContent = '--'; lyricEl.dataset.last = ''; }
             updateUI();
         };
         const updateUI = () => {
@@ -638,7 +655,8 @@ class UIManager {
                 btn.textContent = this._t('music.play') || 'Play';
             }
         };
-        btn.addEventListener('click', () => {
+        disc.addEventListener('click', () => {
+            if (this.aplayer) { this.aplayer.toggle(); return; }
             playing = !playing;
             updateUI();
         });
@@ -654,17 +672,35 @@ class UIManager {
                     listFolded: true,
                     audio
                 });
-                this.aplayer.on('play', () => {
-                    playing = true;
-                    updateUI();
+                const parseLrc = (lrc) => {
+                    if (!lrc) return [];
+                    const lines = String(lrc).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                    const out = [];
+                    for (const s of lines) {
+                        const m = s.match(/\[(\d{1,2}):(\d{1,2})(?:\.(\d{1,3}))?\](.*)/);
+                        if (!m) continue;
+                        const mm = parseInt(m[1], 10), ss = parseInt(m[2], 10), xx = parseInt(m[3] || '0', 10);
+                        const t = mm * 60 + ss + (xx / 1000);
+                        const text = m[4].trim();
+                        out.push({ t, text });
+                    }
+                    out.sort((a, b) => a.t - b.t);
+                    return out;
+                };
+                const ensureLrc = async (track) => {
+                    if (track && track.lrc && /^https?:/.test(track.lrc)) {
+                        try { const r = await fetch(track.lrc); const s = await r.text(); return parseLrc(s); } catch { return []; }
+                    }
+                    return parseLrc(track?.lrc);
+                };
+                this.aplayer.on('play', async () => {
+                    playing = true; updateUI();
+                    const cur = this.aplayer.list.audios[this.aplayer.list.index];
+                    this._lyricLines = await ensureLrc(cur);
+                    lyricIdx = 0; startLyricLoop();
                 });
-                this.aplayer.on('pause', () => {
-                    playing = false;
-                    updateUI();
-                });
-                btn.addEventListener('click', () => {
-                    this.aplayer.toggle();
-                });
+                this.aplayer.on('pause', () => { playing = false; updateUI(); stopLyricLoop(); });
+                this.aplayer.on('ended', () => { stopLyricLoop(); });
                 loaded = true;
             }).catch(() => fail());
             setTimeout(() => {
@@ -685,16 +721,11 @@ class UIManager {
         if (!main || !menu || !fLang || !fTheme || !fMusic) return;
         const updateLabels = () => {
             const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-            const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
-            const themeBean = localStorage.getItem(cacheKey);
-            let theme = 'day';
-            if (themeBean != null && themeBean.value != null) {
-                theme = themeBean.value;
-            }
+            const theme = (localStorage.getItem('theme') === 'night') ? 'night' : 'day';
             fLang.querySelector('.fab-text').textContent = lang === 'zh' ? '中文' : 'English';
             fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Night' : 'Day';
-            const mt = document.getElementById('music-toggle');
-            fMusic.querySelector('.fab-text').textContent = mt ? mt.textContent : 'Music';
+            const playing = (this.aplayer && !this.aplayer.audio.paused);
+            fMusic.querySelector('.fab-text').textContent = playing ? (this._t('music.pause') || 'Pause') : (this._t('music.play') || 'Play');
         };
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
