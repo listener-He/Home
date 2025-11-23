@@ -29,7 +29,7 @@ class I18nManager {
                 "bio.quote": "我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。作为INFJ人格类型，我善于深度思考，注重细节，喜欢通过代码创造有意义的产品。我相信技术的力量能够改变世界，也热衷于在开源社区中分享知识与经验。",
                 "stats.exp": "编程年限", "stats.repos": "开源项目", "stats.followers": "关注者",
                 "mbti.name": "提倡者", "mbti.desc": "提倡者人格类型的人非常稀少，只有不到1%的人口属于这种类型，但他们对世界的贡献不容忽视。",
-                "mbti.tag1": "理想主义", "mbti.tag2": "深度洞察", "mbti.tag3": "同理心",
+                "mbti.tag1": "理想主义与道德感", "mbti.tag2": "果断决绝的行动力", "mbti.tag3": "深度洞察与创意", "mbti.tag4": "关怀与同理心",
                 "tech.title": "技术栈宇宙", "interest.title": "个人兴趣",
                 "interest.cycling": "骑行", "interest.cycling_desc": "享受在路上的自由感，用车轮丈量世界，在风景中寻找灵感",
                 "interest.reading": "阅读", "interest.reading_desc": "通过文字记录思考轨迹，分享技术见解，用代码诠释创意",
@@ -46,7 +46,7 @@ class I18nManager {
                 "bio.quote": "I pursue a deep understanding of technology rather than a broad accumulation, and the learning of every technology stems from the intrinsic drive to solve practical problems. As an INFJ personality type, I am good at deep thinking, pay attention to details, and enjoy creating meaningful products through code. I believe in the power of technology to change the world, and I am passionate about sharing knowledge and experience in the open source community.",
                 "stats.exp": "Years Exp", "stats.repos": "Projects", "stats.followers": "Followers",
                 "mbti.name": "Advocate", "mbti.desc": "Advocates of this personality type are very rare, with less than 1% of the population belonging to this type, but their contributions to the world cannot be ignored.",
-                "mbti.tag1": "Idealism", "mbti.tag2": "Insight", "mbti.tag3": "Empathy",
+                "mbti.tag1": "Idealism & Morality", "mbti.tag2": "Decisive Action", "mbti.tag3": "Deep Insight & Creativity", "mbti.tag4": "Care & Empathy",
                 "tech.title": "Tech Universe", "interest.title": "Interests",
                 "interest.cycling": "Cycling", "interest.cycling_desc": "Enjoy the freedom on the road, measure the world with wheels, and find inspiration in the scenery",
                 "interest.reading": "Reading", "interest.reading_desc": "Record thinking trajectories through text, share technical insights, and interpret creativity with code",
@@ -92,7 +92,16 @@ class ThemeManager {
         this.init();
     }
     init() {
-        const saved = localStorage.getItem('theme') || 'day';
+        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+        const timeout = window.SiteConfig?.cacheKeys?.theme?.ttlMs || 360000;
+        let saved = localStorage.getItem(cacheKey);
+        if (saved == null || new Date().getTime() - timeout > saved.time) {
+            var hour = new Date().getHours();
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var night = hour >= 18 || prefersDark;
+            saved = night ? 'night' : 'day';
+            localStorage.setItem(cacheKey, { time: new Date().getTime(), value: saved });
+        }
         if(saved === 'night') this.root.setAttribute('data-theme', 'night');
         $('#theme-btn').toggleClass('is-active', saved === 'night');
 
@@ -101,7 +110,7 @@ class ThemeManager {
             const next = curr === 'night' ? 'day' : 'night';
             if(next === 'night') this.root.setAttribute('data-theme', 'night');
             else this.root.removeAttribute('data-theme');
-            localStorage.setItem('theme', next);
+            localStorage.setItem(cacheKey, { time: new Date().getTime(), value: next });
             $('#theme-btn').toggleClass('is-active', next === 'night');
             
             // 更新Artalk主题
@@ -131,9 +140,10 @@ class DataManager {
         const cacheKey = (window.SiteConfig?.cacheKeys?.github?.key) || 'gh_data_v2';
         const cached = JSON.parse(localStorage.getItem(cacheKey));
         const now = Date.now();
+        const timeout = (window.SiteConfig?.cacheKeys?.github?.ttlMs) || 3600000;
 
         // Check Cache (1 hour)
-        if(cached && (now - cached.time < 3600000)) {
+        if(cached && (now - cached.time < timeout)) {
             this.renderUser(cached.user);
             this.renderRepos(cached.repos);
             return;
@@ -254,7 +264,7 @@ class DataManager {
                     title,
                     link,
                     date: pubDate,
-                    cats: categories.length ? categories : ["Tech"]
+                    cats: categories.length ? categories : [""]
                 });
             }
 
@@ -410,18 +420,29 @@ class UIManager {
         container.innerHTML = '';
 
         if(isMobile) {
-            // Mobile: Horizontal Scroll Snap (Compact 3 rows)
+            // Mobile: 3-row seamless marquee
             container.classList.add('mobile-scroll');
-            // 创建多个标签副本以实现无缝滚动效果
-            const extendedTechStack = [...techStack, ...techStack, ...techStack];
-            extendedTechStack.forEach((item, index) => {
+            const rows = 3;
+            const buckets = Array.from({ length: rows }, () => []);
+            techStack.forEach((item, i) => { buckets[i % rows].push(item); });
+
+            const appendItem = (rowEl, item, idx) => {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
-                const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
+                const colorClass = `tag-color-${item.gradientId || ((idx % 10) + 1)}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
                 el.style.border = 'none';
-                container.appendChild(el);
+                rowEl.appendChild(el);
+            };
+
+            buckets.forEach((items, rIdx) => {
+                const rowEl = document.createElement('div');
+                rowEl.className = `tech-row row-${rIdx+1}`;
+                rowEl.style.gridRow = `${rIdx+1}`;
+                items.forEach((item, idx) => appendItem(rowEl, item, idx));
+                items.forEach((item, idx) => appendItem(rowEl, item, idx + items.length));
+                container.appendChild(rowEl);
             });
         } else {
             // PC: 3D Sphere
@@ -488,7 +509,7 @@ class UIManager {
                     scale = Math.min(Math.max(scale, 0.7), 1.15);
                     let opacity = (tag.z + radius)/(2*radius) + 0.2;
 
-                    tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 1);
+                    tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 0.85);
                     tag.el.style.zIndex = parseInt(scale*100);
                     let left = tag.x + container.offsetWidth/2 - tag.el.offsetWidth/2;
                     let top = tag.y + container.offsetHeight/2 - tag.el.offsetHeight/2;
