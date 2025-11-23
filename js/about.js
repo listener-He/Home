@@ -1,5 +1,45 @@
 /* about.js - Aurora Nexus Core */
 
+// 公共方法：设置本地存储的语言设置
+function setStoredLanguage(lang) {
+    localStorage.setItem('lang', lang);
+}
+
+// 公共方法：获取本地存储的语言设置
+function getStoredLanguage() {
+    return localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+}
+
+
+// 公共方法：设置本地存储的主题设置
+function setStoredTheme(theme) {
+    const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+    localStorage.setItem(cacheKey, JSON.stringify({
+        value: theme,  time: new Date().getTime()
+    }));
+    console.log("已保存主题设置：", theme);
+}
+
+// 公共方法：获取本地存储的主题设置
+function getStoredTheme() {
+    const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+    const timeout = window.SiteConfig?.cacheKeys?.theme?.ttlMs || 360000;
+    const cacheJson = localStorage.getItem(cacheKey);
+    const saved = cacheJson ? JSON.parse(cacheJson) : null;
+    let theme = 'day';
+    if (saved == null || new Date().getTime() - timeout > saved.time) {
+        const hour = new Date().getHours();
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const night = hour >= 18 || prefersDark;
+        theme = night ? 'night' : 'day';
+        setStoredTheme(theme)
+        console.log("已初始化主题设置：", theme);
+    } else if (saved.value) {
+        theme = saved.value;
+    }
+    return theme;
+}
+
 $(document).ready(function () {
     // 启动应用核心
     const app = new AppCore();
@@ -107,7 +147,7 @@ class I18nManager {
         this.apply();
         $('#lang-btn').on('click', () => {
             this.lang = this.lang === 'zh' ? 'en' : 'zh';
-            localStorage.setItem('lang', this.lang);
+            setStoredLanguage(this.lang);
             this.apply();
             const label = this.lang === 'zh' ? 'CN' : 'EN';
             $('#lang-btn .btn-text').text(label);
@@ -137,25 +177,16 @@ class ThemeManager {
     }
 
     init() {
-        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
-        const timeout = window.SiteConfig?.cacheKeys?.theme?.ttlMs || 360000;
-        let saved = localStorage.getItem(cacheKey);
-        if (saved == null || new Date().getTime() - timeout > saved.time) {
-            var hour = new Date().getHours();
-            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            var night = hour >= 18 || prefersDark;
-            saved = night ? 'night' : 'day';
-            localStorage.setItem(cacheKey, {time: new Date().getTime(), value: saved});
-        }
-        if (saved === 'night') this.root.setAttribute('data-theme', 'night');
-        $('#theme-btn').toggleClass('is-active', saved === 'night');
+        let theme = getStoredTheme();
+        if (theme === 'night') this.root.setAttribute('data-theme', 'night');
+        $('#theme-btn').toggleClass('is-active', theme === 'night');
 
         $('#theme-btn').on('click', () => {
             const curr = this.root.getAttribute('data-theme');
             const next = curr === 'night' ? 'day' : 'night';
             if (next === 'night') this.root.setAttribute('data-theme', 'night');
             else this.root.removeAttribute('data-theme');
-            localStorage.setItem(cacheKey, {time: new Date().getTime(), value: next});
+            setStoredTheme(next)
             $('#theme-btn').toggleClass('is-active', next === 'night');
 
             // 更新Artalk主题
@@ -163,9 +194,7 @@ class ThemeManager {
                 try {
                     Artalk.reload();
                 } catch (e) {
-                    console.error('重新加载评论组件异常：', e);
                 }
-
             }
         });
     }
@@ -389,16 +418,34 @@ class UIManager {
         this.initTechCloud();
         this.initModal();
         this.initArtalk();
-        this.initBioToggle();
-        this.initNavInteraction();
-        this.initProfileGradient();
         this.initAudio();
         this.initFab();
-        let resizeTimer = null;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => this.initTechCloud(), 150);
-        });
+    }
+
+
+    // 公共方法：获取音乐暂停时间
+    getMusicPauseTime() {
+        const pauseTime = localStorage.getItem('musicPauseTime');
+        return pauseTime ? parseInt(pauseTime) : null;
+    }
+
+    // 公共方法：检查音乐是否应在24小时内保持暂停状态
+    shouldMusicRemainPaused() {
+        const pauseTime = this.getMusicPauseTime();
+        if (!pauseTime) return false;
+
+        const now = new Date().getTime();
+        return (now - pauseTime) < 24 * 60 * 60 * 1000;
+    }
+
+    // 公共方法：设置音乐暂停时间
+    setMusicPauseTime() {
+        localStorage.setItem('musicPauseTime', new Date().getTime().toString());
+    }
+
+    // 公共方法：清除音乐暂停时间
+    clearMusicPauseTime() {
+        localStorage.removeItem('musicPauseTime');
     }
 
     initModal() {
@@ -415,7 +462,7 @@ class UIManager {
         // Safe initialization
         const isHttps = location.protocol === 'https:';
         const isLocal = !!(window.SiteConfig?.dev?.isLocal);
-        if(!isHttps || isLocal) {
+        if (!isHttps || isLocal) {
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${(new I18nManager()).dict[(localStorage.getItem('lang') || 'zh')]['comment.closed']}</div>`);
             return;
         }
@@ -616,10 +663,11 @@ class UIManager {
         const fMusic = document.getElementById('fab-music');
         if (!main || !menu || !fLang || !fTheme || !fMusic) return;
         const updateLabels = () => {
-            const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-            const theme = (localStorage.getItem('theme') === 'night') ? 'night' : 'day';
-            fLang.querySelector('.fab-text').textContent = lang === 'zh' ? '中文' : 'English';
-            fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Night' : 'Day';
+            const lang = getStoredLanguage();
+            const theme = getStoredTheme();
+            fLang.querySelector('.fab-text').textContent = lang === 'zh' ? 'English' : '中文';
+            console.log('updateLabels >>>>>>> ', theme);
+            fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Day' : 'Night';
             const playing = (this.audio && !this.audio.paused);
             fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
         };
@@ -638,13 +686,14 @@ class UIManager {
         fMusic.addEventListener('click', () => {
             if (this.audio) {
                 if (this.audio.paused) {
-                    this.audio.play().catch(() => {});
+                    this.audio.play().catch(() => {
+                    });
                     // 清除暂停时间记录，允许下次自动播放
-                    localStorage.removeItem('musicPauseTime');
+                    this.clearMusicPauseTime();
                 } else {
                     this.audio.pause();
                     // 记录暂停时间
-                    localStorage.setItem('musicPauseTime', new Date().getTime().toString());
+                    this.setMusicPauseTime();
                 }
             }
             updateLabels();
@@ -657,15 +706,14 @@ class UIManager {
         if (!el) return;
         this.audio = el;
         this.audio.loop = true;
-        
+
         // 检查是否在24小时内用户暂停过音乐
-        const pauseTime = localStorage.getItem('musicPauseTime');
-        const now = new Date().getTime();
-        const shouldAutoPlay = !(pauseTime && (now - parseInt(pauseTime)) < 24 * 60 * 60 * 1000);
-        
-        const tryPlay = () => { 
-            if (shouldAutoPlay) {
-                this.audio.play().catch(() => {});
+        const shouldRemainPaused = this.shouldMusicRemainPaused();
+
+        const tryPlay = () => {
+            if (!shouldRemainPaused) {
+                this.audio.play().catch(() => {
+                });
             }
         };
         tryPlay();
