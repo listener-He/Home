@@ -663,7 +663,7 @@ class UIManager {
 
     // 初始化拖拽功能
     initDraggableFab() {
-        const fab = document.getElementById('fab-main');
+        const fab = document.querySelector('.mobile-fab');
         if (!fab) return;
 
         let isDragging = false;

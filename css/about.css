@@ -2429,8 +2429,9 @@ body {
       padding: 15px;
       border-radius: 12px;
       display: flex;
-      align-items: center;
-      gap: 15px;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 10px;
       transition: background 0.3s;
   }
 
@@ -2442,13 +2443,14 @@ body {
       font-size: 2rem;
       color: var(--text-primary);
       -webkit-text-fill-color: initial;
+      margin-bottom: 6px;
   }
 
   .i-text {
       display: flex;
       flex-direction: column;
       min-width: 0;
-      gap: 5px;
+      gap: 6px;
   }
 
   /* 添加 min-width: 0 防止溢出 */
@@ -2732,11 +2734,19 @@ body {
         max-height: 150px; /* 限制高度 */
         overflow: hidden;
     }
+    .interest-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .i-emoji { margin-bottom: 6px; }
 
     .i-text {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
     }
 
     .i-text strong, .i-text span {
@@ -3203,7 +3213,7 @@ body {
 }
 .social-dock .s-icon { color: var(--text-primary); }
 .social-dock .s-icon i { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; -webkit-text-fill-color: initial !important; color: currentColor !important; text-shadow: none !important; }
-.mobile-fab { position: fixed; right: 16px; bottom: 88px; z-index: 1100; cursor: move; user-select: none; display: block !important; }
+.mobile-fab { position: fixed; right: 16px; bottom: 33vh; z-index: 1100; cursor: move; user-select: none; display: block !important; }
 .fab-main { display: flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; border: none; border-radius: 22px; padding: 10px 14px; box-shadow: 0 8px 18px rgba(0,0,0,0.25); opacity: 0.9; transition: all 0.3s ease; }
 .fab-main:hover { opacity: 1; transform: scale(1.05); }
 .fab-main:active { transform: scale(0.95); }
