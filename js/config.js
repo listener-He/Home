@@ -89,10 +89,6 @@ const SiteConfig = {
     { name: 'Postgresql', category: 'data', weight: 1 }
   ],
 
-  music: {
-    playlistId: 5131713379,
-    embedUrl: 'https://music.163.com/outchain/player?type=0&id=5131713379&auto=1&height=66'
-  },
 
   // 默认数据（当API或RSS不可用时使用）
   defaults: {

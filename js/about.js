@@ -57,11 +57,6 @@ class I18nManager {
                 "comment.title": "留言板",
                 "modal.wechat": "微信公众号",
                 "modal.desc": "扫码关注获取干货",
-                "music.title": "音乐",
-                "music.playlist": "我的歌单",
-                "music.play": "播放",
-                "music.pause": "暂停",
-                "music.unavailable": "播放器维修中",
                 "comment.closed": "当前评论区已关闭"
             },
             en: {
@@ -100,11 +95,6 @@ class I18nManager {
                 "comment.title": "Message Board",
                 "modal.wechat": "WeChat Account",
                 "modal.desc": "Scan for tech insights",
-                "music.title": "Music",
-                "music.playlist": "My Playlist",
-                "music.play": "Play",
-                "music.pause": "Pause",
-                "music.unavailable": "Player under maintenance",
                 "comment.closed": "Comments are closed"
             }
         };
@@ -400,7 +390,6 @@ class UIManager {
         this.initBioToggle();
         this.initNavInteraction();
         this.initProfileGradient();
-        this.initMusic();
         this.initFab();
         let resizeTimer = null;
         window.addEventListener('resize', () => {
@@ -615,117 +604,18 @@ class UIManager {
         }
     }
 
-    initMusic() {
-        const disc = document.getElementById('vinyl-disc');
-        const statusEl = document.getElementById('music-status');
-        const lyricEl = document.getElementById('lyric-current');
-        if (!disc) return;
-        let playing = true;
-        let loaded = false;
-        let rafId = null; let lyricIdx = 0; this._lyricLines = [];
-        const stopLyricLoop = () => { if (rafId) cancelAnimationFrame(rafId); rafId = null; };
-        const startLyricLoop = () => {
-            stopLyricLoop();
-            const loop = () => {
-                if (!this.aplayer || !playing) return;
-                const ct = this.aplayer.audio.currentTime || 0;
-                while (lyricIdx + 1 < this._lyricLines.length && this._lyricLines[lyricIdx + 1].t <= ct) { lyricIdx++; }
-                const line = this._lyricLines[lyricIdx];
-                if (line && lyricEl && lyricEl.dataset.last !== String(lyricIdx)) {
-                    lyricEl.textContent = line.text || '';
-                    lyricEl.dataset.last = String(lyricIdx);
-                }
-                rafId = requestAnimationFrame(loop);
-            };
-            rafId = requestAnimationFrame(loop);
-        };
-        const fail = () => {
-            playing = false;
-            if (statusEl) statusEl.style.display = 'inline';
-            stopLyricLoop();
-            if (lyricEl) { lyricEl.textContent = '--'; lyricEl.dataset.last = ''; }
-            updateUI();
-        };
-        const updateUI = () => {
-            if (playing) {
-                disc.classList.add('spinning');
-                btn.textContent = this._t('music.pause') || 'Pause';
-            } else {
-                disc.classList.remove('spinning');
-                btn.textContent = this._t('music.play') || 'Play';
-            }
-        };
-        disc.addEventListener('click', () => {
-            if (this.aplayer) { this.aplayer.toggle(); return; }
-            playing = !playing;
-            updateUI();
-        });
-        const api = `https://api.injahow.cn/meting/?type=playlist&id=${(window.SiteConfig?.music?.playlistId) || 5131713379}&server=netease`;
-        try {
-            fetch(api).then(r => r.json()).then(list => {
-                if (!Array.isArray(list) || !window.APlayer) throw new Error('load fail');
-                const audio = list.map(i => ({name: i.title, artist: i.author, url: i.url, cover: i.pic, lrc: i.lrc}));
-                this.aplayer = new APlayer({
-                    container: document.getElementById('aplayer'),
-                    theme: getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#6c5ce7',
-                    autoplay: true,
-                    listFolded: true,
-                    audio
-                });
-                const parseLrc = (lrc) => {
-                    if (!lrc) return [];
-                    const lines = String(lrc).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-                    const out = [];
-                    for (const s of lines) {
-                        const m = s.match(/\[(\d{1,2}):(\d{1,2})(?:\.(\d{1,3}))?\](.*)/);
-                        if (!m) continue;
-                        const mm = parseInt(m[1], 10), ss = parseInt(m[2], 10), xx = parseInt(m[3] || '0', 10);
-                        const t = mm * 60 + ss + (xx / 1000);
-                        const text = m[4].trim();
-                        out.push({ t, text });
-                    }
-                    out.sort((a, b) => a.t - b.t);
-                    return out;
-                };
-                const ensureLrc = async (track) => {
-                    if (track && track.lrc && /^https?:/.test(track.lrc)) {
-                        try { const r = await fetch(track.lrc); const s = await r.text(); return parseLrc(s); } catch { return []; }
-                    }
-                    return parseLrc(track?.lrc);
-                };
-                this.aplayer.on('play', async () => {
-                    playing = true; updateUI();
-                    const cur = this.aplayer.list.audios[this.aplayer.list.index];
-                    this._lyricLines = await ensureLrc(cur);
-                    lyricIdx = 0; startLyricLoop();
-                });
-                this.aplayer.on('pause', () => { playing = false; updateUI(); stopLyricLoop(); });
-                this.aplayer.on('ended', () => { stopLyricLoop(); });
-                loaded = true;
-            }).catch(() => fail());
-            setTimeout(() => {
-                if (!loaded) fail();
-            }, 6000);
-        } catch (_) {
-            fail();
-        }
-        updateUI();
-    }
 
     initFab() {
         const main = document.getElementById('fab-main');
         const menu = document.getElementById('fab-menu');
         const fLang = document.getElementById('fab-lang');
         const fTheme = document.getElementById('fab-theme');
-        const fMusic = document.getElementById('fab-music');
-        if (!main || !menu || !fLang || !fTheme || !fMusic) return;
+        if (!main || !menu || !fLang || !fTheme) return;
         const updateLabels = () => {
             const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
             const theme = (localStorage.getItem('theme') === 'night') ? 'night' : 'day';
             fLang.querySelector('.fab-text').textContent = lang === 'zh' ? '中文' : 'English';
             fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Night' : 'Day';
-            const playing = (this.aplayer && !this.aplayer.audio.paused);
-            fMusic.querySelector('.fab-text').textContent = playing ? (this._t('music.pause') || 'Pause') : (this._t('music.play') || 'Play');
         };
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
@@ -737,10 +627,6 @@ class UIManager {
         });
         fTheme.addEventListener('click', () => {
             document.getElementById('theme-btn')?.click();
-            updateLabels();
-        });
-        fMusic.addEventListener('click', () => {
-            document.getElementById('music-toggle')?.click();
             updateLabels();
         });
         updateLabels();
