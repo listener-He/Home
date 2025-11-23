@@ -3003,21 +3003,6 @@ body {
     -webkit-text-fill-color: initial !important;
     color: #374151 !important;
 }
-:root {
-:not([data-theme="night"]) .i-text strong {
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
-    color: #111827 !important;
-}
-:not([data-theme="night"]) .i-text span:not(.i-emoji) {
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
-    color: #374151 !important;
-}
 
 [data-theme="night"] .i-text strong {
     background: var(--gradient-1) !important;
