@@ -2231,6 +2231,18 @@ body {
     border-color: rgba(108, 92, 231, 0.25);
 }
 
+[data-theme="night"] .interest-item {
+    background: rgba(30, 30, 35, 0.35);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="night"] .interest-item:hover {
+    background: rgba(30, 30, 35, 0.5);
+    border-color: var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
 .i-emoji {
     font-size: 1.6rem;
     color: var(--text-primary);
@@ -2991,3 +3003,42 @@ body {
     -webkit-text-fill-color: initial !important;
     color: #374151 !important;
 }
+:root {
+:not([data-theme="night"]) .i-text strong {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    color: #111827 !important;
+}
+:not([data-theme="night"]) .i-text span:not(.i-emoji) {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    color: #374151 !important;
+}
+
+[data-theme="night"] .i-text strong {
+    background: var(--gradient-1) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+[data-theme="night"] .i-text span:not(.i-emoji) {
+    background: var(--gradient-2) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    text-shadow: 0 0 8px var(--accent-glow);
+}
+/* Loading Skeleton */
+.skeleton-card { height: 60px; background: rgba(128,128,128,0.1); border-radius: 10px; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+/* Loading Transition */
+.fade-in { animation: fadeIn 0.3s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(2px);} to { opacity: 1; transform: none;} }

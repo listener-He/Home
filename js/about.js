@@ -219,8 +219,8 @@ class DataManager {
     }
 
     init() {
-        this.fetchGithub();
-        this.fetchBlog();
+        setTimeout(() => this.fetchGithub(), 0);
+        setTimeout(() => this.fetchBlog(), 0);
     }
 
     // 优先缓存 -> API -> 默认值
@@ -264,12 +264,24 @@ class DataManager {
                     .slice(0, 12); // 只取前12个
             }
 
-            // Cache & Render
+            const slimUser = {
+                created_at: userData.created_at || (window.SiteConfig?.defaults?.user?.created),
+                public_repos: userData.public_repos || (window.SiteConfig?.defaults?.user?.repos),
+                followers: userData.followers || (window.SiteConfig?.defaults?.user?.followers)
+            };
+            const slimRepos = Array.isArray(repoData) ? repoData.map(r => ({
+                name: r.name || '',
+                stargazers_count: (r.stargazers_count !== undefined ? r.stargazers_count : (r.stars || 0)),
+                forks_count: (r.forks_count !== undefined ? r.forks_count : (r.forks || 0)),
+                description: r.description || r.desc || '',
+                html_url: r.html_url || r.url || '#'
+            })) : [];
+
             localStorage.setItem(cacheKey, JSON.stringify({
-                user: userData, repos: repoData, time: now
+                user: slimUser, repos: slimRepos, time: now
             }));
-            this.renderUser(userData);
-            this.renderRepos(repoData);
+            this.renderUser(slimUser);
+            this.renderRepos(slimRepos);
 
         } catch (e) {
             console.warn("GH API Fail", e);
@@ -308,7 +320,10 @@ class DataManager {
                 <div class="repo-desc">${escapeHtml(dShort)}</div>
             </div>`;
         });
-        $('#projects-container').html(html);
+        const pc = $('#projects-container');
+        pc.removeClass('fade-in');
+        pc.html(html);
+        pc.addClass('fade-in');
     }
 
     // 从RSS获取博客文章
@@ -416,7 +431,10 @@ class DataManager {
                 <div class="b-cat">${escapeHtml(cat)}</div>
             </div>`;
         });
-        $('#blog-container').html(html);
+        const bc = $('#blog-container');
+        bc.removeClass('fade-in');
+        bc.html(html);
+        bc.addClass('fade-in');
     }
 }
 
