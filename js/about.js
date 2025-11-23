@@ -17,7 +17,6 @@ function setStoredTheme(theme) {
     localStorage.setItem(cacheKey, JSON.stringify({
         value: theme,  time: new Date().getTime()
     }));
-    console.log("已保存主题设置：", theme);
 }
 
 // 公共方法：获取本地存储的主题设置
@@ -33,7 +32,6 @@ function getStoredTheme() {
         const night = hour >= 18 || prefersDark;
         theme = night ? 'night' : 'day';
         setStoredTheme(theme)
-        console.log("已初始化主题设置：", theme);
     } else if (saved.value) {
         theme = saved.value;
     }
@@ -41,9 +39,15 @@ function getStoredTheme() {
 }
 
 $(document).ready(function () {
-    // 启动应用核心
     const app = new AppCore();
 });
+
+function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>\"]/g, function (c) {
+        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c];
+    });
+}
 
 class AppCore {
     constructor() {
@@ -59,7 +63,7 @@ class AppCore {
    =========================== */
 class I18nManager {
     constructor() {
-        this.lang = localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+        this.lang = getStoredLanguage();
         this.dict = {
             zh: {
                 "nav.home": "首页",
@@ -282,20 +286,20 @@ class DataManager {
             // Fix: API field compatibility
             const stars = repo.stargazers_count !== undefined ? repo.stargazers_count : (repo.stars || 0);
             const forks = repo.forks_count !== undefined ? repo.forks_count : (repo.forks || 0);
-            const desc = repo.description || repo.desc || 'No description.';
+            const descRaw = repo.description || repo.desc || 'No description.';
             const url = repo.html_url || repo.url || '#';
-            const dShort = (desc || '').length > 120 ? (desc.slice(0, 117) + '...') : desc;
+            const dShort = (descRaw || '').length > 120 ? (descRaw.slice(0, 117) + '...') : descRaw;
 
             html += `
-            <div class="repo-card" onclick="window.open('${url}')">
+            <div class="repo-card" onclick="window.open('${url}', '_blank', 'noopener,noreferrer')">
                 <div class="repo-head">
-                    <span class="gradient-text">${repo.name}</span>
+                    <span class="gradient-text">${escapeHtml(repo.name)}</span>
                     <span>
                         <i class="ri-star-fill"></i> ${stars}
                         <i class="ri-git-branch-fill"></i> ${forks}
                     </span>
                 </div>
-                <div class="repo-desc">${dShort}</div>
+                <div class="repo-desc">${escapeHtml(dShort)}</div>
             </div>`;
         });
         $('#projects-container').html(html);
@@ -371,7 +375,7 @@ class DataManager {
 
     renderBlog(list) {
         let html = '';
-        const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        const lang = getStoredLanguage();
         const fmtDate = (dStr) => {
             if (!dStr) return '';
             const d = new Date(dStr);
@@ -398,12 +402,12 @@ class DataManager {
             const link = post.link || post.url || '#';
 
             html += `
-            <div class="blog-item" onclick="window.open('${link}')">
+            <div class="blog-item" onclick="window.open('${link}', '_blank', 'noopener,noreferrer')">
                 <div class="b-info">
-                    <div class="b-title">${post.title}</div>
-                    <div class="b-date">${date}</div>
+                    <div class="b-title">${escapeHtml(post.title)}</div>
+                    <div class="b-date">${escapeHtml(date)}</div>
                 </div>
-                <div class="b-cat">${cat}</div>
+                <div class="b-cat">${escapeHtml(cat)}</div>
             </div>`;
         });
         $('#blog-container').html(html);
@@ -459,11 +463,12 @@ class UIManager {
     }
 
     initArtalk() {
-        // Safe initialization
         const isHttps = location.protocol === 'https:';
         const isLocal = !!(window.SiteConfig?.dev?.isLocal);
         if (!isHttps || isLocal) {
-            $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${(new I18nManager()).dict[(localStorage.getItem('lang') || 'zh')]['comment.closed']}</div>`);
+            const lang = getStoredLanguage();
+            const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+            $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             return;
         }
         if (typeof Artalk !== 'undefined' && window.SiteConfig?.artalk) {
@@ -478,10 +483,14 @@ class UIManager {
                 });
             } catch (e) {
                 console.error("Artalk Error", e);
-                $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${(new I18nManager()).dict[(localStorage.getItem('lang') || 'zh')]['comment.closed']}</div>`);
+                const lang = getStoredLanguage();
+                const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+                $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             }
         } else {
-            $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${(new I18nManager()).dict[(localStorage.getItem('lang') || 'zh')]['comment.closed']}</div>`);
+            const lang = getStoredLanguage();
+            const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+            $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
         }
     }
 
@@ -633,6 +642,7 @@ class UIManager {
         };
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
+            main.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
             updateLabels();
         });
         fLang.addEventListener('click', () => {
@@ -668,10 +678,7 @@ class UIManager {
 
         let isDragging = false;
         let initialX, initialY, currentX, currentY, xOffset = 0, yOffset = 0;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        const fabWidth = fab.offsetWidth;
-        const fabHeight = fab.offsetHeight;
+        fab.style.willChange = 'transform';
 
         // 拖拽相关方法
         const setTranslate = (xPos, yPos, el) => {
@@ -706,9 +713,13 @@ class UIManager {
                     currentY = e.clientY - initialY;
                 }
 
-                // 限制在屏幕内
-                currentX = Math.max(0, Math.min(currentX, windowWidth - fabWidth));
-                currentY = Math.max(0, Math.min(currentY, windowHeight - fabHeight));
+                const ww = window.innerWidth;
+                const wh = window.innerHeight;
+                const rect = fab.getBoundingClientRect();
+                const fw = rect.width;
+                const fh = rect.height;
+                currentX = Math.max(0, Math.min(currentX, ww - fw));
+                currentY = Math.max(0, Math.min(currentY, wh - fh));
 
                 xOffset = currentX;
                 yOffset = currentY;
