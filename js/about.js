@@ -180,31 +180,59 @@ function initProjects() {
     localStorage.removeItem(cacheKey);
     localStorage.removeItem(cacheTimeKey);
     
-    // 使用jQuery AJAX获取项目数据
-    $.ajax({
-        url: 'https://api.github.com/users/' + username + '/repos?sort=stars&per_page=30',
-        method: 'GET',
-        timeout: 10000,
-        success: function(repos) {
-            // 过滤并排序：优先显示原创项目（非fork），按星数排序
-            var filteredRepos = repos.filter(function(repo) {
-                return repo.stargazers_count > 0 || repo.forks_count > 0; // 过滤掉fork的项目
-            }).sort(function(a, b) {
-                return b.stargazers_count - a.stargazers_count; // 按星数降序排序
-            }).slice(0, 12); // 只取前12个
-            
-            // 缓存数据
-            localStorage.setItem(cacheKey, JSON.stringify(filteredRepos));
-            localStorage.setItem(cacheTimeKey, now.toString());
-            displayProjects(filteredRepos);
-        },
-        error: function() {
-            fetch('data/github_repos.json')
-                .then(function(res) { return res.json(); })
-                .then(function(json) { displayProjects(json); })
-                .catch(function() { displayProjects([]); });
-        }
-    });
+    // 使用分页获取所有项目数据
+    var allRepos = [];
+    var page = 1;
+    var perPage = 100;
+    
+    function fetchReposPage() {
+        $.ajax({
+            url: 'https://api.github.com/users/' + username + '/repos?sort=stars&page=' + page + '&per_page=' + perPage + '&visibility=public',
+            method: 'GET',
+            timeout: 10000,
+            success: function(repos) {
+                if (!repos || repos.length === 0) {
+                    // 如果没有返回数据，则说明没有更多项目
+                    processAllRepos(allRepos);
+                    return;
+                }
+                // 将当前页的项目添加到总列表中
+                allRepos = allRepos.concat(repos);
+                
+                // 如果当前页返回的项目数量小于请求的数量，说明已经到最后一页
+                if (repos.length < perPage) {
+                    // 处理所有获取到的项目数据
+                    processAllRepos(allRepos);
+                } else {
+                    // 继续获取下一页
+                    page++;
+                    fetchReposPage();
+                }
+            },
+            error: function() {
+                // 出错时只显示已获取到的项目
+                processAllRepos(allRepos);
+            }
+        });
+    }
+    
+    // 开始获取第一页数据
+    fetchReposPage();
+    
+    // 处理所有获取到的项目数据
+    function processAllRepos(repos) {
+        // 过滤并排序：保留原创项目（非fork），按星数排序
+        var filteredRepos = repos.filter(function(repo) {
+            return !repo.fork && (repo.stargazers_count > 0 || repo.forks_count > 0); // 过滤掉fork的项目
+        }).sort(function(a, b) {
+            return b.stargazers_count - a.stargazers_count; // 按星数降序排序
+        }).slice(0, 12); // 只取前12个
+        
+        // 缓存数据
+        localStorage.setItem(cacheKey, JSON.stringify(filteredRepos));
+        localStorage.setItem(cacheTimeKey, now.toString());
+        displayProjects(filteredRepos);
+    }
 }
 
 function displayProjects(repos) {
@@ -427,7 +455,12 @@ function initArtalkComments() {
             return res.json();
           })
           .then(function() {
-            Artalk.init({
+            // 检测设备类型
+            var isMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
+            var isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+            
+            // 根据设备类型设置不同的配置
+            var artalkConfig = {
                 el: '#artalk-container',
                 pageKey: window.location.pathname,
                 pageTitle: document.title,
@@ -443,7 +476,36 @@ function initArtalkComments() {
                 imgUpload: false,
                 preview: true,
                 versionCheck: true
-            });
+            };
+            
+            // 根据设备类型调整配置
+            if (isMobile) {
+                // 移动端配置
+                artalkConfig.editor = {
+                    draft: { enable: true },
+                    emoji: { show: true },
+                    upload: { enable: false }
+                };
+                artalkConfig.pagination = { pageSize: 10, readMore: true, autoLoad: true };
+            } else if (isTablet) {
+                // 平板端配置
+                artalkConfig.editor = {
+                    draft: { enable: true },
+                    emoji: { show: true },
+                    upload: { enable: false }
+                };
+                artalkConfig.pagination = { pageSize: 15, readMore: true, autoLoad: true };
+            } else {
+                // PC端配置
+                artalkConfig.editor = {
+                    draft: { enable: true },
+                    emoji: { show: true },
+                    upload: { enable: false }
+                };
+                artalkConfig.pagination = { pageSize: 20, readMore: true, autoLoad: true };
+            }
+            
+            Artalk.init(artalkConfig);
           })
           .catch(function() { renderCommentsFallback('评论系统暂不可用'); });
     } catch (e) {
@@ -1076,7 +1138,7 @@ var githubStyles = '<style>' +
     '}' +
     '.commit-module-nums {' +
         '    display: grid;' +
-        '    grid-template-columns: repeat(3, minmax(0,1fr));' +
+        '    grid-template-columns: repeat(4, minmax(0,1fr));' +
         '    gap: 16px;' +
         '    align-items: end;' +
     '}' +
@@ -1239,15 +1301,16 @@ function fetchCommitCounts(username) {
     var yearStart = new Date(today.getFullYear(), 0, 1);
     var h = { 'Accept': 'application/vnd.github.cloak-preview+json' };
     function q(start,end){
-        var url = 'https://api.github.com/search/commits?q=author:'+encodeURIComponent(username)+'+author-date:'+fmt(start)+'..'+fmt(end);
+        var url = 'https://api.github.com/search/commits?q=author:'+encodeURIComponent(username)+(start != null && end != null ? '+author-date:'+fmt(start)+'..'+fmt(end) : '');
         return fetch(url,{ headers: h, method:'GET' }).then(function(r){ return r.json(); }).then(function(j){ return (j && typeof j.total_count==='number')? j.total_count : 0; });
     }
     return Promise.all([
         q(weekStart,today),
         q(monthStart,today),
-        q(yearStart,today)
+        q(yearStart,today),
+        q(null,null)
     ]).then(function(arr){
-        return { week: arr[0], month: arr[1], year: arr[2], range: { week:{start:fmt(weekStart),end:fmt(today)}, month:{start:fmt(monthStart),end:fmt(today)}, year:{start:fmt(yearStart),end:fmt(today)} }, generated_at: new Date().toISOString() };
+        return { week: arr[0], month: arr[1], year: arr[2], total: arr[3], range: { week:{start:fmt(weekStart),end:fmt(today)}, month:{start:fmt(monthStart),end:fmt(today)}, year:{start:fmt(yearStart),end:fmt(today)} }, generated_at: new Date().toISOString() };
     });
 }
 
@@ -1255,6 +1318,7 @@ function renderCommitStats(stats) {
     var w = parseInt(stats.week||0,10);
     var m = parseInt(stats.month||0,10);
     var y = parseInt(stats.year||0,10);
+    var t = parseInt(stats.total||0,10);
 
     Array.from(document.querySelectorAll('.commit-inline-title, .commit-inline, .commit-inline-matrix, .commit-inline-group')).forEach(function(el){ el.remove(); });
 
@@ -1264,6 +1328,7 @@ function renderCommitStats(stats) {
         '<div class="commit-num"><span class="num">'+w+'</span><span class="lab">本周</span></div>'+
         '<div class="commit-num"><span class="num">'+m+'</span><span class="lab">本月</span></div>'+
         '<div class="commit-num"><span class="num">'+y+'</span><span class="lab">今年</span></div>'+
+        '<div class="commit-num"><span class="num">'+t+'</span><span class="lab">历史</span></div>'+
       '</div>'+
     '</div>';
     $('#github-commits').html(html);

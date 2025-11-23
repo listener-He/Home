@@ -42,7 +42,7 @@
 <!-- style="background: url(https://blog-file.hehouhui.cn/bj/1.jpg) center center / cover no-repeat rgb(102, 102, 102);" -->
 <header id="panel" class="panel-cover">
     <!--星空背景-->
-<!--    <canvas id="bg"></canvas>-->
+    <!--    <canvas id="bg"></canvas>-->
     <!--天气-->
     <!-- <div id="he-plugin-simple"></div> -->
     <script>
@@ -202,7 +202,7 @@
                                     <span class="label">微信</span>
                                 </a>
                             </div>
-                            
+
                             <div class="social-icon">
                                 <a href="mailto:hehouhui@hehouhui.cn" title="Email">
                                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -236,44 +236,44 @@
                 <button class="weixin-qrcode-close" onclick="closeWeixin()">关闭</button>
             </div>
         </div>
-    <script>
-        function weixin() {
-            const overlay = document.getElementById('weixinOverlay');
-            overlay.style.display = 'flex';
+        <script>
+            function weixin() {
+                const overlay = document.getElementById('weixinOverlay');
+                overlay.style.display = 'flex';
 
-            // 防止滚动穿透
-            document.body.style.overflow = 'hidden';
-            // 添加ESC键关闭
-            document.addEventListener('keydown', closeOnEsc);
-        }
-        
-        function closeWeixin() {
-            const overlay = document.getElementById('weixinOverlay');
-            overlay.style.display = 'none';
-            // 恢复滚动
-            document.body.style.overflow = '';
-            // 移除ESC键监听
-            document.removeEventListener('keydown', closeOnEsc);
-        }
-        
-        function closeOnEsc(e) {
-            if (e.key === 'Escape') {
-                closeWeixin();
+                // 防止滚动穿透
+                document.body.style.overflow = 'hidden';
+                // 添加ESC键关闭
+                document.addEventListener('keydown', closeOnEsc);
             }
-        }
-        
-        // 点击空白处关闭
-        document.getElementById('weixinOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeWeixin();
+
+            function closeWeixin() {
+                const overlay = document.getElementById('weixinOverlay');
+                overlay.style.display = 'none';
+                // 恢复滚动
+                document.body.style.overflow = '';
+                // 移除ESC键监听
+                document.removeEventListener('keydown', closeOnEsc);
             }
-        });
-        
-        // 阻止点击弹框内容时关闭
-        document.querySelector('.weixin-qrcode-container').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    </script>
+
+            function closeOnEsc(e) {
+                if (e.key === 'Escape') {
+                    closeWeixin();
+                }
+            }
+
+            // 点击空白处关闭
+            document.getElementById('weixinOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeWeixin();
+                }
+            });
+
+            // 阻止点击弹框内容时关闭
+            document.querySelector('.weixin-qrcode-container').addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        </script>
     </div>
     <div class="remark iUp">
         <p class="power">
