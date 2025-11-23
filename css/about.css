@@ -571,6 +571,8 @@ body {
         height: auto;
         border-radius: 0; 
         background: var(--dock-bg); 
+        backdrop-filter: blur(12px) saturate(120%);
+        -webkit-backdrop-filter: blur(12px) saturate(120%);
         border-top: 1px solid rgba(128,128,128,0.1);
         padding-bottom: env(safe-area-inset-bottom);
         z-index: 1000;
@@ -582,26 +584,38 @@ body {
         width: 100%; 
         justify-content: space-around; 
         padding: 10px 0; 
+        display: flex;
     }
     .nav-item { 
         flex-direction: column; 
         gap: 2px; 
         font-size: 0.7rem; 
         padding: 8px 0;
+        color: var(--text-secondary);
     }
     .nav-item i { 
         font-size: 1.4rem; 
     }
     .nav-label { 
         font-size: 10px; 
+        color: var(--text-primary);
+    }
+    .nav-item.active { 
+        color: var(--text-primary);
     }
     .action-btn .btn-text { 
         display: none; 
     }
     .action-btn { 
         font-size: 1.2rem; 
-        padding: 5px; 
-        background: transparent;
+        padding: 8px; 
+        background: rgba(128,128,128,0.08);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+    .action-btn.is-active {
+        background: rgba(108, 92, 231, 0.25);
+        color: #fff;
     }
 
     /* Stacking Bento */

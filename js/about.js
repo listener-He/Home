@@ -65,6 +65,9 @@ class I18nManager {
             this.lang = this.lang === 'zh' ? 'en' : 'zh';
             localStorage.setItem('lang', this.lang);
             this.apply();
+            const label = this.lang === 'zh' ? 'CN' : 'EN';
+            $('#lang-btn .btn-text').text(label);
+            $('#lang-btn').attr('title', label);
         });
     }
 
@@ -74,6 +77,9 @@ class I18nManager {
             const k = $(this).data('i18n');
             if(t[k]) $(this).text(t[k]);
         });
+        const label = this.lang === 'zh' ? 'CN' : 'EN';
+        $('#lang-btn .btn-text').text(label);
+        $('#lang-btn').attr('title', label);
     }
 }
 
@@ -88,6 +94,7 @@ class ThemeManager {
     init() {
         const saved = localStorage.getItem('theme') || 'day';
         if(saved === 'night') this.root.setAttribute('data-theme', 'night');
+        $('#theme-btn').toggleClass('is-active', saved === 'night');
 
         $('#theme-btn').on('click', () => {
             const curr = this.root.getAttribute('data-theme');
@@ -95,6 +102,7 @@ class ThemeManager {
             if(next === 'night') this.root.setAttribute('data-theme', 'night');
             else this.root.removeAttribute('data-theme');
             localStorage.setItem('theme', next);
+            $('#theme-btn').toggleClass('is-active', next === 'night');
             
             // 更新Artalk主题
             if (typeof Artalk !== 'undefined') {
@@ -244,13 +252,14 @@ class DataManager {
                 const title = item.querySelector("title")?.textContent || "无标题";
                 const link = item.querySelector("link")?.textContent || "#";
                 const pubDate = item.querySelector("pubDate")?.textContent || "";
-                const category = item.querySelector("category")?.textContent || "Tech";
+                const categoryNodes = item.querySelectorAll("category");
+                const categories = Array.from(categoryNodes).map(n => (n.textContent || '').trim()).filter(Boolean);
                 
                 posts.push({
                     title,
                     link,
                     date: pubDate,
-                    cat: category
+                    cats: categories.length ? categories : ["Tech"]
                 });
             }
 
@@ -277,9 +286,29 @@ class DataManager {
 
     renderBlog(list) {
         let html = '';
+        const lang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        const fmtDate = (dStr) => {
+            if(!dStr) return '';
+            const d = new Date(dStr);
+            if(isNaN(d.getTime())) {
+                try {
+                    const parsed = new Date(Date.parse(dStr));
+                    if(!isNaN(parsed.getTime())) return lang === 'zh'
+                        ? `${parsed.getFullYear()}年${String(parsed.getMonth()+1).padStart(2,'0')}月${String(parsed.getDate()).padStart(2,'0')}日`
+                        : `${parsed.getFullYear()}-${String(parsed.getMonth()+1).padStart(2,'0')}-${String(parsed.getDate()).padStart(2,'0')}`;
+                } catch(_) {}
+                return dStr;
+            }
+            return lang === 'zh'
+                ? `${d.getFullYear()}年${String(d.getMonth()+1).padStart(2,'0')}月${String(d.getDate()).padStart(2,'0')}日`
+                : `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        };
+
         list.slice(0, 5).forEach(post => {
-            const date = (post.pubDate || post.date || '').split('T')[0];
-            const cat = post.category || post.cat || 'Tech';
+            const dateRaw = post.pubDate || post.date || '';
+            const date = fmtDate(dateRaw);
+            const catsArr = post.categories || post.cats || (post.category ? [post.category] : (post.cat ? [post.cat] : ['Tech']));
+            const cat = Array.isArray(catsArr) ? (lang === 'zh' ? catsArr.join('、') : catsArr.join(', ')) : (catsArr || 'Tech');
             const link = post.link || post.url || '#';
 
             html += `
@@ -357,6 +386,7 @@ class UIManager {
                 const colorClass = `tag-color-${(index % 5) + 1}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
+                el.style.gridRow = `${(index % 3) + 1}`;
                 container.appendChild(el);
             });
         } else {
@@ -378,10 +408,9 @@ class UIManager {
                 tags.push({ el, x:0, y:0, z:0 });
             });
 
-            // 增大球体半径以避免标签重叠
-            let radius = 220;
+            let radius = Math.max(180, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
             const dtr = Math.PI/180;
-            let lasta=1, lastb=1;
+            const autoAx = 0.6, autoBx = 0.5;
             let active=false, mouseX=0, mouseY=0;
 
             // Init positions
@@ -404,15 +433,12 @@ class UIManager {
             const update = () => {
                 let a, b;
                 if(active) {
-                    a = (-Math.min(Math.max(-mouseY, -200), 200)/radius) * 2;
-                    b = (Math.min(Math.max(-mouseX, -200), 200)/radius) * 2;
+                    a = (-Math.min(Math.max(-mouseY, -200), 200)/radius) * 2 + autoAx;
+                    b = (Math.min(Math.max(-mouseX, -200), 200)/radius) * 2 + autoBx;
                 } else {
-                    a = lasta * 0.98; // Auto rotate
-                    b = lastb * 0.98;
+                    a = autoAx;
+                    b = autoBx;
                 }
-                lasta=a; lastb=b;
-
-                if(Math.abs(a)<=0.01 && Math.abs(b)<=0.01 && !active) a=0.5; // Keep spinning slowly
 
                 let sa=Math.sin(a*dtr), ca=Math.cos(a*dtr);
                 let sb=Math.sin(b*dtr), cb=Math.cos(b*dtr);
@@ -422,7 +448,8 @@ class UIManager {
                     let rx2=rx1*cb + rz1*sb, ry2=ry1, rz2=rx1*-sb + rz1*cb;
                     tag.x=rx2; tag.y=ry2; tag.z=rz2;
 
-                    let scale = (tag.z + radius)/(2*radius) + 0.5;
+                    let scale = (tag.z + radius)/(2*radius) + 0.45;
+                    scale = Math.min(Math.max(scale, 0.7), 1.2);
                     let opacity = (tag.z + radius)/(2*radius) + 0.2;
 
                     tag.el.style.opacity = Math.min(Math.max(opacity, 0.1), 1);
