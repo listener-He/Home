@@ -1,44 +1,42 @@
 [
   {
-    "title": "向量数据库全攻略：从算法公式到选型指南，一篇吃透高维数据存储术",
-    "excerpt": "深入探讨向量数据库的核心算法、应用场景和选型策略，帮助开发者掌握高维数据存储的关键技术...",
-    "link": "https://blog.hehouhui.cn/posts/vector-database-guide",
-    "pubDate": "2025-01-02",
-    "category": "技术分享"
+    "title": "Spring Boot项目启动优化",
+    "link": "https://blog.hehouhui.cn/archives/21b0c7d0-9e17-80a2-968f-fa70ba8d0b26",
+    "date": "Mon, 23 Jun 2025 00:00:00 GMT",
+    "cats": [
+      ""
+    ]
   },
   {
-    "title": "CompletableFuture 从源码到实战：让异步编程像喝奶茶一样丝滑",
-    "excerpt": "全面解析CompletableFuture的源码实现和实战应用，让Java异步编程变得简单优雅...",
-    "link": "https://blog.hehouhui.cn/posts/completablefuture-guide",
-    "pubDate": "2025-01-02",
-    "category": "Java开发"
+    "title": "高维向量检索 Faiss vector database：向量数据库的基石与核心角色 —— 解析 PQ/IVF/HNSW 算法原理、CPU/GPU 底层实现、量化误差模型及动态索引机制，详解其在 RAG / 推荐系统中的价值与工业应用",
+    "link": "https://blog.hehouhui.cn/archives/faiss-vector-database-high-dimensional-vector-search-academic-foundation-core-role-pq-ivf-hnsw",
+    "date": "Wed, 10 Sep 2025 00:00:00 GMT",
+    "cats": [
+      ""
+    ]
+  },
+  {
+    "title": "Faiss vector database 深度学习指南：从背景到架构&算法&安装  —— 向量检索核心算法（IVF-PQ/HNSW）解析、CPU/GPU 加速优化、索引构建与持久化、动态数据处理方案",
+    "link": "https://blog.hehouhui.cn/archives/faiss-deep-learning-guide-vector-search-algorithm-cpu-gpu-optimization-index-building-industrial-practice-rag",
+    "date": "Wed, 10 Sep 2025 00:00:00 GMT",
+    "cats": [
+      ""
+    ]
+  },
+  {
+    "title": "Spring Bean 源码深度剖析：生命周期、加载机制与作用域的底层实现",
+    "link": "https://blog.hehouhui.cn/archives/spring-bean-lifecycle-loading-mechanism-scope-implementation",
+    "date": "Wed, 16 Jul 2025 00:00:00 GMT",
+    "cats": [
+      ""
+    ]
   },
   {
     "title": "从规范到架构：一篇读懂 Java 工程建模、分层、命名与演进之路",
-    "excerpt": "深入讲解Java工程的规范化建设，包括项目结构、分层架构、命名规范等最佳实践...",
-    "link": "https://blog.hehouhui.cn/posts/java-project-architecture",
-    "pubDate": "2025-01-01",
-    "category": "架构设计"
-  },
-  {
-    "title": "Spring Boot 3.0 新特性详解与实战应用",
-    "excerpt": "全面介绍Spring Boot 3.0的新特性，包括原生镜像支持、可观测性增强等...",
-    "link": "https://blog.hehouhui.cn/posts/spring-boot-3-features",
-    "pubDate": "2024-12-30",
-    "category": "Spring框架"
-  },
-  {
-    "title": "微服务架构设计模式与最佳实践",
-    "excerpt": "深入分析微服务架构的设计模式，包括服务拆分、数据一致性、分布式事务等核心问题...",
-    "link": "https://blog.hehouhui.cn/posts/microservices-patterns",
-    "pubDate": "2024-12-28",
-    "category": "微服务"
-  },
-  {
-    "title": "Redis 高可用集群搭建与性能优化实战",
-    "excerpt": "详细介绍Redis集群的搭建过程、高可用配置以及性能调优技巧...",
-    "link": "https://blog.hehouhui.cn/posts/redis-cluster-optimization",
-    "pubDate": "2024-12-25",
-    "category": "数据库"
+    "link": "https://blog.hehouhui.cn/archives/scalable-java-architecture-from-monolith-to-microservices",
+    "date": "Tue, 29 Jul 2025 00:00:00 GMT",
+    "cats": [
+      ""
+    ]
   }
 ]
