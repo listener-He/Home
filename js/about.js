@@ -661,57 +661,24 @@ class UIManager {
         updateLabels();
     }
 
-    // 初始化可拖拽悬浮按钮
+    // 初始化拖拽功能
     initDraggableFab() {
-        const fab = document.querySelector('.mobile-fab');
+        const fab = document.getElementById('fab-main');
         if (!fab) return;
-        
+
         let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
-        let fabWidth = fab.offsetWidth;
-        let fabHeight = fab.offsetHeight;
-        let windowWidth = window.innerWidth;
-        let windowHeight = window.innerHeight;
-        
-        // 设置初始位置为距离底部1/3处
-        function setInitialPosition() {
-            windowWidth = window.innerWidth;
-            windowHeight = window.innerHeight;
-            fabWidth = fab.offsetWidth;
-            fabHeight = fab.offsetHeight;
-            
-            // 初始位置：右侧16px，距离底部1/3
-            const initialYPos = windowHeight - (windowHeight / 3) - fabHeight / 2;
-            xOffset = windowWidth - 16 - fabWidth; // 距离右边16px
-            yOffset = initialYPos;
-            
-            setTranslate(xOffset, yOffset, fab);
-        }
-        
-        // 页面加载时设置初始位置
-        setInitialPosition();
-        
-        // 窗口大小改变时更新位置
-        window.addEventListener('resize', setInitialPosition);
-        
-        // 触摸开始事件
-        fab.addEventListener('touchstart', dragStart, false);
-        fab.addEventListener('mousedown', dragStart, false);
-        
-        // 拖拽移动事件
-        document.addEventListener('touchmove', drag, { passive: false });
-        document.addEventListener('mousemove', drag);
-        
-        // 拖拽结束事件
-        document.addEventListener('touchend', dragEnd, false);
-        document.addEventListener('mouseup', dragEnd, false);
-        
-        function dragStart(e) {
+        let initialX, initialY, currentX, currentY, xOffset = 0, yOffset = 0;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const fabWidth = fab.offsetWidth;
+        const fabHeight = fab.offsetHeight;
+
+        // 拖拽相关方法
+        const setTranslate = (xPos, yPos, el) => {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        };
+
+        const dragStart = (e) => {
             if (e.type === 'touchstart') {
                 initialX = e.touches[0].clientX - xOffset;
                 initialY = e.touches[0].clientY - yOffset;
@@ -719,16 +686,18 @@ class UIManager {
                 initialX = e.clientX - xOffset;
                 initialY = e.clientY - yOffset;
             }
-            
-            if (e.target === fab || fab.contains(e.target)) {
-                isDragging = true;
-            }
-        }
-        
-        function drag(e) {
+            isDragging = true;
+        };
+
+        const dragEnd = () => {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        };
+
+        const drag = (e) => {
             if (isDragging) {
                 e.preventDefault();
-                
                 if (e.type === 'touchmove') {
                     currentX = e.touches[0].clientX - initialX;
                     currentY = e.touches[0].clientY - initialY;
@@ -736,27 +705,24 @@ class UIManager {
                     currentX = e.clientX - initialX;
                     currentY = e.clientY - initialY;
                 }
-                
-                xOffset = currentX;
-                yOffset = currentY;
-                
-                // 限制在屏幕范围内
+
+                // 限制在屏幕内
                 currentX = Math.max(0, Math.min(currentX, windowWidth - fabWidth));
                 currentY = Math.max(0, Math.min(currentY, windowHeight - fabHeight));
-                
+
+                xOffset = currentX;
+                yOffset = currentY;
                 setTranslate(currentX, currentY, fab);
             }
-        }
-        
-        function dragEnd() {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-        
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = 'translate3d(' + xPos + 'px, ' + yPos + 'px, 0)';
-        }
+        };
+
+        // 绑定事件
+        fab.addEventListener('touchstart', dragStart, false);
+        fab.addEventListener('touchend', dragEnd, false);
+        fab.addEventListener('touchmove', drag, false);
+        fab.addEventListener('mousedown', dragStart, false);
+        fab.addEventListener('mouseup', dragEnd, false);
+        fab.addEventListener('mousemove', drag, false);
     }
 
     initAudio() {
