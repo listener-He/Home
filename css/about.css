@@ -9,18 +9,18 @@
     --font-serif: "Georgia", "Times New Roman", "Songti SC", serif;
     --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-    --bg-base: #f2f4f7;
+    --bg-base: #f3f4f6;
     --bg-grad-1: #a1c4fd;
     --bg-grad-2: #c2e9fb;
 
-    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: 1px solid rgba(255, 255, 255, 0.9);
     --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
     --glass-blur: 28px;
 
-    --text-primary: #2d3436;
-    --text-secondary: #636e72;
-    --text-tertiary: #b2bec3;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
 
     --accent: #6c5ce7;
     --accent-glow: rgba(108, 92, 231, 0.2);
@@ -38,6 +38,10 @@
     --gradient-8: linear-gradient(135deg, #fccb90, #d57eeb);
     --gradient-9: linear-gradient(135deg, #ffecd2, #fcb69f);
     --gradient-10: linear-gradient(135deg, #cfd9df, #e2ebf0);
+    --day-tag-1: #0ea5e9;
+    --day-tag-2: #ef4444;
+    --day-tag-3: #10b981;
+    --day-tag-4: #f59e0b;
 }
 
 [data-theme="night"] {
@@ -78,6 +82,8 @@ body {
     overflow-x: hidden;
     transition: background 0.5s, color 0.3s;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    color-scheme: light;
 }
 
 /* Ambient Background */
@@ -845,19 +851,19 @@ body {
     .i-text strong {
         font-size: 1.1rem;
         white-space: nowrap;
-        background: var(--gradient-1);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        background: none;
+        -webkit-background-clip: initial;
+        background-clip: initial;
+        color: var(--text-primary);
     }
 
     .i-text span {
         font-size: 0.9rem;
         white-space: normal;
-        background: var(--gradient-2);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        background: none;
+        -webkit-background-clip: initial;
+        background-clip: initial;
+        color: var(--text-tertiary);
     }
 
     .comment-box {
@@ -2181,24 +2187,20 @@ body {
   .i-text strong {
       font-size: 1.1rem;
       color: var(--text-primary);
-      /* 为兴趣标签添加渐变色彩 */
-      background: var(--gradient-1);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+      -webkit-text-fill-color: initial;
       white-space: nowrap;
   }
 
   .i-text span:not(.i-emoji) {
       font-size: 0.9rem;
       color: var(--text-tertiary);
-      /* 为兴趣描述添加渐变色彩 */
-      background: var(--gradient-2);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+      -webkit-text-fill-color: initial;
       white-space: normal;
   }
 }
@@ -2940,3 +2942,48 @@ body {
 .fab-menu { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
 .fab-item { display: flex; align-items: center; gap: 6px; background: var(--glass-bg); border-radius: 18px; padding: 8px 12px; border: var(--glass-border); box-shadow: var(--glass-shadow); opacity: 0.8; }
 .fab-menu.open { display: flex; }
+/* Day-only: keep subtle gradient on titles, solid body text */
+:not([data-theme="night"]) .glow-title {
+    background: linear-gradient(90deg, var(--text-primary), var(--accent), var(--text-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+:not([data-theme="night"]) .card-header h3 {
+    background: linear-gradient(90deg, var(--text-primary), var(--accent), var(--text-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Day-only: strengthen contrast for INFJ tags */
+:not([data-theme="night"]) .mbti-tags .tag {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    color: var(--text-secondary) !important;
+}
+:not([data-theme="night"]) .mbti-tags .tag.tag-color-1 { color: var(--day-tag-1) !important; }
+:not([data-theme="night"]) .mbti-tags .tag.tag-color-2 { color: var(--day-tag-2) !important; }
+:not([data-theme="night"]) .mbti-tags .tag.tag-color-3 { color: var(--day-tag-3) !important; }
+:not([data-theme="night"]) .mbti-tags .tag.tag-color-4 { color: var(--day-tag-4) !important; }
+
+/* Day-only: strengthen contrast for Interests */
+:not([data-theme="night"]) .i-text strong {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    color: #111827 !important;
+}
+:not([data-theme="night"]) .i-text span:not(.i-emoji) {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    color: #374151 !important;
+}
