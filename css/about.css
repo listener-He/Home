@@ -147,6 +147,14 @@ body {
     text-shadow: 0 0 10px var(--accent);
 }
 
+[data-theme="day"] .icon-sun {
+    display: none;
+}
+
+[data-theme="night"] .icon-moon {
+    display: none;
+}
+
 
 /* =========================================
    3. Navigation
@@ -249,14 +257,6 @@ body {
 
     .action-btn:active {
         transform: translateY(0);
-    }
-
-    [data-theme="day"] .icon-sun {
-        display: none;
-    }
-
-    [data-theme="night"] .icon-moon {
-        display: none;
     }
 }
 
@@ -646,33 +646,6 @@ body {
     max-width: 100%;
 }
 
-.mbti-tags .tag.tag-color-1 {
-    background: var(--gradient-1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.mbti-tags .tag.tag-color-2 {
-    background: var(--gradient-2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.mbti-tags .tag.tag-color-3 {
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.mbti-tags .tag.tag-color-4 {
-    background: var(--gradient-4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
 
 /* --- Tech Stack (PC) --- */
 .area-tech {
@@ -1478,14 +1451,6 @@ body {
 
     .action-btn:active {
         transform: translateY(0);
-    }
-
-    [data-theme="day"] .icon-sun {
-        display: none;
-    }
-
-    [data-theme="night"] .icon-moon {
-        display: none;
     }
 }
 
