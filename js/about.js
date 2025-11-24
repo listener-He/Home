@@ -161,6 +161,7 @@ class I18nManager {
 
     apply() {
         const t = this.dict[this.lang];
+        document.documentElement.setAttribute('data-lang', this.lang)
         $('[data-i18n]').each(function () {
             const k = $(this).data('i18n');
             if (t[k]) $(this).text(t[k]);
@@ -661,11 +662,11 @@ class UIManager {
 
         const techStackRaw = window.SiteConfig?.techStack || [];
         const techStack = techStackRaw.map((item, idx) => {
-            const name = item.name || '';
-            const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
+            //const name = item.name || '';
+            //const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
             const gid = Number(item.gradientId) && Number.isFinite(Number(item.gradientId))
                 ? Math.max(1, Math.min(10, Number(item.gradientId)))
-                : (hash % 10) + 1;
+                : (idx % 10) + 1;
             return {...item, gradientId: gid};
         });
 
