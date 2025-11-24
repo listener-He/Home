@@ -522,35 +522,138 @@ class UIManager {
     enhanceArtalkUI() {
         const container = document.getElementById('artalk-container');
         if (!container) return;
+        
+        // 检测是否为移动端
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         container.classList.toggle('atk-mobile', isMobile);
         container.classList.toggle('atk-desktop', !isMobile);
+        
+        // 获取当前语言
         const lang = getStoredLanguage();
+        
+        // 获取当前主题
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
+        // 设置主题
+        if (typeof Artalk !== 'undefined') {
+            try {
+                Artalk.setDarkMode(currentTheme === 'night');
+            } catch (e) {
+                console.warn('Failed to set Artalk dark mode:', e);
+            }
+        }
+        
+        // 移动端增强功能
         if (isMobile) {
-            const apply = () => {
-                container.querySelectorAll('.atk-comment-wrap .atk-content').forEach(el => {
-                    if (el.dataset.clamped) return;
-                    el.classList.add('clamped');
-                    const btn = document.createElement('button');
-                    btn.className = 'atk-expand-btn';
-                    const expandText = lang === 'zh' ? '展开' : 'Expand';
-                    const collapseText = lang === 'zh' ? '收起' : 'Collapse';
-                    btn.textContent = expandText;
-                    btn.addEventListener('click', () => {
-                        const clamped = el.classList.toggle('clamped');
-                        btn.textContent = clamped ? expandText : collapseText;
-                    });
-                    el.parentElement.appendChild(btn);
-                    el.dataset.clamped = '1';
-                });
-            };
-            apply();
-            const obs = new MutationObserver(apply);
-            obs.observe(container, { childList: true, subtree: true });
+            this.enhanceMobileArtalk(container, lang);
+        }
+        
+        // 监听主题变化
+        const themeObserver = new MutationObserver(() => {
+            const newTheme = document.documentElement.getAttribute('data-theme');
+            if (typeof Artalk !== 'undefined') {
+                try {
+                    Artalk.setDarkMode(newTheme === 'night');
+                } catch (e) {
+                    console.warn('Failed to update Artalk dark mode:', e);
+                }
+            }
+        });
+        
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+        
+        // 监听语言变化
+        const langBtn = document.getElementById('lang-btn');
+        if (langBtn) {
+            langBtn.addEventListener('click', () => {
+                // 延迟执行以确保语言已经切换
+                setTimeout(() => {
+                    const newLang = getStoredLanguage();
+                    this.updateArtalkLanguage(container, newLang, isMobile);
+                }, 100);
+            });
         }
     }
 
+    enhanceMobileArtalk(container, lang) {
+        const applyMobileStyles = () => {
+            container.querySelectorAll('.atk-comment-wrap .atk-content').forEach(el => {
+                // 检查是否已经处理过
+                if (el.dataset.mobileProcessed) return;
+                
+                // 添加移动端内容截断
+                el.classList.add('clamped');
+                
+                // 创建展开/收起按钮
+                const btn = document.createElement('button');
+                btn.className = 'atk-expand-btn';
+                const expandText = lang === 'zh' ? '展开' : 'Expand';
+                const collapseText = lang === 'zh' ? '收起' : 'Collapse';
+                btn.textContent = expandText;
+                
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isClamped = el.classList.toggle('clamped');
+                    btn.textContent = isClamped ? expandText : collapseText;
+                });
+                
+                // 将按钮插入到适当位置
+                const actionsElement = el.closest('.atk-comment').querySelector('.atk-actions');
+                if (actionsElement) {
+                    actionsElement.parentNode.insertBefore(btn, actionsElement);
+                } else {
+                    el.parentNode.appendChild(btn);
+                }
+                
+                // 标记为已处理
+                el.dataset.mobileProcessed = '1';
+            });
+        };
+        
+        // 初始应用
+        applyMobileStyles();
+        
+        // 创建观察器以处理动态添加的评论
+        const observer = new MutationObserver(applyMobileStyles);
+        observer.observe(container, { 
+            childList: true, 
+            subtree: true,
+            attributes: false
+        });
+    }
 
+    updateArtalkLanguage(container, lang, isMobile) {
+        // 更新展开/收起按钮文本
+        if (isMobile) {
+            const expandButtons = container.querySelectorAll('.atk-expand-btn');
+            const expandText = lang === 'zh' ? '展开' : 'Expand';
+            const collapseText = lang === 'zh' ? '收起' : 'Collapse';
+            
+            expandButtons.forEach(btn => {
+                // 如果按钮当前显示的是展开文本，保持不变
+                // 如果显示的是收起文本，则更新为对应语言的收起文本
+                if (btn.textContent === '展开' || btn.textContent === 'Expand') {
+                    btn.textContent = expandText;
+                } else if (btn.textContent === '收起' || btn.textContent === 'Collapse') {
+                    btn.textContent = collapseText;
+                }
+            });
+        }
+        
+        // 如果有 Artalk 实例，可以在这里更新其实例的语言设置
+        if (typeof Artalk !== 'undefined') {
+            try {
+                // 注意：Artalk 的语言设置通常在初始化时确定，
+                // 动态更改语言需要重新初始化或者使用其API（如果支持）
+                console.log('Would update Artalk language to:', lang);
+            } catch (e) {
+                console.warn('Failed to update Artalk language:', e);
+            }
+        }
+    }
 
     initTechCloud() {
         const container = document.getElementById('tech-container');
@@ -655,16 +758,14 @@ class UIManager {
 
                 tags.forEach(tag => {
                     let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
-                    let rx2 = rx1 * cb + rz1 * sb, ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
-                    tag.x = rx2;
+                    let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
+                    tag.x = rx1 * cb + rz1 * sb;
                     tag.y = ry2;
                     tag.z = rz2;
 
                     let scale = (tag.z + radius) / (2 * radius) + 0.45;
                     scale = Math.min(Math.max(scale, 0.7), 1.15);
-                    let opacity = (tag.z + radius) / (2 * radius) + 0.2;
-
-                    tag.el.style.opacity = 1;
+                    tag.el.style.opacity = (tag.z + radius) / (2 * radius) + 0.2;
                     tag.el.style.zIndex = parseInt(scale * 100);
                     let left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
                     let top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
@@ -808,13 +909,5 @@ class UIManager {
             }
         };
         tryPlay();
-    }
-
-    _t(key) {
-        try {
-            return (new I18nManager()).dict[(localStorage.getItem('lang') || 'zh')][key];
-        } catch (_) {
-            return null;
-        }
     }
 }

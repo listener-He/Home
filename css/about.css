@@ -1329,52 +1329,6 @@ body {
     box-shadow: var(--glass-shadow);
 }
 
-/* Artalk 组件（按容器选择器统一覆盖，移除无效类选择器） */
-
-/* 确保评论区域适配白天/黑夜模式 */
-#artalk-container {
-  border-radius: var(--radius);
-}
-
-#artalk-container .atk-main-editor {
-  background: var(--glass-bg);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-}
-#artalk-container .atk-editor, #artalk-container .atk-editor textarea, #artalk-container .atk-editor input {
-  background: var(--glass-bg);
-  color: var(--text-primary);
-}
-
-#artalk-container .atk-comment-wrap {
-  background: var(--glass-bg);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  opacity: 0.9;
-  transition: opacity 0.2s;
-}
-#artalk-container .atk-dialog, #artalk-container .atk-layer .atk-dialog { background: var(--glass-bg); color: var(--text-primary); border: var(--glass-border); box-shadow: var(--glass-shadow); }
-[data-theme="night"] #artalk-container .atk-main-editor,
-[data-theme="night"] #artalk-container .atk-editor,
-[data-theme="night"] #artalk-container .atk-comment-wrap,
-[data-theme="night"] #artalk-container .atk-dialog,
-[data-theme="night"] #artalk-container .atk-layer .atk-dialog {
-  background: rgba(30,30,35,0.55);
-  color: var(--text-primary);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: var(--glass-shadow);
-}
-
-#artalk-container.atk-mobile .atk-main-editor { padding: 12px; font-size: 0.95rem; }
-#artalk-container.atk-mobile .atk-comment-wrap { padding: 12px 14px; font-size: 0.95rem; }
-#artalk-container.atk-mobile .atk-avatar { width: 28px; height: 28px; }
-#artalk-container.atk-mobile .atk-meta { font-size: 12px; }
-#artalk-container.atk-desktop .atk-main-editor { padding: 18px 22px; }
-#artalk-container.atk-desktop .atk-comment-wrap { padding: 18px 22px; line-height: 1.7; }
-#artalk-container .atk-content.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-#artalk-container .atk-expand-btn { margin-top: 8px; padding: 6px 10px; border-radius: 14px; border: none; cursor: pointer; background: var(--accent); color: #fff; box-shadow: 0 4px 10px rgba(108,92,231,0.25); }
-[data-theme="night"] #artalk-container .atk-expand-btn { background: linear-gradient(135deg, #a1c4fd, #6c5ce7); box-shadow: 0 4px 12px rgba(108,92,231,0.35); }
-
 .fab-menu.open {
     display: flex;
 }
