@@ -224,6 +224,21 @@ class DataManager {
         setTimeout(() => this.fetchBlog(), 0);
     }
 
+    // 创建带超时的fetch函数
+    async fetchWithTimeout(url, options = {}) {
+        const { timeout = 5000 } = options;
+        
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+
     // 优先缓存 -> API -> 默认值
     async fetchGithub() {
         const user = (window.SiteConfig?.github?.username) || 'listener-He';
@@ -240,14 +255,14 @@ class DataManager {
         }
 
         try {
-            // Parallel Fetch
-            const uRes = await fetch(`https://api.github.com/users/${user}`);
+            // Parallel Fetch with timeout
+            const uRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}`, { timeout: 5000 });
             const userData = uRes.ok ? await uRes.json() : (window.SiteConfig?.defaults?.user);
             let allRepos = [];
             let page = 1;
             const perPage = 100;
             while (page <= 10) { // 最多抓取1000条，直到满足条件或为空
-                const rRes = await fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=${perPage}&page=${page}`);
+                const rRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}/repos?sort=stars&per_page=${perPage}&page=${page}`, { timeout: 5000 });
                 if (!rRes.ok) break;
                 const repos = await rRes.json();
                 if (!Array.isArray(repos) || repos.length === 0) break;
@@ -342,8 +357,8 @@ class DataManager {
         }
 
         try {
-            // 尝试从RSS获取
-            const response = await fetch(rssUrl);
+            // 尝试从RSS获取，带超时设置
+            const response = await this.fetchWithTimeout(rssUrl, { timeout: 5000 });
             if (!response.ok) throw new Error('RSS fetch failed');
 
             const xmlText = await response.text();
@@ -385,7 +400,7 @@ class DataManager {
             console.warn("RSS API Fail", e);
             // 降级到本地JSON文件
             try {
-                const response = await fetch('data/articles.json');
+                const response = await this.fetchWithTimeout('data/articles.json', { timeout: 3000 });
                 const data = await response.json();
                 this.renderBlog(data);
             } catch (e2) {
