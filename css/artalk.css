@@ -170,6 +170,7 @@
   border: 2px solid #6c5ce7 !important;
   box-shadow: 0 0 10px rgba(108, 92, 231, 0.2) !important;
   transition: all 0.3s ease;
+  object-fit: cover; /* 修复头像拉伸问题 */
 }
 
 .atk-comment .atk-header {
@@ -208,6 +209,7 @@
 .atk-actions .atk-action {
   color: #4b5563 !important;
   transition: all 0.2s ease !important;
+  margin-right: 15px; /* 增加回复评论组件的边距 */
 }
 
 .atk-actions .atk-action:hover {
@@ -359,11 +361,14 @@
 .atk-mobile .atk-comment-wrap {
   padding: 15px !important;
   font-size: 0.95rem !important;
+  margin: 0 0 8px 0 !important; /* 移除移动端容器化样式，节省宽度 */
+  border-radius: 0 !important; /* 移除圆角 */
 }
 
 .atk-mobile .atk-avatar {
   width: 28px !important;
   height: 28px !important;
+  object-fit: cover; /* 修复移动端头像拉伸问题 */
 }
 
 .atk-mobile .atk-meta {
@@ -400,6 +405,7 @@
   cursor: pointer !important;
   margin-top: 10px !important;
   transition: all 0.3s ease !important;
+  margin-right: 0 !important; /* 重置移动端回复按钮的右边距 */
 }
 
 .atk-mobile .atk-expand-btn:hover {
@@ -532,14 +538,24 @@
   .atk-comment-wrap {
     padding: 12px 14px !important;
     font-size: 0.95rem !important;
+    margin: 0 0 8px 0 !important; /* 移除移动端容器化样式，节省宽度 */
+    border-radius: 0 !important; /* 移除圆角 */
   }
   
   .atk-avatar {
     width: 28px !important;
     height: 28px !important;
+    object-fit: cover; /* 修复移动端头像拉伸问题 */
   }
   
   .atk-meta {
     font-size: 12px !important;
+  }
+  
+  /* 修复移动端输入框底色问题 */
+  [data-theme="night"] .atk-editor-textarea {
+    background: rgba(40, 40, 45, 0.5) !important;
+    color: #dfe6e9 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 }
