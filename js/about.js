@@ -559,6 +559,9 @@ class UIManager {
                     console.warn('Failed to update Artalk dark mode:', e);
                 }
             }
+            
+            // 更新自定义样式类
+            this.updateCustomStyles(container, newTheme);
         });
         
         themeObserver.observe(document.documentElement, {
@@ -577,6 +580,9 @@ class UIManager {
                 }, 100);
             });
         }
+        
+        // 初始化自定义样式
+        this.updateCustomStyles(container, currentTheme);
     }
 
     enhanceMobileArtalk(container, lang) {
@@ -624,6 +630,10 @@ class UIManager {
             subtree: true,
             attributes: false
         });
+        
+        // 添加移动端特定的样式类
+        const theme = document.documentElement.getAttribute('data-theme');
+        container.classList.add(`atk-theme-${theme || 'day'}`);
     }
 
     updateArtalkLanguage(container, lang, isMobile) {
@@ -911,4 +921,18 @@ class UIManager {
         };
         tryPlay();
     }
+
+    updateCustomStyles(container, theme) {
+        // 确保容器具有正确的主题类
+        container.classList.remove('atk-theme-day', 'atk-theme-night');
+        container.classList.add(`atk-theme-${theme || 'day'}`);
+        
+        // 更新自定义元素的主题样式
+        const customElements = container.querySelectorAll('.atk-expand-btn, .atk-pagination .atk-page-item');
+        customElements.forEach(el => {
+            el.classList.remove('atk-theme-day', 'atk-theme-night');
+            el.classList.add(`atk-theme-${theme || 'day'}`);
+        });
+    }
+
 }

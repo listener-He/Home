@@ -5,6 +5,43 @@
   border-radius: 12px;
 }
 
+/* 确保评论区域适配白天/黑夜模式 */
+#artalk-container .atk-main-editor {
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  border-radius: 24px;
+}
+
+#artalk-container .atk-comment-wrap {
+  background: rgba(128, 128, 128, 0.03);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  opacity: 0.9;
+  transition: opacity 0.2s, background 0.3s;
+  border-radius: 12px;
+}
+
+#artalk-container .atk-comment-wrap:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.08);
+}
+
+#artalk-container .atk-dialog, 
+#artalk-container .atk-layer .atk-dialog {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  border-radius: 24px;
+}
+
 /* Light theme styles */
 .atk-main-editor {
   background: rgba(255, 255, 255, 0.75) !important;
@@ -14,6 +51,11 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12) !important;
   border-radius: 24px !important;
   transition: all 0.3s ease !important;
+}
+
+.atk-editor, .atk-editor textarea, .atk-editor input {
+  background: rgba(255, 255, 255, 0.75);
+  color: #1f2937;
 }
 
 .atk-main-editor:focus-within {
@@ -68,6 +110,17 @@
   padding: 8px 20px !important;
   font-weight: 500 !important;
   transition: all 0.3s ease !important;
+  box-shadow: 0 4px 10px rgba(108, 92, 231, 0.25);
+}
+
+.atk-send-btn:hover {
+  background: #5d4de0 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3) !important;
+}
+
+.atk-send-btn:active {
+  transform: translateY(0) !important;
 }
 
 .atk-send-btn:hover {
@@ -165,6 +218,47 @@
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65) !important;
 }
 
+[data-theme="night"] .atk-send-btn {
+  background: #00cec9 !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 8px 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 10px rgba(0, 206, 201, 0.25);
+}
+
+[data-theme="night"] .atk-send-btn:hover {
+  background: #00b3ae !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 206, 201, 0.3) !important;
+}
+
+[data-theme="night"] .atk-send-btn:active {
+  transform: translateY(0) !important;
+}
+
+[data-theme="night"] .atk-editor, 
+[data-theme="night"] .atk-editor textarea, 
+[data-theme="night"] .atk-editor input {
+  background: rgba(30, 30, 35, 0.55);
+  color: #dfe6e9;
+}
+
+[data-theme="night"] .atk-comment-wrap {
+  background: rgba(30, 30, 35, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="night"] .atk-dialog, 
+[data-theme="night"] .atk-layer .atk-dialog {
+  background: rgba(30, 30, 35, 0.55);
+  color: #dfe6e9;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+}
+
 [data-theme="night"] .atk-header-item {
   color: #dfe6e9 !important;
 }
@@ -223,6 +317,8 @@
 /* Mobile specific styles */
 .atk-mobile .atk-main-editor {
   border-radius: 16px !important;
+  padding: 12px !important;
+  font-size: 0.95rem !important;
 }
 
 .atk-mobile .atk-header {
@@ -244,6 +340,16 @@
 
 .atk-mobile .atk-comment-wrap {
   padding: 15px !important;
+  font-size: 0.95rem !important;
+}
+
+.atk-mobile .atk-avatar {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.atk-mobile .atk-meta {
+  font-size: 12px !important;
 }
 
 .atk-mobile .atk-comment .atk-content.clamped {
@@ -305,6 +411,10 @@
   background: rgba(128, 128, 128, 0.05) !important;
   color: #4b5563 !important;
   transition: all 0.3s ease !important;
+  border: var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%) !important;
 }
 
 .atk-pagination .atk-page-item:hover {
@@ -320,6 +430,10 @@
 [data-theme="night"] .atk-pagination .atk-page-item {
   background: rgba(255, 255, 255, 0.05) !important;
   color: #b2bec3 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(28px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
 }
 
 [data-theme="night"] .atk-pagination .atk-page-item:hover {
@@ -379,5 +493,24 @@
     padding: 6px 12px !important;
     margin: 0 3px !important;
     font-size: 0.9rem !important;
+  }
+  
+  /* 移动端增强样式 */
+  .atk-main-editor {
+    border-radius: 16px !important;
+  }
+  
+  .atk-comment-wrap {
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .atk-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .atk-meta {
+    font-size: 12px !important;
   }
 }
