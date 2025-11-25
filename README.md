@@ -68,10 +68,10 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/listener-He/Honesty-Home.git
+git clone https://github.com/listener-He/Home.git
 
 # 进入项目目录
-cd Honesty-Home
+cd Home
 
 # 直接打开 HTML 文件预览
 open index.html
