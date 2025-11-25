@@ -1,15 +1,14 @@
 // Service Worker for PWA
-const CACHE_NAME = 'honesty-home-v1.0.0';
+const CACHE_NAME = 'honesty-home-v1.0.1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/about.html',
-  '/css/style.css',
-  '/css/about.css',
-  '/css/artalk.css',
-  '/js/config.js',
-  '/js/main.js',
-  '/js/about.js'
+  './index.html',
+  './about.html',
+  './css/style.css',
+  './css/about.css',
+  './css/artalk.css',
+  './js/config.js',
+  './js/main.js',
+  './js/about.js'
 ];
 
 // 安装事件 - 缓存资源
@@ -25,6 +24,11 @@ self.addEventListener('install', event => {
 
 // 获取事件 - 拦截网络请求
 self.addEventListener('fetch', event => {
+  // 对于非GET请求或者不是同源请求，直接跳过
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {

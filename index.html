@@ -12,33 +12,36 @@
     <meta name="description" content="Honesty的主页,HeHouHui的主页,HeHui的主页,明厚的主页">
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
     <meta name="author" content="Honesty">
-    
+
     <!-- PWA相关配置 -->
     <meta name="theme-color" content="#6c5ce7">
     <link rel="manifest" href="./manifest.json">
-    
+
     <!-- 社交平台分享优化 -->
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.hehouhui.cn/">
     <meta property="og:title" content="Honesty的主页 - Java后端 & AI工程师">
-    <meta property="og:description" content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
+    <meta property="og:description"
+          content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
     <meta property="og:image" content="images/avatar.jpeg">
     <meta property="og:site_name" content="Honesty的主页">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.hehouhui.cn/">
     <meta property="twitter:title" content="Honesty的主页 - Java后端 & AI工程师">
-    <meta property="twitter:description" content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
+    <meta property="twitter:description"
+          content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
     <meta property="twitter:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
     <meta property="twitter:site" content="@Honesty861024">
-    
+
     <!-- 微信小程序/朋友圈分享 -->
     <meta property="wechat:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
     <meta property="wechat:title" content="Honesty的主页 - Java后端 & AI工程师">
-    <meta property="wechat:description" content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
-    
+    <meta property="wechat:description"
+          content="我是Honesty，一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
+
     <title>Honesty的主页</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css?version=3">
     <link rel="stylesheet" type="text/css" href="./css/iconfont.css">
@@ -58,7 +61,6 @@
           media="all">
 
 
-
     <!--IE淘汰计划-->
     <script>
         if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href = "https://imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location.href);
@@ -66,12 +68,7 @@
 </head>
 
 <body oncontextmenu=self.event.returnValue=false onselectstart="return false">
-<!-- style="background: url(https://blog-file.hehouhui.cn/bj/1.jpg) center center / cover no-repeat rgb(102, 102, 102);" -->
 <header id="panel" class="panel-cover">
-    <!--星空背景-->
-    <!--    <canvas id="bg"></canvas>-->
-    <!--天气-->
-    <!-- <div id="he-plugin-simple"></div> -->
     <script>
         WIDGET = {
             "CONFIG": {
@@ -376,64 +373,77 @@
 </script>
 
 <!-- Google Analytics -->
-<script>
+<script type="text/javascript">
     // 定义 gtag 函数作为安全兜底
-    <script type="text/javascript">
-        try {
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-        } catch (e) {
-            console.log("Google Analytics Init 错误", e);
+    try {
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
         }
 
-    </script>
+        gtag('js', new Date());
+    } catch (e) {
+        console.log("Google Analytics Init 错误", e);
+    }
 
-    <!-- 再异步加载 Google 的 gtag.js -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYWDEVKDP0"></script>
+</script>
 
-    <!-- 可选：继续调用 config -->
-    <script type="text/javascript">
-        try {
-            gtag('config', 'G-DYWDEVKDP0');
-        } catch (e) {
-            console.error("Google Analytics config 失败", e);
-        }
-    </script>
+<!-- 再异步加载 Google 的 gtag.js -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DYWDEVKDP0"></script>
 
-    <script>
-        !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3OBGjwDdEIRS7XZ1",ck:"3OBGjwDdEIRS7XZ1"});
-    </script>
-    
-    <!-- PWA注册 -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./js/sw.js')
-                    .then(function(registration) {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-    </script>
-    
-    <!-- Apple PWA支持 -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Honesty">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    
-    <!-- Windows PWA支持 -->
-    <meta name="msapplication-TileImage" content="/images/avatar.jpeg">
-    <meta name="msapplication-TileColor" content="#6c5ce7">
-    <meta name="msapplication-tap-highlight" content="no">
-    
-    <!-- 其他PWA相关meta标签 -->
-    <meta name="mobile-web-app-capable" content="yes">
+<!-- 可选：继续调用 config -->
+<script type="text/javascript">
+    try {
+        gtag('config', 'G-DYWDEVKDP0');
+    } catch (e) {
+        console.error("Google Analytics config 失败", e);
+    }
+</script>
+
+<script>
+    !function (p) {
+        "use strict";
+        !function (t) {
+            var s = window, e = document, i = p,
+                c = "".concat("https:" === e.location.protocol ? "https://" : "http://", "sdk.51.la/js-sdk-pro.min.js"),
+                n = e.createElement("script"), r = e.getElementsByTagName("script")[0];
+            n.type = "text/javascript", n.setAttribute("charset", "UTF-8"), n.async = !0, n.src = c, n.id = "LA_COLLECT", i.d = n;
+            var o = function () {
+                s.LA.ids.push(i)
+            };
+            s.LA ? s.LA.ids && o() : (s.LA = p, s.LA.ids = [], o()), r.parentNode.insertBefore(n, r)
+        }()
+    }({id: "3OBGjwDdEIRS7XZ1", ck: "3OBGjwDdEIRS7XZ1"});
+</script>
+
+<!-- PWA注册 -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('./js/sw.js')
+                .then(function (registration) {
+                    console.log('SW registered: ', registration);
+                })
+                .catch(function (registrationError) {
+                    console.log('SW registration failed: ', registrationError);
+                });
+        });
+    }
+</script>
+
+<!-- Apple PWA支持 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Honesty">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Windows PWA支持 -->
+<meta name="msapplication-TileImage" content="/images/avatar.jpeg">
+<meta name="msapplication-TileColor" content="#6c5ce7">
+<meta name="msapplication-tap-highlight" content="no">
+
+<!-- 其他PWA相关meta标签 -->
+<meta name="mobile-web-app-capable" content="yes">
 </body>
 </html>
