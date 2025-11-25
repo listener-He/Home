@@ -535,6 +535,23 @@ class UIManager {
         }
     }
 
+    // 重新加载 Artalk 评论组件
+    reloadArtalk() {
+        // 销毁现有的 Artalk 实例
+        if (typeof Artalk !== 'undefined' && Artalk.instances) {
+            Artalk.destroy();
+        }
+        
+        // 清空容器
+        const container = document.getElementById('artalk-container');
+        if (container) {
+            container.innerHTML = '';
+        }
+        
+        // 重新初始化
+        this.initArtalk();
+    }
+
     enhanceArtalkUI() {
         const container = document.getElementById('artalk-container');
         if (!container) return;
@@ -567,16 +584,10 @@ class UIManager {
         // 监听主题变化
         const themeObserver = new MutationObserver(() => {
             const newTheme = document.documentElement.getAttribute('data-theme');
-            if (typeof Artalk !== 'undefined') {
-                try {
-                    Artalk.setDarkMode(newTheme === 'night');
-                } catch (e) {
-                    console.warn('Failed to update Artalk dark mode:', e);
-                }
+            if (newTheme !== currentTheme) {
+                // 重新加载整个评论组件而不是仅仅设置主题
+                this.reloadArtalk();
             }
-            
-            // 更新自定义样式类
-            this.updateCustomStyles(container, newTheme);
         });
         
         themeObserver.observe(document.documentElement, {
@@ -590,8 +601,8 @@ class UIManager {
             langBtn.addEventListener('click', () => {
                 // 延迟执行以确保语言已经切换
                 setTimeout(() => {
-                    const newLang = getStoredLanguage();
-                    this.updateArtalkLanguage(container, newLang, isMobile);
+                    // 重新加载整个评论组件而不是仅仅更新语言
+                    this.reloadArtalk();
                 }, 100);
             });
         }
