@@ -9,6 +9,29 @@
     <meta name="description" content="关于Honesty,关于HeHouHui,关于HeHui,关于明厚, About Me Honesty, About Me HeHouHui, About Me HeHui">
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
     <meta name="author" content="Honesty">
+    
+    <!-- 社交平台分享优化 -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hehouhui.cn/about.html">
+    <meta property="og:title" content="关于我 - Honesty的个人主页">
+    <meta property="og:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
+    <meta property="og:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="og:site_name" content="Honesty的个人主页">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.hehouhui.cn/about.html">
+    <meta property="twitter:title" content="关于我 - Honesty的个人主页">
+    <meta property="twitter:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
+    <meta property="twitter:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="twitter:site" content="@Honesty861024">
+    
+    <!-- 微信小程序/朋友圈分享 -->
+    <meta property="wechat:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="wechat:title" content="关于我 - Honesty的个人主页">
+    <meta property="wechat:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
+    
     <!-- 核心资源：使用 BootCDN 加速 -->
     <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
@@ -79,7 +102,7 @@
             <div class="bento-card area-profile">
                 <div class="profile-content">
                     <div class="avatar-ring">
-                        <img src="https://blog-file.hehouhui.cn/202507171929231.jpeg" alt="Honesty" class="avatar-img">
+                        <img src="images/avatar.jpeg" alt="Honesty" class="avatar-img">
                         <div class="status-dot" data-i18n="status.online">Online</div>
                     </div>
                     <div class="profile-info">
@@ -279,7 +302,10 @@
     </div>
 
     <footer class="site-footer">
-        <p>&copy; 2024 Honesty. All rights reserved. <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备20014902号</a></p>
+        <p>&copy; 2018 <span id="currentYear"></span> Honesty. All rights reserved. <a class="icp" href="https://beian.miit.gov.cn/" target="_blank">湘ICP备20014902号</a> Powered By <a href="https://pages.edgeone.ai/" target="_blank"> Tencent EdgeOne </a></p>
+        <script>
+            document.getElementById("currentYear").textContent = ' - ' + new Date().getFullYear();
+        </script>
     </footer>
 </div>
 
