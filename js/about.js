@@ -606,28 +606,38 @@ class UIManager {
                 // 检查是否已经处理过
                 if (el.dataset.mobileProcessed) return;
                 
-                // 添加移动端内容截断
-                el.classList.add('clamped');
+                // 检查内容是否超过3行才添加展开收起功能
+                const lineHeight = parseInt(window.getComputedStyle(el).lineHeight);
+                const paddingTop = parseInt(window.getComputedStyle(el).paddingTop);
+                const paddingBottom = parseInt(window.getComputedStyle(el).paddingBottom);
+                const actualHeight = el.clientHeight - paddingTop - paddingBottom;
                 
-                // 创建展开/收起按钮
-                const btn = document.createElement('button');
-                btn.className = 'atk-expand-btn';
-                const expandText = lang === 'zh' ? '展开' : 'Expand';
-                const collapseText = lang === 'zh' ? '收起' : 'Collapse';
-                btn.textContent = expandText;
-                
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isClamped = el.classList.toggle('clamped');
-                    btn.textContent = isClamped ? expandText : collapseText;
-                });
-                
-                // 将按钮插入到适当位置
-                const actionsElement = el.closest('.atk-comment').querySelector('.atk-actions');
-                if (actionsElement) {
-                    actionsElement.parentNode.insertBefore(btn, actionsElement);
-                } else {
-                    el.parentNode.appendChild(btn);
+                // 如果内容高度超过3倍行高，则添加展开收起功能
+                if (actualHeight > lineHeight * 3) {
+                    // 添加移动端内容截断
+                    el.classList.add('clamped');
+                    el.style.setProperty('--max-lines', '3');
+                    
+                    // 创建展开/收起按钮
+                    const btn = document.createElement('button');
+                    btn.className = 'atk-expand-btn';
+                    const expandText = lang === 'zh' ? '展开' : 'Expand';
+                    const collapseText = lang === 'zh' ? '收起' : 'Collapse';
+                    btn.textContent = expandText;
+                    
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isClamped = el.classList.toggle('clamped');
+                        btn.textContent = isClamped ? expandText : collapseText;
+                    });
+                    
+                    // 将按钮插入到适当位置
+                    const actionsElement = el.closest('.atk-comment').querySelector('.atk-actions');
+                    if (actionsElement) {
+                        actionsElement.parentNode.insertBefore(btn, actionsElement);
+                    } else {
+                        el.parentNode.appendChild(btn);
+                    }
                 }
                 
                 // 标记为已处理

@@ -125,6 +125,15 @@
   transform: translateY(0) !important;
 }
 
+/* 修改发送按钮默认显示为"发送" */
+.atk-send-btn:before {
+  content: "发送" !important;
+}
+
+[data-lang="en"] .atk-send-btn:before {
+  content: "Send" !important;
+}
+
 .atk-list-header {
   padding: 20px !important;
   border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
@@ -166,6 +175,8 @@
 }
 
 .atk-avatar {
+  border-radius: 50% !important;
+  border: 2px solid #6c5ce7 !important;
   box-shadow: 0 0 10px rgba(108, 92, 231, 0.2) !important;
   transition: all 0.3s ease;
   object-fit: cover; /* 修复头像拉伸问题 */
@@ -251,14 +262,14 @@
 }
 
 [data-theme="night"] .atk-comment-wrap {
-  background: rgba(30, 30, 35, 0.5);
+  background: rgba(40, 40, 45, 0.85); /* 提高背景不透明度以增强可读性 */
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
 }
 
 [data-theme="night"] .atk-comment-wrap:hover {
-  background: rgba(35, 35, 40, 0.7);
+  background: rgba(45, 45, 50, 0.95); /* 提高悬停时的背景不透明度 */
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
 }
@@ -378,49 +389,58 @@
 }
 
 .atk-mobile .atk-comment .atk-content.clamped {
-  max-height: 100px !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-.atk-mobile .atk-comment .atk-content.clamped::after {
-  content: "" !important;
-  position: absolute !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 40px !important;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9)) !important;
-}
-
-[data-theme="night"] .atk-mobile .atk-comment .atk-content.clamped::after {
-  background: linear-gradient(to bottom, transparent, rgba(30, 30, 35, 0.9)) !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
 }
 
 .atk-mobile .atk-expand-btn {
-  background: rgba(108, 92, 231, 0.1) !important;
+  background: transparent !important;
   border: none !important;
-  border-radius: 20px !important;
-  padding: 6px 15px !important;
+  border-radius: 0 !important;
+  padding: 8px 0 !important;
   color: #6c5ce7 !important;
   font-size: 0.9rem !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
+  margin: 8px 0 0 0 !important;
   transition: all 0.3s ease !important;
-  margin-right: 0 !important; /* 重置移动端回复按钮的右边距 */
+  margin-right: 0 !important;
+  text-align: left !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
 }
 
 .atk-mobile .atk-expand-btn:hover {
-  background: rgba(108, 92, 231, 0.2) !important;
+  background: transparent !important;
+  text-decoration: underline !important;
+}
+
+.atk-mobile .atk-expand-btn::before {
+  content: "展开全文";
+}
+
+.atk-mobile .atk-expand-btn[data-expanded="true"]::before {
+  content: "收起";
+}
+
+[data-lang="en"] .atk-mobile .atk-expand-btn::before {
+  content: "Expand";
+}
+
+[data-lang="en"] .atk-mobile .atk-expand-btn[data-expanded="true"]::before {
+  content: "Collapse";
 }
 
 [data-theme="night"] .atk-mobile .atk-expand-btn {
-  background: rgba(0, 206, 201, 0.1) !important;
+  background: transparent !important;
   color: #00cec9 !important;
 }
 
 [data-theme="night"] .atk-mobile .atk-expand-btn:hover {
-  background: rgba(0, 206, 201, 0.2) !important;
+  background: transparent !important;
 }
 
 /* Pagination styles */
@@ -573,5 +593,14 @@
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+  }
+  
+  /* 黑夜模式下移动端评论背景色优化 */
+  [data-theme="night"] .atk-comment-wrap {
+    background: rgba(40, 40, 45, 0.9) !important; /* 提高移动端黑夜模式下的背景不透明度 */
+  }
+  
+  [data-theme="night"] .atk-comment-wrap:hover {
+    background: rgba(45, 45, 50, 0.95) !important;
   }
 }
