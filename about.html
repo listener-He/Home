@@ -317,5 +317,49 @@
 <script src="https://cdn.jsdelivr.net/npm/artalk@latest/dist/i18n/zh-cn.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/artalk@latest/dist/i18n/en.js"></script>
 <script src="js/about.js?version=20251125"></script>
+<script>
+    !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3OBGjwDdEIRS7XZ1",ck:"3OBGjwDdEIRS7XZ1"});
+</script>
+<script>
+    // 百度站点统计
+    var _hmt = _hmt || [];
+    (function () {
+        try {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        } catch (e) {
+            console.log("百度统计错误", e);
+        }
+
+    })();
+</script>
+
+<!-- 先定义 gtag 函数作为安全兜底 -->
+<script type="text/javascript">
+    try {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+    } catch (e) {
+        console.log("Google Analytics Init 错误", e);
+    }
+
+</script>
+
+<!-- 再异步加载 Google 的 gtag.js -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DYWDEVKDP0"></script>
+
+<!-- 可选：继续调用 config -->
+<script type="text/javascript">
+    try {
+        gtag('config', 'G-DYWDEVKDP0');
+    } catch (e) {
+        console.error("Google Analytics config 失败", e);
+    }
+</script>
 </body>
 </html>
