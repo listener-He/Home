@@ -220,8 +220,15 @@ class DataManager {
     }
 
     init() {
-        setTimeout(() => this.fetchGithub(), 0);
-        setTimeout(() => this.fetchBlog(), 0);
+        // 使用requestIdleCallback或setTimeout优化初始化调用
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => this.fetchGithub(), { timeout: 1000 });
+            requestIdleCallback(() => this.fetchBlog(), { timeout: 1000 });
+        } else {
+            // 降级到setTimeout，但稍后执行以避免阻塞
+            setTimeout(() => this.fetchGithub(), 50);
+            setTimeout(() => this.fetchBlog(), 100);
+        }
     }
 
     // 创建带超时的fetch函数
@@ -336,10 +343,16 @@ class DataManager {
                 <div class="repo-desc">${escapeHtml(dShort)}</div>
             </div>`;
         });
-        const pc = $('#projects-container');
-        pc.removeClass('fade-in');
-        pc.html(html);
-        pc.addClass('fade-in');
+        
+        // 使用requestAnimationFrame避免强制重排
+        requestAnimationFrame(() => {
+            const pc = $('#projects-container');
+            pc.removeClass('fade-in');
+            requestAnimationFrame(() => {
+                pc.html(html);
+                pc.addClass('fade-in');
+            });
+        });
     }
 
     // 从RSS获取博客文章
@@ -447,10 +460,16 @@ class DataManager {
                 <div class="b-cat">${escapeHtml(cat)}</div>
             </div>`;
         });
-        const bc = $('#blog-container');
-        bc.removeClass('fade-in');
-        bc.html(html);
-        bc.addClass('fade-in');
+        
+        // 使用requestAnimationFrame避免强制重排
+        requestAnimationFrame(() => {
+            const bc = $('#blog-container');
+            bc.removeClass('fade-in');
+            requestAnimationFrame(() => {
+                bc.html(html);
+                bc.addClass('fade-in');
+            });
+        });
     }
 }
 
@@ -585,6 +604,7 @@ class UIManager {
         const themeObserver = new MutationObserver(() => {
             const newTheme = document.documentElement.getAttribute('data-theme');
             const newLang = document.documentElement.getAttribute('data-lang');
+            console.log('Theme/Language changed:', newTheme, newLang);
             // 延迟执行
             setTimeout(() => {
                 // 重新加载整个评论组件
@@ -738,78 +758,111 @@ class UIManager {
         } else {
             // PC: 3D Sphere
             container.classList.remove('mobile-scroll');
-            container.__animToken = Date.now();
-            const tags = [];
-
-            techStack.forEach((item, index) => {
-                const el = document.createElement('a');
-                el.className = 'tech-tag-3d';
-                const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
-                el.classList.add(colorClass);
-                el.innerText = item.name;
-                el.style.border = 'none';
-                container.appendChild(el);
-                tags.push({el, x: 0, y: 0, z: 0});
-            });
-
-            // 动态半径，避免容器溢出
-            let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
-            const dtr = Math.PI / 180;
-            let lasta = 1, lastb = 1;
-            let active = false, mouseX = 0, mouseY = 0;
-
-            // Init positions
-            tags.forEach((tag, i) => {
-                let phi = Math.acos(-1 + (2 * i + 1) / tags.length);
-                let theta = Math.sqrt(tags.length * Math.PI) * phi;
-                tag.x = radius * Math.cos(theta) * Math.sin(phi);
-                tag.y = radius * Math.sin(theta) * Math.sin(phi);
-                tag.z = radius * Math.cos(phi);
-            });
-
-            container.onmouseover = () => active = true;
-            container.onmouseout = () => active = false;
-            container.onmousemove = (e) => {
-                let rect = container.getBoundingClientRect();
-                mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
-                mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
-            };
-
-            const update = () => {
-                let a, b;
-                if (active) {
-                    a = (-Math.min(Math.max(-mouseY, -200), 200) / radius) * 2;
-                    b = (Math.min(Math.max(-mouseX, -200), 200) / radius) * 2;
-                } else {
-                    a = lasta * 0.98; // Auto rotate
-                    b = lastb * 0.98;
+            
+            // 使用防抖优化尺寸计算
+            let resizeTimeout;
+            const updateContainerSize = () => {
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
                 }
-                lasta = a;
-                lastb = b;
-
-                if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01 && !active) a = 0.5; // Keep spinning slowly
-
-                let sa = Math.sin(a * dtr), ca = Math.cos(a * dtr);
-                let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
-
-                tags.forEach(tag => {
-                    let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
-                    let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
-                    tag.x = rx1 * cb + rz1 * sb;
-                    tag.y = ry2;
-                    tag.z = rz2;
-
-                    let scale = (tag.z + radius) / (2 * radius) + 0.45;
-                    scale = Math.min(Math.max(scale, 0.7), 1.15);
-                    tag.el.style.opacity = (tag.z + radius) / (2 * radius) + 0.2;
-                    tag.el.style.zIndex = parseInt(scale * 100);
-                    let left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
-                    let top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
-                    tag.el.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
-                });
-                requestAnimationFrame(update);
+                resizeTimeout = setTimeout(() => {
+                    init3DSphere();
+                }, 100);
             };
-            update();
+            
+            // 初始化3D球体
+            const init3DSphere = () => {
+                // 清除之前的动画
+                if (container.__animToken) {
+                    cancelAnimationFrame(container.__animToken);
+                }
+                
+                // 清空容器
+                container.innerHTML = '';
+                
+                const tags = [];
+                
+                techStack.forEach((item, index) => {
+                    const el = document.createElement('a');
+                    el.className = 'tech-tag-3d';
+                    const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
+                    el.classList.add(colorClass);
+                    el.innerText = item.name;
+                    el.style.border = 'none';
+                    container.appendChild(el);
+                    tags.push({el, x: 0, y: 0, z: 0});
+                });
+                
+                // 动态半径，避免容器溢出，使用防抖优化
+                let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
+                const dtr = Math.PI / 180;
+                let lasta = 1, lastb = 1;
+                let active = false, mouseX = 0, mouseY = 0;
+                
+                // 初始化位置
+                tags.forEach((tag, i) => {
+                    let phi = Math.acos(-1 + (2 * i + 1) / tags.length);
+                    let theta = Math.sqrt(tags.length * Math.PI) * phi;
+                    tag.x = radius * Math.cos(theta) * Math.sin(phi);
+                    tag.y = radius * Math.sin(theta) * Math.sin(phi);
+                    tag.z = radius * Math.cos(phi);
+                });
+                
+                container.onmouseover = () => active = true;
+                container.onmouseout = () => active = false;
+                container.onmousemove = (e) => {
+                    let rect = container.getBoundingClientRect();
+                    mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
+                    mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
+                };
+                
+                const update = () => {
+                    let a, b;
+                    if (active) {
+                        a = (-Math.min(Math.max(-mouseY, -200), 200) / radius) * 2;
+                        b = (Math.min(Math.max(-mouseX, -200), 200) / radius) * 2;
+                    } else {
+                        a = lasta * 0.98; // Auto rotate
+                        b = lastb * 0.98;
+                    }
+                    lasta = a;
+                    lastb = b;
+                    
+                    if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01 && !active) a = 0.5; // Keep spinning slowly
+                    
+                    let sa = Math.sin(a * dtr), ca = Math.cos(a * dtr);
+                    let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
+                    
+                    // 批量更新样式以减少重排
+                    const fragment = document.createDocumentFragment();
+                    
+                    tags.forEach(tag => {
+                        let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
+                        let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
+                        tag.x = rx1 * cb + rz1 * sb;
+                        tag.y = ry2;
+                        tag.z = rz2;
+                        
+                        let scale = (tag.z + radius) / (2 * radius) + 0.45;
+                        scale = Math.min(Math.max(scale, 0.7), 1.15);
+                        tag.el.style.opacity = (tag.z + radius) / (2 * radius) + 0.2;
+                        tag.el.style.zIndex = parseInt(scale * 100);
+                        let left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
+                        let top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
+                        tag.el.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+                    });
+                    
+                    container.__animToken = requestAnimationFrame(update);
+                };
+                
+                container.__animToken = requestAnimationFrame(update);
+            };
+            
+            // 初始化3D球体
+            init3DSphere();
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', updateContainerSize);
         }
     }
 
