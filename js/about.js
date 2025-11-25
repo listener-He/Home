@@ -528,31 +528,112 @@ class UIManager {
     initArtalk() {
         const isHttps = location.protocol === 'https:';
         const isLocal = !!(window.SiteConfig?.dev?.isLocal);
+        const lang = getStoredLanguage();
         if (!isHttps || isLocal) {
-            const lang = getStoredLanguage();
             const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             return;
         }
         if (typeof Artalk !== 'undefined' && window.SiteConfig?.artalk) {
             try {
-                Artalk.init({
+                const artalkConfig = {
                     el: '#artalk-container',
                     pageKey: '/about.html',
                     pageTitle: '关于我 - Honesty',
                     server: window.SiteConfig.artalk.server,
                     site: window.SiteConfig.artalk.site,
-                    darkMode: document.documentElement.getAttribute('data-theme') === 'night'
-                });
+                    // 多语言支持
+                    locale: lang === 'zh' ? 'zh-CN' : 'en-US',
+                    
+                    // 主题支持
+                    darkMode: document.documentElement.getAttribute('data-theme') === 'night',
+                    
+                    // 编辑器增强配置
+                    editor: {
+                        // 启用 Markdown
+                        markdown: true,
+                        
+                        // 自定义占位符（支持多语言）
+                        placeholder: lang === 'zh' ? '说点什么吧...支持 Markdown 语法，可 @用户、发送表情' : 'Leave a comment... Supports Markdown, @mentions, and Send 😊',
+                        
+                        // 发送按钮文字（多语言）
+                        sendBtn: lang === 'zh' ? '发送' : 'Send',
+                        
+                        // 表情面板
+                        emoji: {
+                            // 使用默认表情包
+                            preset: 'twemoji'
+                        },
+                        
+                        // 启用 @ 用户提醒功能
+                        mention: true,
+                        
+                        // 自动聚焦（仅桌面端）
+                        autoFocus: !('ontouchstart' in window),
+                        
+                        // 限制编辑器高度
+                        maxHeight: 200,
+                        
+                        // 工具栏
+                        toolbar: [
+                            'bold', 'italic', 'strike', 'link',
+                            'blockquote', 'code', 'codeblock',
+                            'ol', 'ul', 'hr',
+                            'emoji', 'mention'
+                        ]
+                    },
+                    
+                    // 评论格式化函数
+                    commentFormatter: (comment) => {
+                        // 美化时间显示
+                        const formatTime = (dateStr) => {
+                            const date = new Date(dateStr);
+                            const now = new Date();
+                            const diffSec = Math.floor((now - date) / 1000);
+                            
+                            if (diffSec < 60) return lang === 'zh' ? '刚刚' : 'Just now';
+                            if (diffSec < 3600) return lang === 'zh' ? `${Math.floor(diffSec / 60)}分钟前` : `${Math.floor(diffSec / 60)} minutes ago`;
+                            if (diffSec < 86400) return lang === 'zh' ? `${Math.floor(diffSec / 3600)}小时前` : `${Math.floor(diffSec / 3600)} hours ago`;
+                            
+                            const isToday = date.toDateString() === now.toDateString();
+                            if (isToday) return lang === 'zh' ? 
+                                `今天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
+                                `Today ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                            
+                            const isYesterday = new Date(now - 86400000).toDateString() === date.toDateString();
+                            if (isYesterday) return lang === 'zh' ? 
+                                `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
+                                `Yesterday ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                            
+                            return date.toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }).replace(/\//g, '-');
+                        };
+                        
+                        // 如果是管理员，添加徽章
+                        if (comment.is_admin) {
+                            comment.nick = `👑${comment.nick}`;
+                        }
+                        
+                        // 更新显示时间
+                        comment.create_date_formatted = formatTime(comment.date || comment.created_at || comment.create_date);
+                        
+                        return comment;
+                    }
+                };
+                
+                Artalk.init(artalkConfig);
                 this.enhanceArtalkUI();
             } catch (e) {
                 console.error("Artalk Error", e);
-                const lang = getStoredLanguage();
                 const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
                 $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             }
         } else {
-            const lang = getStoredLanguage();
             const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
         }
@@ -562,7 +643,12 @@ class UIManager {
     reloadArtalk() {
         // 销毁现有的 Artalk 实例
         if (typeof Artalk !== 'undefined' && Artalk.instances) {
-            Artalk.destroy();
+            try {
+                Artalk.destroy();
+            } catch (e) {
+                console.error("Artalk destroy Error", e);
+            }
+
         }
         
         // 清空容器
@@ -589,16 +675,7 @@ class UIManager {
         
         // 获取当前主题
         const currentTheme = document.documentElement.getAttribute('data-theme');
-        
-        // 设置主题
-        if (typeof Artalk !== 'undefined') {
-            try {
-                Artalk.setDarkMode(currentTheme === 'night');
-            } catch (e) {
-                console.warn('Failed to set Artalk dark mode:', e);
-            }
-        }
-        
+
         // 移动端增强功能
         if (isMobile) {
             this.enhanceMobileArtalk(container, lang);
@@ -683,36 +760,6 @@ class UIManager {
         // 添加移动端特定的样式类
         const theme = document.documentElement.getAttribute('data-theme');
         container.classList.add(`atk-theme-${theme || 'day'}`);
-    }
-
-    updateArtalkLanguage(container, lang, isMobile) {
-        // 更新展开/收起按钮文本
-        if (isMobile) {
-            const expandButtons = container.querySelectorAll('.atk-expand-btn');
-            const expandText = lang === 'zh' ? '展开' : 'Expand';
-            const collapseText = lang === 'zh' ? '收起' : 'Collapse';
-            
-            expandButtons.forEach(btn => {
-                // 如果按钮当前显示的是展开文本，保持不变
-                // 如果显示的是收起文本，则更新为对应语言的收起文本
-                if (btn.textContent === '展开' || btn.textContent === 'Expand') {
-                    btn.textContent = expandText;
-                } else if (btn.textContent === '收起' || btn.textContent === 'Collapse') {
-                    btn.textContent = collapseText;
-                }
-            });
-        }
-        
-        // 如果有 Artalk 实例，可以在这里更新其实例的语言设置
-        if (typeof Artalk !== 'undefined') {
-            try {
-                // 注意：Artalk 的语言设置通常在初始化时确定，
-                // 动态更改语言需要重新初始化或者使用其API（如果支持）
-                console.log('Would update Artalk language to:', lang);
-            } catch (e) {
-                console.warn('Failed to update Artalk language:', e);
-            }
-        }
     }
 
     initTechCloud() {

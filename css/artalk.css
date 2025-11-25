@@ -124,7 +124,6 @@
   transform: translateY(0) !important;
 }
 
-/* 修改发送按钮默认显示为"发送" */
 .atk-send-btn:before {
   content: "发送" !important;
 }
@@ -173,12 +172,6 @@
   border-bottom: 1px solid rgba(108, 92, 231, 0.2) !important;
 }
 
-.atk-avatar {
-  border-radius: 50% !important;
-  box-shadow: 0 0 10px rgba(108, 92, 231, 0.2) !important;
-  transition: all 0.3s ease;
-  object-fit: cover; /* 修复头像拉伸问题 */
-}
 
 .atk-comment .atk-header {
   padding: 0 !important;
@@ -334,11 +327,6 @@
 
 [data-theme="night"] .atk-actions .atk-action:hover {
   color: #00cec9 !important;
-}
-
-[data-theme="night"] .atk-avatar {
-  border: 2px solid #00cec9 !important;
-  box-shadow: 0 0 10px rgba(0, 206, 201, 0.3) !important;
 }
 
 /* Mobile specific styles */
@@ -512,6 +500,33 @@
   padding: 40px !important;
   text-align: center !important;
   color: #ef4444 !important;
+}
+
+
+/* 评论内容链接样式 */
+.atk-comment-content a {
+  color: #3498db;
+  text-decoration: underline;
+}
+
+.atk-comment-content a:hover {
+  color: #2980b9;
+}
+
+/* 更圆润的输入框 */
+.atk-editor-wrap .atk-editor-textarea {
+  border-radius: 12px !important;
+  padding: 12px !important;
+}
+
+/* 工具栏图标间距优化 */
+.atk-editor-toolbar .atk-btn {
+  margin: 2px !important;
+}
+
+/* 暗色模式下聚焦边框 */
+.atk-dark .atk-editor-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5) !important;
 }
 
 /* Responsive adjustments */
