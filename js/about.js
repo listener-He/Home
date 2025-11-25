@@ -79,6 +79,8 @@ class I18nManager {
                 "stats.exp": "编程年限",
                 "stats.repos": "开源项目",
                 "stats.followers": "关注者",
+                "stats.visitors": "访问量",
+                "stats.visitNum": "访客数",
                 "mbti.name": "提倡者",
                 "mbti.desc": "提倡者人格类型的人非常稀少，只有不到1%的人口属于这种类型，但他们对世界的贡献不容忽视。",
                 "mbti.tag1": "理想主义与道德感",
@@ -118,6 +120,8 @@ class I18nManager {
                 "stats.exp": "Years Exp",
                 "stats.repos": "Projects",
                 "stats.followers": "Followers",
+                "stats.visitors": "Visitors",
+                "stats.visitNum": "Visiting guests",
                 "mbti.name": "Advocate",
                 "mbti.desc": "Advocates of this personality type are very rare, with less than 1% of the population belonging to this type, but their contributions to the world cannot be ignored.",
                 "mbti.tag1": "Idealism & Morality",
@@ -324,7 +328,18 @@ class DataManager {
         });
     }
 
-
+    formatVisitors() {
+        const siteVisitorDom = window.document.getElementById('busuanzi_value_site_pv');
+        if (siteVisitorDom) {
+            let count = siteVisitorDom.innerText;
+            if (count && count.length > 3) {
+                // 格式化 k,w m等单位 支持两位小数点
+                count = count.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+                count = count.replace(/(\d+)(?=(\d{3})+(?:\.\d+)?$)/g, '$0 ');
+                siteVisitorDom.innerText = count;
+            }
+        }
+    }
     renderRepos(list) {
         if (!Array.isArray(list)) list = window.SiteConfig?.defaults?.repos;
         let html = '';

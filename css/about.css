@@ -1769,37 +1769,105 @@ body {
 
 /* --- Stats --- */
 .area-stats {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 20px 30px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(128, 128, 128, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .stat-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.1);
-    padding: 10px 0;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    min-width: 0;
+    text-align: center;
 }
 
-.stat-item:last-child {
-    border-bottom: none;
+.stat-item:hover {
+    background: rgba(108, 92, 231, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .stat-val {
     font-size: 1.5rem;
+    margin-bottom: 5px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .stat-key {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-tertiary);
     text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* 访问人数统计样式 */
-#visit-count {
-    font-family: var(--font-mono);
+/* PC端统计区域响应式布局 */
+@media (min-width: 1025px) {
+    .area-stats {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+}
+
+/* 平板端统计区域布局 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .area-stats {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+    }
+    
+    .stat-item {
+        padding: 10px 5px;
+    }
+    
+    .stat-val {
+        font-size: 1.3rem;
+    }
+    
+    .stat-key {
+        font-size: 0.7rem;
+    }
+}
+
+/* 移动端统计区域布局 */
+@media (max-width: 768px) {
+    .area-stats {
+        grid-template-columns: repeat(5, 1fr);
+        padding: 15px 10px;
+        gap: 4px;
+    }
+    
+    .stat-item {
+        padding: 8px 2px;
+    }
+    
+    .stat-val {
+        font-size: 1.1rem;
+        margin-bottom: 3px;
+    }
+    
+    .stat-key {
+        font-size: 0.6rem;
+    }
 }
 
 /* --- Mobile Social --- */
@@ -2138,9 +2206,10 @@ body {
 @media (min-width: 1025px) {
   .interest-list {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 15px;
       margin-top: 1rem;
+  }
   }
 
   .interest-item {
