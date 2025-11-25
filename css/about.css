@@ -1907,8 +1907,8 @@ body {
         margin-bottom: 3px;
     }
 
-    .stat-key {
-        font-size: 0.6rem;
+    [data-lang="en"] .stat-key {
+        font-size: 6px !important;
     }
 }
 
