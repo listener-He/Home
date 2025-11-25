@@ -865,7 +865,6 @@ class UIManager {
                         });
                     });
 
-                    // 一次性应用所有样式更新
                     updates.forEach(update => {
                         update.el.style.transform = update.transform;
                         update.el.style.opacity = update.opacity;
