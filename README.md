@@ -31,6 +31,7 @@
 - 📊 **网站统计**：集成多种统计服务（不蒜子、百度统计、Google Analytics、51.LA），统一配置管理
 - 🌗 **主题与语言**：一键切换 Day/Night 与 CN/EN，自动缓存记忆
 - ⚡ **性能与体验**：缓存字段精简、骨架占位与淡入过渡、异步抓取避免阻塞
+- 📱 **PWA 支持**：支持安装为本地应用，离线访问核心功能
 
 ## 🚀 一键部署
 
@@ -79,7 +80,7 @@
 
 ## 📁 项目结构
 
-```textmate
+```
 Home/
 ├── index.html              # 主页
 ├── about.html              # 关于页面
@@ -87,6 +88,7 @@ Home/
 ├── DEPLOY.md               # 部署与自定义指南
 ├── LICENSE                 # 开源许可证
 ├── CNAME                   # 自定义域名配置
+├── manifest.json           # PWA 应用清单文件
 ├── vercel.json             # Vercel 配置文件
 ├── netlify.toml            # Netlify 配置文件
 ├── _headers                # Netlify 安全头配置
@@ -103,7 +105,7 @@ Home/
 │   ├── main.js             # 主页脚本
 │   ├── about.js            # 关于页面脚本
 │   ├── bj.js               # 背景效果脚本
-│   └── ...                 # 其他功能脚本
+│   └── sw.js               # Service Worker（PWA支持）
 ├── data/
 │   ├── articles.json       # 文章数据
 │   └── ...                 # 其他数据文件
@@ -137,7 +139,7 @@ Home/
 
 ## 🚀 快速开始
 
-```shell
+``shell
 # 克隆项目
 git clone https://github.com/listener-He/Home.git
 
@@ -179,7 +181,7 @@ open about.html
 - [x] 添加骨架屏加载效果
 - [x] 实现数据缓存机制，提升页面加载速度
 - [x] 添加淡入动画效果，提升用户体验
-- [x] 添加网站统计功能, 如不蒜子、百度统计、Google Analytics、51.LA
+- [x] 实现 PWA 支持，支持离线访问
 
 ### 待完成
 - [ ] 添加更多数据源（如 Twitter、知乎等）
@@ -188,7 +190,6 @@ open about.html
 - [ ] 实现更多的个性化定制选项
 - [ ] 添加键盘快捷键支持
 - [ ] 增加更多动画效果和交互细节
-- [ ] 实现 PWA 支持，支持离线访问
 - [ ] 添加更多主题选项（如高对比度模式等）
 - [ ] 实现深色模式下的图片优化处理
 - [ ] 添加无障碍访问支持（ARIA 属性完善）

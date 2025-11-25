@@ -1076,14 +1076,7 @@ body {
                 black 90%,
                 transparent 100%
         );
-        -webkit-mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 10%,
-                black 90%,
-                transparent 100%
-        );
-        /* 行内滚动动画由 .tech-row 控制 */
+
     }
     .tech-row {
         display: flex;
@@ -2231,7 +2224,6 @@ body {
       gap: 15px;
       margin-top: 1rem;
   }
-  }
 
   .interest-item {
       background: rgba(128, 128, 128, 0.05);
@@ -2778,13 +2770,6 @@ body {
                 transparent 0%,
                 black 10%,
                 black 90%,
-                transparent 100%
-        );
-        -webkit-mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 20%,
-                black 80%,
                 transparent 100%
         );
     }
