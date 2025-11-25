@@ -184,21 +184,22 @@ class ThemeManager {
     init() {
         let theme = getStoredTheme();
         if (theme) this.root.setAttribute('data-theme', theme);
-        $('#theme-btn').toggleClass('is-active', theme === 'night');
+        const themeBtn = $('#theme-btn');
+        themeBtn.toggleClass('is-active', theme === 'night');
         const langForTitle = getStoredLanguage();
         const titleText = theme === 'night' ? (langForTitle === 'zh' ? '白天模式' : 'Day') : (langForTitle === 'zh' ? '黑夜模式' : 'Night');
-        $('#theme-btn').attr('title', titleText);
+        themeBtn.attr('title', titleText);
 
-        $('#theme-btn').on('click', () => {
+        themeBtn.on('click', () => {
             const curr = this.root.getAttribute('data-theme');
             const next = curr === 'night' ? 'day' : 'night';
             if (next) this.root.setAttribute('data-theme', next);
             else this.root.removeAttribute('data-theme');
             setStoredTheme(next)
-            $('#theme-btn').toggleClass('is-active', next === 'night');
+            themeBtn.toggleClass('is-active', next === 'night');
             const lang = getStoredLanguage();
             const t = next === 'night' ? (lang === 'zh' ? '白天模式' : 'Day') : (lang === 'zh' ? '黑夜模式' : 'Night');
-            $('#theme-btn').attr('title', t);
+            themeBtn.attr('title', t);
 
             // 更新Artalk主题
             if (typeof Artalk !== 'undefined') {
