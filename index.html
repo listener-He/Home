@@ -13,9 +13,6 @@
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
     <meta name="author" content="Honesty">
 
-    <!-- PWA相关配置 -->
-    <meta name="theme-color" content="#6c5ce7">
-    <link rel="manifest" href="./manifest.json">
 
     <!-- 社交平台分享优化 -->
     <!-- Open Graph / Facebook -->
@@ -416,34 +413,5 @@
         }()
     }({id: "3OBGjwDdEIRS7XZ1", ck: "3OBGjwDdEIRS7XZ1"});
 </script>
-
-<!-- PWA注册 -->
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-            navigator.serviceWorker.register('./js/sw.js')
-                .then(function (registration) {
-                    console.log('SW registered: ', registration);
-                })
-                .catch(function (registrationError) {
-                    console.log('SW registration failed: ', registrationError);
-                });
-        });
-    }
-</script>
-
-<!-- Apple PWA支持 -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Honesty">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-<!-- Windows PWA支持 -->
-<meta name="msapplication-TileImage" content="/images/avatar.jpeg">
-<meta name="msapplication-TileColor" content="#6c5ce7">
-<meta name="msapplication-tap-highlight" content="no">
-
-<!-- 其他PWA相关meta标签 -->
-<meta name="mobile-web-app-capable" content="yes">
 </body>
 </html>
