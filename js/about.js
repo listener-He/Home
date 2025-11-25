@@ -581,32 +581,21 @@ class UIManager {
             this.enhanceMobileArtalk(container, lang);
         }
         
-        // 监听主题变化
+        // 监听主题/语言变化
         const themeObserver = new MutationObserver(() => {
             const newTheme = document.documentElement.getAttribute('data-theme');
-            if (newTheme !== currentTheme) {
-                // 重新加载整个评论组件而不是仅仅设置主题
+            const newLang = document.documentElement.getAttribute('data-lang');
+            // 延迟执行
+            setTimeout(() => {
+                // 重新加载整个评论组件
                 this.reloadArtalk();
-            }
+            }, 300);
         });
         
         themeObserver.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ['data-theme']
+            attributeFilter: ['data-theme', 'data-lang']
         });
-        
-        // 监听语言变化
-        const langBtn = document.getElementById('lang-btn');
-        if (langBtn) {
-            langBtn.addEventListener('click', () => {
-                // 延迟执行以确保语言已经切换
-                setTimeout(() => {
-                    // 重新加载整个评论组件而不是仅仅更新语言
-                    this.reloadArtalk();
-                }, 100);
-            });
-        }
-        
         // 初始化自定义样式
         this.updateCustomStyles(container, currentTheme);
     }
