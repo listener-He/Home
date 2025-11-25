@@ -392,7 +392,7 @@
 <!-- 可选：继续调用 config -->
 <script type="text/javascript">
     try {
-        gtag('config', 'G-DYWDEVKDP0');
+        gtag('config', SiteConfig.analytics.google.id);
     } catch (e) {
         console.error("Google Analytics config 失败", e);
     }
@@ -411,7 +411,7 @@
             };
             s.LA ? s.LA.ids && o() : (s.LA = p, s.LA.ids = [], o()), r.parentNode.insertBefore(n, r)
         }()
-    }({id: "3OBGjwDdEIRS7XZ1", ck: "3OBGjwDdEIRS7XZ1"});
+    }({id: SiteConfig.analytics.tencent.id, ck: SiteConfig.analytics.tencent.ck});
 </script>
 </body>
 </html>

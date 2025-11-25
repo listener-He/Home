@@ -134,8 +134,8 @@ const SiteConfig = {
   analytics: {
     busuanzi: {
       src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
-      site_pv_id: 'busuanzi_value_site_pv',
-      site_uv_id: 'busuanzi_value_site_uv',
+      site_pv_id: 'busuanzi_site_pv',
+      site_uv_id: 'busuanzi_site_uv',
       formatter: true
     },
     baidu: {

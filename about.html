@@ -120,7 +120,7 @@
                     <div class="social-dock desktop-social">
                         <a href="https://github.com/listener-He" target="_blank" class="s-icon"><i class="ri-github-fill"></i></a>
                         <a href="mailto:hehouhui@foxmail.com" class="s-icon"><i class="ri-mail-send-fill"></i></a>
-                        <a href="https://blog.hehouhui.cn" target="_blank" class="s-icon"><i class="ri-pages-line"></i></a>
+                        <a href="https://twitter.com/Honesty861024" target="_blank" class="s-icon"><i class="ri-twitter-line"></i></a>
                         <a href="https://www.zhihu.com/people/wen-xin-92-2-57" target="_blank" class="s-icon"><i class="ri-zhihu-line"></i></a>
                         <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon"><i class="ri-wechat-fill"></i></a>
                         <a href="https://juejin.cn/user/3659591622878503" target="_blank" class="s-icon"><i class="ri-code-box-line"></i></a>
@@ -155,11 +155,11 @@
                     <span class="stat-key" data-i18n="stats.followers">Followers</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-val neon-font" id="busuanzi_value_site_pv">0</span>
+                    <span class="stat-val neon-font" id="busuanzi_site_pv">0</span>
                     <span class="stat-key" data-i18n="stats.visitNum">Visit num</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-val neon-font" id="busuanzi_value_site_uv">0</span>
+                    <span class="stat-val neon-font" id="busuanzi_site_uv">0</span>
                     <span class="stat-key" data-i18n="stats.visitors">Visitors</span>
                 </div>
             </div>
@@ -238,7 +238,7 @@
             <div class="bento-card area-social-mobile mobile-social">
                 <a href="https://github.com/listener-He" class="ms-btn"><i class="ri-github-fill"></i></a>
                 <a href="mailto:hehouhui@foxmail.com" class="ms-btn"><i class="ri-mail-send-fill"></i></a>
-                <a href="https://blog.hehouhui.cn" class="ms-btn"><i class="ri-pages-line"></i></a>
+                <a href="https://twitter.com/Honesty861024" class="ms-btn"><i class="ri-twitter-line"></i></a>
                 <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="ms-btn"><i class="ri-zhihu-line"></i></a>
                 <a href="javascript:void(0);" onclick="toggleWechat()" class="ms-btn"><i class="ri-wechat-fill"></i></a>
                 <a href="https://juejin.cn/user/3659591622878503" class="ms-btn"><i class="ri-code-box-line"></i></a>
@@ -362,6 +362,82 @@
         }
 
     })();
+</script>
+
+<!-- 自动格式化脚本 -->
+<script>
+    // 核心格式化函数：支持 K / W / M，保留最多两位小数，去除尾随零
+    function formatWithUnit(num) {
+        if (num && num.indexOf('禁用') >= 0) {
+            return '-';
+        }
+        num = Number(num);
+        if (isNaN(num) || num < 0) return '0';
+
+        // 小于 1000：直接显示
+        if (num < 1_000) {
+            return Math.floor(num).toString();
+        }
+
+        // 1K ~ 9.99K
+        if (num < 10_000) {
+            let val = (num / 1_000).toFixed(2);
+            return parseFloat(val) + 'K';
+        }
+
+        // 1W ~ 99.99W （1W = 10,000）
+        if (num < 1_000_000) {
+            let val = (num / 10_000).toFixed(2);
+            return parseFloat(val) + 'W';
+        }
+
+        // ≥ 1M
+        let val = (num / 1_000_000).toFixed(2);
+        return parseFloat(val) + 'M';
+    }
+
+    // 监听不蒜子数据更新并格式化
+    function initFormatter() {
+        const pvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_pv_id);
+        const uvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_uv_id);
+
+        if (!pvEl && !uvEl) return;
+        console.log('[Busuanzi]', 'Formatting... Listener observer');
+        const observer = new MutationObserver(() => {
+            if (pvEl?.textContent) {
+                if (pvEl.textContent.includes('禁用')) {
+                    pvEl.textContent = '-';
+                    return;
+                }
+                const raw = pvEl.textContent.trim().replace(/[,，]/g, '');
+                const num = parseFloat(raw);
+                if (!isNaN(num)) {
+                    pvEl.textContent = formatWithUnit(num);
+                }
+            }
+            if (uvEl?.textContent) {
+                if (uvEl.textContent.includes('禁用')) {
+                    uvEl.textContent = '-';
+                    return;
+                }
+                const raw = uvEl.textContent.trim().replace(/[,，]/g, '');
+                const num = parseFloat(raw);
+                if (!isNaN(num)) {
+                    uvEl.textContent = formatWithUnit(num);
+                }
+            }
+        });
+
+        if (pvEl) observer.observe(pvEl, { childList: true, subtree: true });
+        if (uvEl) observer.observe(uvEl, { childList: true, subtree: true });
+    }
+
+    // 启动
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFormatter);
+    } else {
+        initFormatter();
+    }
 </script>
 </body>
 </html>
