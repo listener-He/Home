@@ -8,7 +8,20 @@ const urlsToCache = [
   './css/artalk.css',
   './js/config.js',
   './js/main.js',
-  './js/about.js'
+  './js/about.js',
+  './images/avatar.jpeg',
+  './images/favicon.ico',
+    './images/favicon.png',
+    './images/logo.png',
+    './images/INFJ.png',
+    './images/kl.gif',
+    './images/bj/1.jpg',
+    './images/bj/2.jpg',
+    './images/bj/3.jpg',
+    './images/bj/4.jpg',
+    './images/bj/5.jpg',
+    './images/bj/6.jpg',
+    './images/bj/7.jpg',
 ];
 
 // 安装事件 - 缓存资源
