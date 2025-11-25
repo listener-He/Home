@@ -617,7 +617,7 @@
 /* PC端黑夜模式下的输入框颜色和列表样式修正 */
 [data-theme="night"] .atk-editor-textarea {
   background: rgba(40, 40, 45, 0.7) !important;
-  color: #dfe6e9 !important;
+  color: #1f2937 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
