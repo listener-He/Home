@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>关于我 - Honesty</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--SEO信息 -->
+    <meta name="description" content="关于Honesty,关于HeHouHui,关于HeHui,关于明厚, About Me Honesty, About Me HeHouHui, About Me HeHui">
+    <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
+    <meta name="author" content="Honesty">
     <!-- 核心资源：使用 BootCDN 加速 -->
     <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/style.css?version=20251125">
+    <link rel="stylesheet" href="css/about.css?version=20251125">
     <!-- Artalk 评论样式 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.css">
-    <link rel="stylesheet" href="css/artalk.css">
+    <link rel="stylesheet" href="css/artalk.css?version=20251125">
     <link rel="icon" href="favicon.ico">
+    <!--IE淘汰计划-->
+    <script>
+        if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href = "https://imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location.href);
+    </script>
 </head>
 <body>
 <!-- 动态背景层 -->
@@ -95,14 +104,13 @@
             <!-- [2] 简介与格言 (Bio) -->
             <div class="bento-card area-bio">
                 <div class="card-label" data-i18n="bio.label">About Me</div>
-                <p class="bio-text collapsed" data-i18n="bio.text">
+                <p class="bio-text" data-i18n="bio.text">
                     "我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。"
                 </p>
                 <div class="quote-box">
                     <i class="ri-double-quotes-l"></i>
                     <p data-i18n="bio.quote">"我追求技术的深度理解而非广度堆砌，每一项技术的学习都源于解决实际问题的内在驱动。作为INFJ人格类型，我善于深度思考，注重细节，喜欢通过代码创造有意义的产品。我相信技术的力量能够改变世界，也热衷于在开源社区中分享知识与经验。 "</p>
                 </div>
-                <button id="bio-toggle" class="link-btn" aria-label="Toggle Bio">展开/收起</button>
             </div>
 
             <!-- [3] 数据统计 (Stats) -->
@@ -277,8 +285,8 @@
 
 <!-- 脚本：BootCDN jQuery / Artalk -->
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="js/config.js"></script>
+<script src="js/config.js?version=20251125"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.js"></script>
-<script src="js/about.js"></script>
+<script src="js/about.js?version=20251125"></script>
 </body>
 </html>
