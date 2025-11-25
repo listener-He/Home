@@ -1821,7 +1821,7 @@ body {
 }
 
 /* PC端统计区域响应式布局 */
-@media (min-width: 1025px) {
+@media (min-width: 1446px) {
     .area-stats {
         grid-template-columns: repeat(5, 1fr);
         gap: 8px;
@@ -1845,6 +1845,27 @@ body {
     
     .stat-key {
         font-size: 0.7rem;
+    }
+}
+
+/* PC端统计区域响应式布局 */
+@media (min-width: 1025px) and (max-width: 1445px) {
+    .area-stats {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    [data-lang="en"] .stat-key {
+        font-size: 6px !important;
+    }
+}
+
+@media (min-width: 1201px) {
+    .area-stats {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 12px;
     }
 }
 
