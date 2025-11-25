@@ -613,3 +613,36 @@
     box-shadow: 0 8px 25px rgba(0, 206, 201, 0.4) !important;
   }
 }
+
+/* PC端黑夜模式下的输入框颜色和列表样式修正 */
+[data-theme="night"] .atk-editor-textarea {
+  background: rgba(40, 40, 45, 0.7) !important;
+  color: #dfe6e9 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="night"] .atk-editor-textarea:focus {
+  border: 1px solid #00cec9 !important;
+  box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2) !important;
+}
+
+[data-theme="night"] .atk-comment-wrap {
+  background: rgba(30, 30, 35, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="night"] .atk-comment-wrap:hover {
+  background: rgba(40, 40, 45, 0.7) !important;
+  border: 1px solid rgba(0, 206, 201, 0.3) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="night"] .atk-list-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="night"] .atk-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
