@@ -514,27 +514,57 @@ body {
     margin-bottom: 15px;
 }
 
+[data-theme="night"] .card-label {
+    background: linear-gradient(90deg, #4facfe 0%, #6c5ce7 50%, #4facfe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
 .bio-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     font-size: 1rem;
     color: var(--text-primary);
     margin-bottom: 20px;
     text-align: justify;
 }
 
-.bio-text.collapsed {
-    display: -webkit-box;
-    -webkit-line-clamp: 7;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-[data-lang="en"] .bio-text.collapsed {
+[data-lang="en"] .bio-text {
     /* 英文渲染友好的格式，字间距行间距 样式*/
     font-size: 1rem;
     line-height: 1.5;
     font-family: 'Noto Serif', serif;
     font-style: oblique;
 }
+
+
+[data-theme="night"] .bio-text {
+    /* 时间窗口的波浪形渐变发光文字 */
+    background: linear-gradient(90deg, #4facfe 0%, #6c5ce7 50%, #4facfe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+            0 0 10px rgba(108, 92, 231, 0.7),
+            0 0 20px rgba(79, 172, 254, 0.5),
+            0 0 30px rgba(108, 92, 231, 0.3);
+    background-size: 200% auto;
+    animation: waveGlow 3s linear infinite;
+}
+
+@keyframes waveGlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+
 
 
 .link-btn {
@@ -624,6 +654,20 @@ body {
     margin-bottom: 15px;
     line-height: 1.3;
     font-style: italic
+}
+
+[data-theme="day"] .mbti-desc {
+    background: linear-gradient(90deg, #6c5ce7 0%, #3b82f6 50%, #0ea5e9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+[data-theme="night"] .mbti-desc {
+    background: linear-gradient(90deg, #a162e8 0%, #8b5cf6 50%, #6c5ce7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .mbti-tags {
@@ -1699,25 +1743,13 @@ body {
 
 .card-label {
     font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--text-tertiary);
     margin-bottom: 15px;
 }
 
-.bio-text {
-    font-size: 1rem;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    text-align: justify;
-}
-
-.bio-text.collapsed {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
 
 .link-btn {
     background: none;
@@ -1765,65 +1797,6 @@ body {
     text-transform: uppercase;
 }
 
-/* --- MBTI --- */
-.area-mbti {
-    padding: 3px;
-    display: flex;
-    align-items: center;
-}
-
-.mbti-inner {
-    width: 100%;
-}
-
-.mbti-head {
-    margin-left: 20px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.mbti-code {
-    font-size: 2.2rem;
-    font-weight: 900;
-    font-family: var(--font-mono);
-}
-
-.mbti-name {
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.mbti-icon {
-    font-size: 1.5rem;
-}
-
-.mbti-desc {
-    margin-left: 15px;
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    margin-bottom: 15px;
-    line-height: 1.3;
-    font-style: italic
-}
-
-.mbti-tags {
-    display: grid;
-    gap: 1px;
-    grid-template-columns: 1fr 1fr;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: flex-start;
-
-}
-
-.tag {
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 6px;
-    color: var(--text-secondary);
-}
 
 /* --- Mobile Social --- */
 .mobile-social {
@@ -2716,11 +2689,10 @@ body {
         -webkit-mask-image: linear-gradient(
                 to right,
                 transparent 0%,
-                black 10%,
-                black 90%,
+                black 20%,
+                black 80%,
                 transparent 100%
         );
-        /* 行内滚动动画由 .tech-row 控制 */
     }
     .tech-row {
         display: flex;
