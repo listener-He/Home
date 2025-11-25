@@ -139,7 +139,7 @@ Home/
 
 ## 🚀 快速开始
 
-``shell
+```shell
 # 克隆项目
 git clone https://github.com/listener-He/Home.git
 
@@ -193,7 +193,7 @@ open about.html
 - [ ] 添加更多主题选项（如高对比度模式等）
 - [ ] 实现深色模式下的图片优化处理
 - [ ] 添加无障碍访问支持（ARIA 属性完善）
-- [] 实现 PWA 支持，支持离线访问
+- [ ] 实现 PWA 支持，支持离线访问
 
 ## 🙏 鸣谢与致敬
 
