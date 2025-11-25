@@ -133,7 +133,7 @@ const SiteConfig = {
   // 站点统计配置
   analytics: {
     busuanzi: {
-      src: 'https://events.vercount.one/js',
+      src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
       site_pv_id: 'busuanzi_value_site_pv',
       site_uv_id: 'busuanzi_value_site_uv',
       formatter: true
