@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- PWA相关配置 -->
     <meta name="theme-color" content="#6c5ce7">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     
     <!--SEO信息 -->
     <meta name="description" content="关于Honesty,关于HeHouHui,关于HeHui,关于明厚, About Me Honesty, About Me HeHouHui, About Me HeHui">
@@ -435,7 +435,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/js/sw.js')
+            navigator.serviceWorker.register('./js/sw.js')
                 .then(function(registration) {
                     console.log('SW registered: ', registration);
                 })

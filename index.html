@@ -15,7 +15,7 @@
     
     <!-- PWA相关配置 -->
     <meta name="theme-color" content="#6c5ce7">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     
     <!-- 社交平台分享优化 -->
     <!-- Open Graph / Facebook -->
@@ -411,7 +411,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/js/sw.js')
+                navigator.serviceWorker.register('./js/sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
