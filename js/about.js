@@ -932,12 +932,12 @@ class UIManager {
         };
 
         // 绑定事件
-        fab.addEventListener('touchstart', dragStart, false);
-        fab.addEventListener('touchend', dragEnd, false);
-        fab.addEventListener('touchmove', drag, false);
-        fab.addEventListener('mousedown', dragStart, false);
-        fab.addEventListener('mouseup', dragEnd, false);
-        fab.addEventListener('mousemove', drag, false);
+        fab.addEventListener('touchstart', dragStart, { passive: false });
+        fab.addEventListener('touchend', dragEnd, { passive: false });
+        fab.addEventListener('touchmove', drag, { passive: false });
+        fab.addEventListener('mousedown', dragStart, { passive: false });
+        fab.addEventListener('mouseup', dragEnd, { passive: false });
+        fab.addEventListener('mousemove', drag, { passive: false });
     }
 
     initAudio() {
