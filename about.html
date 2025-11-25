@@ -326,12 +326,19 @@
 <script src="https://cdn.jsdelivr.net/npm/artalk@latest/dist/i18n/en.js"></script>
 <script src="js/about.js?version=20251125"></script>
 
-<!-- verCount统计 -->
-<script defer src="https://events.vercount.one/js"></script>
-
+<!-- 不蒜子统计 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 动态加载不蒜子统计脚本
+        const script = document.createElement('script');
+        script.src = SiteConfig.analytics.busuanzi.src;
+        script.async = true;
+        document.head.appendChild(script);
+    });
+</script>
 <script>
     try {
-        !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3OBGjwDdEIRS7XZ1",ck:"3OBGjwDdEIRS7XZ1"});
+        !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id: SiteConfig.analytics.tencent.id, ck: SiteConfig.analytics.tencent.ck});
     } catch (e) {
         console.log("51.la统计错误", e);
     }
@@ -343,7 +350,7 @@
     (function () {
         try {
             var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e";
+            hm.src = SiteConfig.analytics.baidu.src;
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         } catch (e) {
@@ -384,8 +391,8 @@
 
     // 监听不蒜子数据更新并格式化
     function initFormatter() {
-        const pvEl = document.getElementById('busuanzi_value_site_pv');
-        const uvEl = document.getElementById('busuanzi_value_site_uv');
+        const pvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_pv_id);
+        const uvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_uv_id);
 
         if (!pvEl && !uvEl) return;
 

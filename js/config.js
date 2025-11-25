@@ -130,6 +130,29 @@ const SiteConfig = {
     sendBtn: '发送'
   },
   
+  // 站点统计配置
+  analytics: {
+    busuanzi: {
+      src: 'https://events.vercount.one/js',
+      site_pv_id: 'busuanzi_value_site_pv',
+      site_uv_id: 'busuanzi_value_site_uv',
+      formatter: true
+    },
+    baidu: {
+      src: 'https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e',
+      id: 'ae2a009a75b13c21d5121ee51375ea4e'
+    },
+    google: {
+      src: 'https://www.googletagmanager.com/gtag/js',
+      id: 'G-DYWDEVKDP0'
+    },
+    tencent: {
+      src: 'https://sdk.51.la/js-sdk-pro.min.js',
+      id: '3OBGjwDdEIRS7XZ1',
+      ck: '3OBGjwDdEIRS7XZ1'
+    }
+  },
+  
   animationSettings: {
     observerOptions: {
       threshold: 0.1,
