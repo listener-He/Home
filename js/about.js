@@ -273,13 +273,13 @@ class DataManager {
             let allRepos = [];
             let page = 1;
             const perPage = 100;
-            while (page <= 10) { // 最多抓取1000条，直到满足条件或为空
-                const rRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}/repos?sort=stars&per_page=${perPage}&page=${page}`, { timeout: 5000 });
+            while (page <= 50) { // 最多抓取500条，直到满足条件或为空
+                const rRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}/repos?sort=pushed&direction=desc&per_page=${perPage}&page=${page}`, { timeout: 3000 });
                 if (!rRes.ok) break;
                 const repos = await rRes.json();
                 if (!Array.isArray(repos) || repos.length === 0) break;
                 allRepos = allRepos.concat(repos);
-                if (repos.length < perPage || allRepos.length >= 1000) break; // 足量
+                if (repos.length < perPage || allRepos.length >= 500) break; // 足量
                 page++;
             }
             let repoData = allRepos.length ? allRepos : (window.SiteConfig?.defaults?.repos);
@@ -289,7 +289,7 @@ class DataManager {
                 repoData = repoData
                     .filter(repo => !repo.fork && (repo.stargazers_count > 0 || repo.forks_count > 0))
                     .sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0))
-                    .slice(0, 12); // 只取前12个
+                    .slice(0, 16); // 只取前16个
             }
 
             const slimUser = {
@@ -328,22 +328,10 @@ class DataManager {
         });
     }
 
-    formatVisitors() {
-        const siteVisitorDom = window.document.getElementById('busuanzi_value_site_pv');
-        if (siteVisitorDom) {
-            let count = siteVisitorDom.innerText;
-            if (count && count.length > 3) {
-                // 格式化 k,w m等单位 支持两位小数点
-                count = count.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-                count = count.replace(/(\d+)(?=(\d{3})+(?:\.\d+)?$)/g, '$0 ');
-                siteVisitorDom.innerText = count;
-            }
-        }
-    }
     renderRepos(list) {
         if (!Array.isArray(list)) list = window.SiteConfig?.defaults?.repos;
         let html = '';
-        list.slice(0, 12).forEach(repo => {
+        list.forEach(repo => {
             // Fix: API field compatibility
             const stars = repo.stargazers_count !== undefined ? repo.stargazers_count : (repo.stars || 0);
             const forks = repo.forks_count !== undefined ? repo.forks_count : (repo.forks || 0);
