@@ -1797,6 +1797,10 @@ body {
     text-transform: uppercase;
 }
 
+/* 访问人数统计样式 */
+#visit-count {
+    font-family: var(--font-mono);
+}
 
 /* --- Mobile Social --- */
 .mobile-social {
