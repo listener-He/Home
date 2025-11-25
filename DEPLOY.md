@@ -74,7 +74,7 @@ netlify deploy
 
 ### Nginx
 
-```
+```textmate
 server {
     listen 80;
     server_name your.domain.com;
@@ -94,7 +94,7 @@ server {
 
 ## 项目结构规范
 
-```
+```textmate
 Home/
 ├── index.html              # 主页
 ├── about.html              # 关于页面
@@ -114,7 +114,7 @@ Home/
 │   ├── artalk.css          # 评论系统样式
 │   └── iconfont.css        # 字体图标样式
 ├── js/
-│   ├── config.js           # 全局配置文件
+│   ├── config.js           # 全局配置文件（包含网站统计配置）
 │   ├── main.js             # 主页脚本
 │   ├── about.js            # 关于页面脚本
 │   ├── bj.js               # 背景效果脚本
@@ -163,6 +163,9 @@ Home/
 - 主题与语言
   - 主题缓存：`SiteConfig.cacheKeys.theme.key/ttlMs`
   - 语言存取：使用 `localStorage('lang')`，页面内可切换 CN/EN
+- 网站统计
+  - `SiteConfig.analytics`：包含不蒜子、百度统计、Google Analytics和51.LA等统计服务的配置
+  - 各统计服务通过配置文件统一管理，便于维护和更新
 
 > 安全提示：请勿在 `config.js` 中硬编码敏感信息（如 Token）。本项目不需要服务端密钥；如需扩展 API，请在后端代理或使用服务端环境变量。
 
@@ -228,6 +231,7 @@ Home/
 - [x] 添加骨架屏加载效果
 - [x] 实现数据缓存机制，提升页面加载速度
 - [x] 添加淡入动画效果，提升用户体验
+- [x] 添加网站统计功能, 如不蒜子、百度统计、Google Analytics、51.LA
 
 ### 待完成
 - [ ] 添加更多数据源（如 Twitter、知乎等）
