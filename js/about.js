@@ -529,8 +529,9 @@ class UIManager {
         const isHttps = location.protocol === 'https:';
         const isLocal = !!(window.SiteConfig?.dev?.isLocal);
         const lang = getStoredLanguage();
+        const isZh = lang === 'zh';
         if (!isHttps || isLocal) {
-            const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+            const msg = isZh ? '当前评论区已关闭' : 'Comments are closed';
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             return;
         }
@@ -543,7 +544,13 @@ class UIManager {
                     server: window.SiteConfig.artalk.server,
                     site: window.SiteConfig.artalk.site,
                     // 多语言支持
-                    locale: lang === 'zh' ? 'zh-CN' : 'en-US',
+                    locale: isZh ? 'zh-CN' : 'en-US',
+                    // 自定义占位符（支持多语言）
+                    placeholder: isZh ? '说点什么吧...支持 Markdown 语法，可 @用户、发送表情' : 'Leave a comment... Supports Markdown, @mentions, and Send 😊',
+
+                    // 发送按钮文字（多语言）
+                    sendBtn: isZh ? '发送' : 'Send',
+                    loginBtn: isZh ? '发送' : 'Send',
                     
                     // 主题支持
                     darkMode: document.documentElement.getAttribute('data-theme') === 'night',
@@ -552,12 +559,6 @@ class UIManager {
                     editor: {
                         // 启用 Markdown
                         markdown: true,
-                        
-                        // 自定义占位符（支持多语言）
-                        placeholder: lang === 'zh' ? '说点什么吧...支持 Markdown 语法，可 @用户、发送表情' : 'Leave a comment... Supports Markdown, @mentions, and Send 😊',
-                        
-                        // 发送按钮文字（多语言）
-                        sendBtn: lang === 'zh' ? '发送' : 'Send',
                         
                         // 表情面板
                         emoji: {
@@ -591,21 +592,21 @@ class UIManager {
                             const now = new Date();
                             const diffSec = Math.floor((now - date) / 1000);
                             
-                            if (diffSec < 60) return lang === 'zh' ? '刚刚' : 'Just now';
-                            if (diffSec < 3600) return lang === 'zh' ? `${Math.floor(diffSec / 60)}分钟前` : `${Math.floor(diffSec / 60)} minutes ago`;
-                            if (diffSec < 86400) return lang === 'zh' ? `${Math.floor(diffSec / 3600)}小时前` : `${Math.floor(diffSec / 3600)} hours ago`;
+                            if (diffSec < 60) return isZh ? '刚刚' : 'Just now';
+                            if (diffSec < 3600) return isZh ? `${Math.floor(diffSec / 60)}分钟前` : `${Math.floor(diffSec / 60)} minutes ago`;
+                            if (diffSec < 86400) return isZh ? `${Math.floor(diffSec / 3600)}小时前` : `${Math.floor(diffSec / 3600)} hours ago`;
                             
                             const isToday = date.toDateString() === now.toDateString();
-                            if (isToday) return lang === 'zh' ? 
+                            if (isToday) return isZh ?
                                 `今天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
                                 `Today ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
                             
                             const isYesterday = new Date(now - 86400000).toDateString() === date.toDateString();
-                            if (isYesterday) return lang === 'zh' ? 
+                            if (isYesterday) return isZh ?
                                 `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
                                 `Yesterday ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
                             
-                            return date.toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US', {
+                            return date.toLocaleString(isZh ? 'zh-CN' : 'en-US', {
                                 year: 'numeric',
                                 month: '2-digit',
                                 day: '2-digit',
@@ -630,11 +631,11 @@ class UIManager {
                 this.enhanceArtalkUI();
             } catch (e) {
                 console.error("Artalk Error", e);
-                const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+                const msg = isZh ? '当前评论区已关闭' : 'Comments are closed';
                 $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
             }
         } else {
-            const msg = lang === 'zh' ? '当前评论区已关闭' : 'Comments are closed';
+            const msg = isZh ? '当前评论区已关闭' : 'Comments are closed';
             $('#artalk-container').html(`<div style="text-align:center;color:#999;padding:20px;">${msg}</div>`);
         }
     }

@@ -124,14 +124,6 @@
   transform: translateY(0) !important;
 }
 
-.atk-send-btn:before {
-  content: "发送" !important;
-}
-
-[data-lang="en"] .atk-send-btn:before {
-  content: "Send" !important;
-}
-
 .atk-list-header {
   padding: 20px !important;
   border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
