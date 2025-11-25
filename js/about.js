@@ -699,18 +699,29 @@ class UIManager {
         }
         
         // 监听主题/语言变化
-        const themeObserver = new MutationObserver(() => {
+        if (this._themeLangObserver) {
+            try { this._themeLangObserver.disconnect(); } catch (_) {}
+        }
+        const prevTheme = document.documentElement.getAttribute('data-theme');
+        const prevLang = document.documentElement.getAttribute('data-lang');
+        this._lastTheme = prevTheme;
+        this._lastLang = prevLang;
+        this._reloading = false;
+        this._themeLangObserver = new MutationObserver(() => {
             const newTheme = document.documentElement.getAttribute('data-theme');
             const newLang = document.documentElement.getAttribute('data-lang');
-            console.log('Theme/Language changed:', newTheme, newLang);
-            // 延迟执行
+            if (this._reloading) return;
+            if (newTheme === this._lastTheme && newLang === this._lastLang) return;
+            this._lastTheme = newTheme;
+            this._lastLang = newLang;
             setTimeout(() => {
-                // 重新加载整个评论组件
+                if (this._reloading) return;
+                this._reloading = true;
                 this.reloadArtalk();
+                this._reloading = false;
             }, 300);
         });
-        
-        themeObserver.observe(document.documentElement, {
+        this._themeLangObserver.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme', 'data-lang']
         });
@@ -858,11 +869,13 @@ class UIManager {
                     el.innerText = item.name;
                     el.style.border = 'none';
                     container.appendChild(el);
-                    tags.push({el, x: 0, y: 0, z: 0});
+                    tags.push({el, x: 0, y: 0, z: 0, bw: el.offsetWidth, bh: el.offsetHeight});
                 });
                 
                 // 动态半径，避免容器溢出，使用防抖优化
-                let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
+                const cw = container.clientWidth;
+                const ch = container.clientHeight;
+                let radius = Math.max(160, Math.min(cw, ch) / 2 - 24);
                 const dtr = Math.PI / 180;
                 let lasta = 1, lastb = 1;
                 let active = false, mouseX = 0, mouseY = 0;
@@ -918,8 +931,8 @@ class UIManager {
                         scale = Math.min(Math.max(scale, 0.7), 1.15);
                         const opacity = (tag.z + radius) / (2 * radius) + 0.2;
                         const zIndex = parseInt(scale * 100);
-                        const left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
-                        const top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
+                        const left = tag.x + cw / 2 - tag.bw / 2;
+                        const top = tag.y + ch / 2 - tag.bh / 2;
                         
                         updates.push({
                             el: tag.el,

@@ -16,7 +16,7 @@
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: 1px solid rgba(255, 255, 255, 0.9);
     --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
-    --glass-blur: 28px;
+    --glass-blur: 18px;
 
     --text-primary: #1f2937;
     --text-secondary: #4b5563;
@@ -88,7 +88,7 @@ body {
 
 /* Ambient Background */
 .aurora-canvas { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.glow-spot { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 20s infinite alternate; }
+.glow-spot { position: absolute; border-radius: 50%; filter: blur(40px); opacity: 0.5; animation: float 20s infinite alternate; }
 .spot-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--bg-grad-1); }
 .spot-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--bg-grad-2); animation-delay: -5s; }
 .noise-layer { position: absolute; inset: 0; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
