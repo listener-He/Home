@@ -239,10 +239,10 @@ class DataManager {
     // 创建带超时的fetch函数
     async fetchWithTimeout(url, options = {}) {
         const { timeout = 5000 } = options;
-        
+
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), timeout);
-        
+
         const response = await fetch(url, {
             ...options,
             signal: controller.signal
@@ -363,7 +363,7 @@ class DataManager {
                 <div class="repo-desc">${escapeHtml(dShort)}</div>
             </div>`;
         });
-        
+
         // 使用requestAnimationFrame避免强制重排
         requestAnimationFrame(() => {
             const pc = $('#projects-container');
@@ -480,7 +480,7 @@ class DataManager {
                 <div class="b-cat">${escapeHtml(cat)}</div>
             </div>`;
         });
-        
+
         // 使用requestAnimationFrame避免强制重排
         requestAnimationFrame(() => {
             const bc = $('#blog-container');
@@ -567,30 +567,30 @@ class UIManager {
                     // 发送按钮文字（多语言）
                     sendBtn: isZh ? '发送' : 'Send',
                     loginBtn: isZh ? '发送' : 'Send',
-                    
+
                     // 主题支持
                     darkMode: document.documentElement.getAttribute('data-theme') === 'night',
-                    
+
                     // 编辑器增强配置
                     editor: {
                         // 启用 Markdown
                         markdown: true,
-                        
+
                         // 表情面板
                         emoji: {
                             // 使用默认表情包
                             preset: 'twemoji'
                         },
-                        
+
                         // 启用 @ 用户提醒功能
                         mention: true,
-                        
+
                         // 自动聚焦（仅桌面端）
                         autoFocus: !('ontouchstart' in window),
-                        
+
                         // 限制编辑器高度
                         maxHeight: 200,
-                        
+
                         // 工具栏
                         toolbar: [
                             'bold', 'italic', 'strike', 'link',
@@ -599,7 +599,7 @@ class UIManager {
                             'emoji', 'mention'
                         ]
                     },
-                    
+
                     // 评论格式化函数
                     commentFormatter: (comment) => {
                         // 美化时间显示
@@ -607,21 +607,21 @@ class UIManager {
                             const date = new Date(dateStr);
                             const now = new Date();
                             const diffSec = Math.floor((now - date) / 1000);
-                            
+
                             if (diffSec < 60) return isZh ? '刚刚' : 'Just now';
                             if (diffSec < 3600) return isZh ? `${Math.floor(diffSec / 60)}分钟前` : `${Math.floor(diffSec / 60)} minutes ago`;
                             if (diffSec < 86400) return isZh ? `${Math.floor(diffSec / 3600)}小时前` : `${Math.floor(diffSec / 3600)} hours ago`;
-                            
+
                             const isToday = date.toDateString() === now.toDateString();
                             if (isToday) return isZh ?
                                 `今天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
                                 `Today ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                            
+
                             const isYesterday = new Date(now - 86400000).toDateString() === date.toDateString();
                             if (isYesterday) return isZh ?
                                 `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
                                 `Yesterday ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                            
+
                             return date.toLocaleString(isZh ? 'zh-CN' : 'en-US', {
                                 year: 'numeric',
                                 month: '2-digit',
@@ -630,19 +630,19 @@ class UIManager {
                                 minute: '2-digit'
                             }).replace(/\//g, '-');
                         };
-                        
+
                         // 如果是管理员，添加徽章
                         if (comment.is_admin) {
                             comment.nick = `👑${comment.nick}`;
                         }
-                        
+
                         // 更新显示时间
                         comment.create_date_formatted = formatTime(comment.date || comment.created_at || comment.create_date);
-                        
+
                         return comment;
                     }
                 };
-                
+
                 Artalk.init(artalkConfig);
                 this.enhanceArtalkUI();
             } catch (e) {
@@ -667,13 +667,13 @@ class UIManager {
             }
 
         }
-        
+
         // 清空容器
         const container = document.getElementById('artalk-container');
         if (container) {
             container.innerHTML = '';
         }
-        
+
         // 重新初始化
         this.initArtalk();
     }
@@ -681,15 +681,15 @@ class UIManager {
     enhanceArtalkUI() {
         const container = document.getElementById('artalk-container');
         if (!container) return;
-        
+
         // 检测是否为移动端
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         container.classList.toggle('atk-mobile', isMobile);
         container.classList.toggle('atk-desktop', !isMobile);
-        
+
         // 获取当前语言
         const lang = getStoredLanguage();
-        
+
         // 获取当前主题
         const currentTheme = document.documentElement.getAttribute('data-theme');
 
@@ -697,7 +697,7 @@ class UIManager {
         if (isMobile) {
             this.enhanceMobileArtalk(container, lang);
         }
-        
+
         // 监听主题/语言变化
         const themeObserver = new MutationObserver(() => {
             const newTheme = document.documentElement.getAttribute('data-theme');
@@ -709,7 +709,7 @@ class UIManager {
                 this.reloadArtalk();
             }, 300);
         });
-        
+
         themeObserver.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme', 'data-lang']
@@ -723,32 +723,32 @@ class UIManager {
             container.querySelectorAll('.atk-comment-wrap .atk-content').forEach(el => {
                 // 检查是否已经处理过
                 if (el.dataset.mobileProcessed) return;
-                
+
                 // 检查内容是否超过3行才添加展开收起功能
                 const lineHeight = parseInt(window.getComputedStyle(el).lineHeight);
                 const paddingTop = parseInt(window.getComputedStyle(el).paddingTop);
                 const paddingBottom = parseInt(window.getComputedStyle(el).paddingBottom);
                 const actualHeight = el.clientHeight - paddingTop - paddingBottom;
-                
+
                 // 如果内容高度超过3倍行高，则添加展开收起功能
                 if (actualHeight > lineHeight * 3) {
                     // 添加移动端内容截断
                     el.classList.add('clamped');
                     el.style.setProperty('--max-lines', '3');
-                    
+
                     // 创建展开/收起按钮
                     const btn = document.createElement('button');
                     btn.className = 'atk-expand-btn';
                     const expandText = lang === 'zh' ? '展开' : 'Expand';
                     const collapseText = lang === 'zh' ? '收起' : 'Collapse';
                     btn.textContent = expandText;
-                    
+
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const isClamped = el.classList.toggle('clamped');
                         btn.textContent = isClamped ? expandText : collapseText;
                     });
-                    
+
                     // 将按钮插入到适当位置
                     const actionsElement = el.closest('.atk-comment').querySelector('.atk-actions');
                     if (actionsElement) {
@@ -757,23 +757,23 @@ class UIManager {
                         el.parentNode.appendChild(btn);
                     }
                 }
-                
+
                 // 标记为已处理
                 el.dataset.mobileProcessed = '1';
             });
         };
-        
+
         // 初始应用
         applyMobileStyles();
-        
+
         // 创建观察器以处理动态添加的评论
         const observer = new MutationObserver(applyMobileStyles);
-        observer.observe(container, { 
-            childList: true, 
+        observer.observe(container, {
+            childList: true,
             subtree: true,
             attributes: false
         });
-        
+
         // 添加移动端特定的样式类
         const theme = document.documentElement.getAttribute('data-theme');
         container.classList.add(`atk-theme-${theme || 'day'}`);
@@ -826,7 +826,7 @@ class UIManager {
         } else {
             // PC: 3D Sphere
             container.classList.remove('mobile-scroll');
-            
+
             // 使用防抖优化尺寸计算
             let resizeTimeout;
             const updateContainerSize = () => {
@@ -837,19 +837,19 @@ class UIManager {
                     init3DSphere();
                 }, 100);
             };
-            
+
             // 初始化3D球体
             const init3DSphere = () => {
                 // 清除之前的动画
                 if (container.__animToken) {
                     cancelAnimationFrame(container.__animToken);
                 }
-                
+
                 // 清空容器
                 container.innerHTML = '';
-                
+
                 const tags = [];
-                
+
                 techStack.forEach((item, index) => {
                     const el = document.createElement('a');
                     el.className = 'tech-tag-3d';
@@ -860,13 +860,13 @@ class UIManager {
                     container.appendChild(el);
                     tags.push({el, x: 0, y: 0, z: 0});
                 });
-                
+
                 // 动态半径，避免容器溢出，使用防抖优化
                 let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
                 const dtr = Math.PI / 180;
                 let lasta = 1, lastb = 1;
                 let active = false, mouseX = 0, mouseY = 0;
-                
+
                 // 初始化位置
                 tags.forEach((tag, i) => {
                     let phi = Math.acos(-1 + (2 * i + 1) / tags.length);
@@ -875,7 +875,7 @@ class UIManager {
                     tag.y = radius * Math.sin(theta) * Math.sin(phi);
                     tag.z = radius * Math.cos(phi);
                 });
-                
+
                 container.onmouseover = () => active = true;
                 container.onmouseout = () => active = false;
                 container.onmousemove = (e) => {
@@ -886,7 +886,7 @@ class UIManager {
                         mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
                     });
                 };
-                
+
                 const update = () => {
                     let a, b;
                     if (active) {
@@ -898,12 +898,12 @@ class UIManager {
                     }
                     lasta = a;
                     lastb = b;
-                    
+
                     if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01 && !active) a = 0.5; // Keep spinning slowly
-                    
+
                     let sa = Math.sin(a * dtr), ca = Math.cos(a * dtr);
                     let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
-                    
+
                     // 批量更新样式以减少重排
                     // 先收集所有需要更新的样式信息
                     const updates = [];
@@ -920,7 +920,7 @@ class UIManager {
                         const zIndex = parseInt(scale * 100);
                         const left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
                         const top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
-                        
+
                         updates.push({
                             el: tag.el,
                             transform: `translate(${left}px, ${top}px) scale(${scale})`,
@@ -934,16 +934,16 @@ class UIManager {
                         update.el.style.opacity = update.opacity;
                         update.el.style.zIndex = update.zIndex;
                     });
-                    
+
                     container.__animToken = requestAnimationFrame(update);
                 };
-                
+
                 container.__animToken = requestAnimationFrame(update);
             };
-            
+
             // 初始化3D球体
             init3DSphere();
-            
+
             // 监听窗口大小变化
             window.addEventListener('resize', updateContainerSize);
         }
@@ -957,10 +957,10 @@ class UIManager {
         const fTheme = document.getElementById('fab-theme');
         const fMusic = document.getElementById('fab-music');
         if (!main || !menu || !fLang || !fTheme || !fMusic) return;
-        
+
         // 添加拖拽功能
         this.initDraggableFab();
-        
+
         const updateLabels = () => {
             // 使用requestAnimationFrame避免强制重排
             requestAnimationFrame(() => {
@@ -1098,7 +1098,7 @@ class UIManager {
         // 确保容器具有正确的主题类
         container.classList.remove('atk-theme-day', 'atk-theme-night');
         container.classList.add(`atk-theme-${theme || 'day'}`);
-        
+
         // 更新自定义元素的主题样式
         const customElements = container.querySelectorAll('.atk-expand-btn, .atk-pagination .atk-page-item');
         customElements.forEach(el => {
