@@ -1920,6 +1920,8 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    font-style: inherit;
+    font-weight: 700;
 }
 
 /* PC 3D Container */
@@ -2480,10 +2482,8 @@ body {
         flex-direction: column;
     }
 
-    /* 修复平板模式下兴趣模块的高度问题 */
     .interest-list {
         grid-template-columns: 1fr 1fr;
-        max-height: 150px; /* 限制高度 */
         overflow: hidden;
     }
     .interest-item {
@@ -2491,6 +2491,7 @@ body {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+        min-width: 0;
     }
     .i-emoji { margin-bottom: 6px; }
 
@@ -2499,10 +2500,14 @@ body {
         flex-direction: column;
         align-items: flex-start;
         gap: 6px;
+        min-width: 0;
+        width: 100%;
     }
 
     .i-text strong, .i-text span {
-        white-space: nowrap;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     /* 兴趣模块文本渐变色彩 */
@@ -2511,6 +2516,8 @@ body {
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .i-text span {
@@ -2518,6 +2525,8 @@ body {
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
     .comment-box {

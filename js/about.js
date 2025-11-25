@@ -222,12 +222,12 @@ class DataManager {
     init() {
         // 使用requestIdleCallback或setTimeout优化初始化调用
         if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => this.fetchGithub(), { timeout: 1000 });
-            requestIdleCallback(() => this.fetchBlog(), { timeout: 1000 });
+            requestIdleCallback(() => this.fetchGithub(), { timeout: 2000 });
+            requestIdleCallback(() => this.fetchBlog(), { timeout: 2000 });
         } else {
             // 降级到setTimeout，但稍后执行以避免阻塞
-            setTimeout(() => this.fetchGithub(), 50);
-            setTimeout(() => this.fetchBlog(), 100);
+            setTimeout(() => this.fetchGithub(), 200);
+            setTimeout(() => this.fetchBlog(), 300);
         }
     }
 
@@ -314,10 +314,13 @@ class DataManager {
     }
 
     renderUser(data) {
-        const years = new Date().getFullYear() - new Date(data.created_at || (window.SiteConfig?.defaults?.user?.created)).getFullYear();
-        $('#coding-years').text(years + "+");
-        $('#github-repos').text(data.public_repos || (window.SiteConfig?.defaults?.user?.repos));
-        $('#github-followers').text(data.followers || (window.SiteConfig?.defaults?.user?.followers));
+        // 使用requestAnimationFrame避免强制重排
+        requestAnimationFrame(() => {
+            const years = new Date().getFullYear() - new Date(data.created_at || (window.SiteConfig?.defaults?.user?.created)).getFullYear();
+            $('#coding-years').text(years + "+");
+            $('#github-repos').text(data.public_repos || (window.SiteConfig?.defaults?.user?.repos));
+            $('#github-followers').text(data.followers || (window.SiteConfig?.defaults?.user?.followers));
+        });
     }
 
     renderRepos(list) {
@@ -811,9 +814,12 @@ class UIManager {
                 container.onmouseover = () => active = true;
                 container.onmouseout = () => active = false;
                 container.onmousemove = (e) => {
-                    let rect = container.getBoundingClientRect();
-                    mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
-                    mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
+                    // 使用requestAnimationFrame处理鼠标移动事件，避免强制重排
+                    requestAnimationFrame(() => {
+                        let rect = container.getBoundingClientRect();
+                        mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
+                        mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
+                    });
                 };
                 
                 const update = () => {
@@ -834,22 +840,35 @@ class UIManager {
                     let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
                     
                     // 批量更新样式以减少重排
-                    const fragment = document.createDocumentFragment();
-                    
+                    // 先收集所有需要更新的样式信息
+                    const updates = [];
                     tags.forEach(tag => {
                         let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
                         let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
                         tag.x = rx1 * cb + rz1 * sb;
                         tag.y = ry2;
                         tag.z = rz2;
-                        
+
                         let scale = (tag.z + radius) / (2 * radius) + 0.45;
                         scale = Math.min(Math.max(scale, 0.7), 1.15);
-                        tag.el.style.opacity = (tag.z + radius) / (2 * radius) + 0.2;
-                        tag.el.style.zIndex = parseInt(scale * 100);
-                        let left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
-                        let top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
-                        tag.el.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+                        const opacity = (tag.z + radius) / (2 * radius) + 0.2;
+                        const zIndex = parseInt(scale * 100);
+                        const left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
+                        const top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
+                        
+                        updates.push({
+                            el: tag.el,
+                            transform: `translate(${left}px, ${top}px) scale(${scale})`,
+                            opacity: opacity,
+                            zIndex: zIndex
+                        });
+                    });
+
+                    // 一次性应用所有样式更新
+                    updates.forEach(update => {
+                        update.el.style.transform = update.transform;
+                        update.el.style.opacity = update.opacity;
+                        update.el.style.zIndex = update.zIndex;
                     });
                     
                     container.__animToken = requestAnimationFrame(update);
@@ -879,25 +898,31 @@ class UIManager {
         this.initDraggableFab();
         
         const updateLabels = () => {
-            const lang = getStoredLanguage();
-            const theme = getStoredTheme();
-            fLang.querySelector('.fab-text').textContent = lang === 'zh' ? 'English' : '中文';
-            fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Day' : 'Night';
-            const playing = (this.audio && !this.audio.paused);
-            fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
+            // 使用requestAnimationFrame避免强制重排
+            requestAnimationFrame(() => {
+                const lang = getStoredLanguage();
+                const theme = getStoredTheme();
+                fLang.querySelector('.fab-text').textContent = lang === 'zh' ? 'English' : '中文';
+                fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Day' : 'Night';
+                const playing = (this.audio && !this.audio.paused);
+                fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
+            });
         };
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
             main.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
-            updateLabels();
+            // 延迟更新标签以避免阻塞
+            requestAnimationFrame(updateLabels);
         });
         fLang.addEventListener('click', () => {
             document.getElementById('lang-btn')?.click();
-            updateLabels();
+            // 延迟更新标签以避免阻塞
+            requestAnimationFrame(updateLabels);
         });
         fTheme.addEventListener('click', () => {
             document.getElementById('theme-btn')?.click();
-            updateLabels();
+            // 延迟更新标签以避免阻塞
+            requestAnimationFrame(updateLabels);
         });
         fMusic.addEventListener('click', () => {
             if (this.audio) {
@@ -912,9 +937,11 @@ class UIManager {
                     this.setMusicPauseTime();
                 }
             }
-            updateLabels();
+            // 延迟更新标签以避免阻塞
+            requestAnimationFrame(updateLabels);
         });
-        updateLabels();
+        // 延迟初始标签更新以避免阻塞
+        requestAnimationFrame(updateLabels);
     }
 
     // 初始化拖拽功能
@@ -959,17 +986,20 @@ class UIManager {
                     currentY = e.clientY - initialY;
                 }
 
-                const ww = window.innerWidth;
-                const wh = window.innerHeight;
-                const rect = fab.getBoundingClientRect();
-                const fw = rect.width;
-                const fh = rect.height;
-                currentX = Math.max(0, Math.min(currentX, ww - fw));
-                currentY = Math.max(0, Math.min(currentY, wh - fh));
+                // 使用requestAnimationFrame优化拖拽动画
+                requestAnimationFrame(() => {
+                    const ww = window.innerWidth;
+                    const wh = window.innerHeight;
+                    const rect = fab.getBoundingClientRect();
+                    const fw = rect.width;
+                    const fh = rect.height;
+                    currentX = Math.max(0, Math.min(currentX, ww - fw));
+                    currentY = Math.max(0, Math.min(currentY, wh - fh));
 
-                xOffset = currentX;
-                yOffset = currentY;
-                setTranslate(currentX, currentY, fab);
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    setTranslate(currentX, currentY, fab);
+                });
             }
         };
 
