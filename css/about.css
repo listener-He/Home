@@ -607,11 +607,6 @@ body {
     font-size: 1.5rem;
 }
 
-.stat-key {
-    font-size: 0.8rem;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-}
 
 /* --- MBTI --- */
 .area-mbti {
@@ -1818,6 +1813,32 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* 黑夜模式样式增强 */
+[data-theme="night"] .area-stats {
+    background: rgba(30, 30, 35, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="night"] .stat-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="night"] .stat-item:hover {
+    background: rgba(108, 92, 231, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="night"] .stat-val {
+    color: #fff;
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+[data-theme="night"] .stat-key {
+    color: var(--text-secondary);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
 }
 
 /* PC端统计区域响应式布局 */
