@@ -31,6 +31,16 @@
 - 🌗 **主题与语言**：一键切换 Day/Night 与 CN/EN，自动缓存记忆
 - ⚡ **性能与体验**：缓存字段精简、骨架占位与淡入过渡、异步抓取避免阻塞
 
+## 🚀 一键部署
+
+<div align="center">
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flistener-He%2FHome)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/listener-He/Home)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/listener-He/Home)
+
+</div>
+
 ## 🖼️ 页面预览
 
 <div align="center">

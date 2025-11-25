@@ -7,6 +7,49 @@
 - 任意静态站点环境（Nginx/Apache/Node 静态服务、Vercel、Netlify、GitHub Pages 等）
 - 现代浏览器（移动/桌面）
 
+## 一键部署
+
+### Vercel
+
+点击下方按钮一键部署到 Vercel：
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/listener-He/Home)
+
+或者通过命令行部署：
+```bash
+# 安装 Vercel CLI
+npm install -g vercel
+
+# 在项目根目录运行
+vercel
+```
+
+### Netlify
+
+点击下方按钮一键部署到 Netlify：
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/listener-He/Home)
+
+或者通过命令行部署：
+```bash
+# 安装 Netlify CLI
+npm install -g netlify-cli
+
+# 在项目根目录运行
+netlify deploy
+```
+
+### Cloudflare Pages
+
+1. 登录 Cloudflare 控制台
+2. 进入 Pages 服务
+3. 选择 "Create a project"
+4. 连接 GitHub 账户并选择此仓库
+5. 配置设置：
+   - 构建命令：`echo "No build command needed"`
+   - 发布目录：`.`
+6. 点击 "Deploy"
+
 ## 本地预览
 
 - 直接在本地打开 `index.html` 与 `about.html` 即可（双击或使用任意静态服务器）
@@ -58,7 +101,7 @@ server {
   - `SiteConfig.cacheKeys.blog`：缓存键与过期时间（毫秒）
 - Artalk 评论
   - `SiteConfig.artalk.server` 与 `SiteConfig.artalk.site`
-  - `dev.isLocal`：本地或非 HTTPS 环境下自动显示“评论区已关闭”提示
+  - `dev.isLocal`：本地或非 HTTPS 环境下自动显示"评论区已关闭"提示
 - 主题与语言
   - 主题缓存：`SiteConfig.cacheKeys.theme.key/ttlMs`
   - 语言存取：使用 `localStorage('lang')`，页面内可切换 CN/EN
@@ -76,7 +119,7 @@ server {
   - 标题渐变：仅在白天保留轻微渐变，正文统一实色以提升可读性
 - 评论组件（Artalk）
   - 桌/移端响应式：容器 `#artalk-container` 自动加 `.atk-mobile/.atk-desktop`
-  - 移动端折叠：评论内容默认折叠，按钮“展开/收起”交互
+  - 移动端折叠：评论内容默认折叠，按钮"展开/收起"交互
 
 ## 数据缓存与性能
 
@@ -86,7 +129,7 @@ server {
 
 ## 常见问题
 
-- 评论区在本地或非 HTTPS 环境显示“评论区已关闭”
+- 评论区在本地或非 HTTPS 环境显示"评论区已关闭"
   - 这是预期行为；上线到 HTTPS 环境并设置 `SiteConfig.artalk` 可开启
 - 夜间兴趣文本未显示渐变
   - 清理浏览器缓存后重试；检查 CSS 覆盖是否被自定义样式覆盖
