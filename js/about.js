@@ -63,7 +63,23 @@ class AppCore {
    =========================== */
 class I18nManager {
     constructor() {
-        this.lang = getStoredLanguage();
+        // 获取当前请求参数有无 lang 参数
+        try {
+            this.query = new URLSearchParams(window.location.search);
+            if (this.query.has('lang')) {
+                let lang = this.query.get('lang');
+                if (lang === 'zh' || lang === 'en') {
+                    this.lang = lang;
+                    setStoredLanguage(lang);
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        if (!this.lang) {
+            this.lang = getStoredLanguage();
+        }
         this.dict = {
             zh: {
                 "nav.home": "首页",
