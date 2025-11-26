@@ -614,35 +614,102 @@
   }
 }
 
-/* PC端黑夜模式下的输入框颜色和列表样式修正 */
+/* PC端黑夜模式下的输入框颜色和列表样式修正 - 全面优化版 */
 [data-theme="night"] .atk-editor-textarea {
-  background: rgba(40, 40, 45, 0.7) !important;
-  color: #1f2937 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    background: rgba(40, 40, 45, 0.8) !important;
+    color: #e2e8f0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
 [data-theme="night"] .atk-editor-textarea:focus {
-  border: 1px solid #00cec9 !important;
-  box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2) !important;
+    border: 1px solid #00cec9 !important;
+    box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2) !important;
 }
 
 [data-theme="night"] .atk-comment-wrap {
-  background: rgba(30, 30, 35, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+    background: rgba(30, 30, 35, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 [data-theme="night"] .atk-comment-wrap:hover {
-  background: rgba(40, 40, 45, 0.7) !important;
-  border: 1px solid rgba(0, 206, 201, 0.3) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(40, 40, 45, 0.9) !important;
+    border: 1px solid rgba(0, 206, 201, 0.3) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
 [data-theme="night"] .atk-list-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 [data-theme="night"] .atk-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 优化评论底部工具栏在黑夜模式下的样式 */
+[data-theme="night"] .atk-editor-bottom {
+    background: rgba(40, 40, 45, 0.7) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 20px !important;
+    border-radius: 0 0 12px 12px !important;
+}
+
+[data-theme="night"] .atk-editor-bottom .atk-item {
+    color: #b2bec3 !important;
+    margin-right: 12px !important;
+}
+
+[data-theme="night"] .atk-send-btn {
+    background: linear-gradient(135deg, #00cec9, #00b3ae) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 8px 20px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 206, 201, 0.4);
+}
+
+[data-theme="night"] .atk-send-btn:hover {
+    background: linear-gradient(135deg, #00b3ae, #009690) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0, 206, 201, 0.6) !important;
+}
+
+[data-theme="night"] .atk-send-btn:active {
+    transform: translateY(0) !important;
+}
+
+/* 优化评论列表项在黑夜模式下的样式 */
+[data-theme="night"] .atk-comment {
+    color: #e2e8f0 !important;
+}
+
+[data-theme="night"] .atk-comment .atk-nick {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="night"] .atk-comment .atk-date {
+    color: #a0aec0 !important;
+}
+
+[data-theme="night"] .atk-comment .atk-content {
+    color: #e2e8f0 !important;
+    line-height: 1.6 !important;
+}
+
+[data-theme="night"] .atk-comment .atk-content a {
+    color: #00cec9 !important;
+    text-decoration: underline !important;
+}
+
+[data-theme="night"] .atk-actions .atk-action {
+    color: #b2bec3 !important;
+    transition: all 0.2s ease !important;
+    margin-right: 15px; /* 增加回复评论组件的边距 */
+}
+
+[data-theme="night"] .atk-actions .atk-action:hover {
+    color: #00cec9 !important;
 }
