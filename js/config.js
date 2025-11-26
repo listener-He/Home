@@ -18,13 +18,13 @@ const SiteConfig = {
   
   background: {
     imagePaths: [
-      "/images/bj/1.jpg",
-      "/images/bj/2.jpg",
-      "/images/bj/3.jpg",
-      "/images/bj/4.jpg",
-      "/images/bj/5.jpg",
-      "/images/bj/6.jpg",
-      "/images/bj/7.jpg"
+      "/images/bj/1.webp",
+      "/images/bj/2.webp",
+      "/images/bj/3.webp",
+      "/images/bj/4.webp",
+      "/images/bj/5.webp",
+      "/images/bj/6.webp",
+      "/images/bj/7.webp"
     ]
   },
   

@@ -50,17 +50,15 @@ $(document).ready(function () {
 	 *  自定义壁纸
 	 */
 	var imgUrls = JSON.parse(sessionStorage.getItem("imgUrls"));
-	var index = sessionStorage.getItem("index");
 	var $panel = $('#panel');
 	var date = new Date();
     var dayOfWeek = date.getDay();
 	if (imgUrls == null) {
 		imgUrls = [];
-		index = 0;
         SiteConfig.background.imagePaths.forEach(path => {
             imgUrls.push(path);
         });
-        sessionStorage.setItem("imgUrls", JSON.stringify(imgUrls));
+        //sessionStorage.setItem("imgUrls", JSON.stringify(imgUrls));
         // sessionStorage.setItem("index", index);
 	} else {
 //		if (index == imgUrls.length)
