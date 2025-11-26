@@ -268,7 +268,7 @@ class DataManager {
 
         try {
             // Parallel Fetch with timeout
-            const uRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}`, { timeout: 5000 });
+            const uRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}`, { timeout: 1000 });
             const userData = uRes.ok ? await uRes.json() : (window.SiteConfig?.defaults?.user);
             let allRepos = [];
             let page = 1;
