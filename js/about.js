@@ -53,8 +53,8 @@ class AppCore {
     constructor() {
         this.i18n = new I18nManager();
         this.theme = new ThemeManager();
-        this.data = new DataManager();
         this.ui = new UIManager();
+        this.data = new DataManager();
     }
 }
 
