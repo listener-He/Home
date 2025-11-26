@@ -564,7 +564,7 @@ class UIManager {
                     server: window.SiteConfig.artalk.server,
                     site: window.SiteConfig.artalk.site,
                     // 多语言支持
-                    locale: isZh ? 'zh-CN' : 'en-US',
+                    locale: isZh ? 'zh-CN' : 'en',
                     // 自定义占位符（支持多语言）
                     placeholder: isZh ? '说点什么吧...支持 Markdown 语法，可 @用户、发送表情' : 'Leave a comment... Supports Markdown, @mentions, and Send 😊',
 
@@ -626,7 +626,7 @@ class UIManager {
                                 `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}` :
                                 `Yesterday ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
-                            return date.toLocaleString(isZh ? 'zh-CN' : 'en-US', {
+                            return date.toLocaleString(isZh ? 'zh-CN' : 'en', {
                                 year: 'numeric',
                                 month: '2-digit',
                                 day: '2-digit',
