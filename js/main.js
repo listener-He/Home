@@ -49,7 +49,7 @@ $(document).ready(function () {
 	/**
 	 *  自定义壁纸
 	 */
-	var imgUrls = JSON.parse(sessionStorage.getItem("imgUrls"));
+	var imgUrls = null; //JSON.parse(sessionStorage.getItem("imgUrls"));
 	var $panel = $('#panel');
 	var date = new Date();
     var dayOfWeek = date.getDay();
