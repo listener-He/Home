@@ -64,7 +64,7 @@
     </script>
 </head>
 
-<body oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<body>
 <header id="panel" class="panel-cover">
     <script>
         WIDGET = {
@@ -277,7 +277,7 @@
                 // 防止滚动穿透
                 document.body.style.overflow = 'hidden';
                 // 添加ESC键关闭
-                document.addEventListener('keydown', closeOnEsc);
+                document.addEventListener('keydown', closeOnEsc, { passive: false });
             }
 
             function closeWeixin() {
@@ -286,7 +286,7 @@
                 // 恢复滚动
                 document.body.style.overflow = '';
                 // 移除ESC键监听
-                document.removeEventListener('keydown', closeOnEsc);
+                document.removeEventListener('keydown', closeOnEsc, { passive: false });
             }
 
             function closeOnEsc(e) {
@@ -300,12 +300,12 @@
                 if (e.target === this) {
                     closeWeixin();
                 }
-            });
+            }, { passive: false });
 
             // 阻止点击弹框内容时关闭
             document.querySelector('.weixin-qrcode-container').addEventListener('click', function (e) {
                 e.stopPropagation();
-            });
+            }, { passive: false });
         </script>
     </div>
     <div class="remark iUp">

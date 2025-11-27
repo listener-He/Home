@@ -84,7 +84,7 @@ const StarrySky = function () {
             }
           }
           starCount = Math.ceil(canvasWidth * starCountLevel);
-        }, 200));
+        }, 200), { passive: true });
       } else {
         console.error('初始化失败，必须传入Canvas元素');
       }
@@ -160,7 +160,7 @@ const StarrySky = function () {
           canvasContext.shadowOffsetX = 0;
           canvasContext.shadowOffsetY = 0;
           canvasContext.shadowColor = "rgb(" + star["color"] + ")";
-          canvasContext.shadowBlur = 10;
+          canvasContext.shadowBlur = 5;
           canvasContext.beginPath();
           canvasContext.arc(star_x, star_y, star_radius, 0, 2 * Math.PI);
           canvasContext.fill();
