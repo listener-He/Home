@@ -962,8 +962,6 @@ class UIManager {
         const fMusic = document.getElementById('fab-music');
         if (!main || !menu || !fLang || !fTheme || !fMusic) return;
 
-        // 添加拖拽功能
-        this.initDraggableFab();
 
         const updateLabels = () => {
             // 使用requestAnimationFrame避免强制重排
@@ -1012,73 +1010,6 @@ class UIManager {
         requestAnimationFrame(updateLabels);
     }
 
-    // 初始化拖拽功能
-    initDraggableFab() {
-        const fab = document.querySelector('.mobile-fab');
-        if (!fab) return;
-
-        let isDragging = false;
-        let initialX, initialY, currentX, currentY, xOffset = 0, yOffset = 0;
-        fab.style.willChange = 'transform';
-
-        // 拖拽相关方法
-        const setTranslate = (xPos, yPos, el) => {
-            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-        };
-
-        const dragStart = (e) => {
-            if (e.type === 'touchstart') {
-                initialX = e.touches[0].clientX - xOffset;
-                initialY = e.touches[0].clientY - yOffset;
-            } else {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-            }
-            isDragging = true;
-        };
-
-        const dragEnd = () => {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        };
-
-        const drag = (e) => {
-            if (isDragging) {
-                e.preventDefault();
-                if (e.type === 'touchmove') {
-                    currentX = e.touches[0].clientX - initialX;
-                    currentY = e.touches[0].clientY - initialY;
-                } else {
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                }
-
-                // 使用requestAnimationFrame优化拖拽动画
-                requestAnimationFrame(() => {
-                    const ww = window.innerWidth;
-                    const wh = window.innerHeight;
-                    const rect = fab.getBoundingClientRect();
-                    const fw = rect.width;
-                    const fh = rect.height;
-                    currentX = Math.max(0, Math.min(currentX, ww - fw));
-                    currentY = Math.max(0, Math.min(currentY, wh - fh));
-
-                    xOffset = currentX;
-                    yOffset = currentY;
-                    setTranslate(currentX, currentY, fab);
-                });
-            }
-        };
-
-        // 绑定事件
-        fab.addEventListener('touchstart', dragStart, { passive: false });
-        fab.addEventListener('touchend', dragEnd, { passive: false });
-        fab.addEventListener('touchmove', drag, { passive: false });
-        fab.addEventListener('mousedown', dragStart, { passive: false });
-        fab.addEventListener('mouseup', dragEnd, { passive: false });
-        fab.addEventListener('mousemove', drag, { passive: false });
-    }
 
     initAudio() {
         const el = document.getElementById('site-audio');

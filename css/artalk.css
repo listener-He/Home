@@ -3,6 +3,7 @@
 /* Base Artalk container styles */
 #artalk-container {
   border-radius: 12px;
+  contain: layout style;
 }
 
 /* 确保评论区域适配白天/黑夜模式 */

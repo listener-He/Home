@@ -322,6 +322,7 @@ body {
     /* 确保不继承任何可能影响文字的滤镜或动画 */
     filter: none;
     animation: none;
+    contain: layout style;
 }
 
 /* 黑夜模式下个人卡片发光效果 */
@@ -701,6 +702,7 @@ body {
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    contain: layout style;
 }
 
 
@@ -708,6 +710,7 @@ body {
 /* --- Interests --- */
 .area-interests {
     padding: 20px;
+    contain: layout style;
 }
 
 
@@ -1563,6 +1566,7 @@ body {
     text-align: center;
     /* 创建独立的层叠上下文，防止动画影响子元素 */
     isolation: isolate;
+    contain: layout style;
 }
 
 /* 增强版呼吸动画：多层光晕 + 色彩流动 */
@@ -1982,6 +1986,7 @@ body {
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    contain: layout style;
 }
 
 .card-header {
@@ -2048,6 +2053,7 @@ body {
     text-decoration: none;
     pointer-events: none; /* 禁用鼠标事件避免干扰 */
     z-index: 10;
+    contain: layout style;
 }
 
 /* 白天模式下为 tag-color 类增强可读性 */
@@ -2851,6 +2857,7 @@ body {
         text-decoration: none;
         pointer-events: none;
         z-index: 10;
+        contain: layout style;
     }
 
     /* Mobile Social */
