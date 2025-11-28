@@ -1017,16 +1017,19 @@ class UIManager {
         this.audio = el;
         this.audio.loop = true;
 
-        // 检查是否在24小时内用户暂停过音乐
-        const shouldRemainPaused = this.shouldMusicRemainPaused();
+        // 页面加载完成后根据条件决定是否播放
+        window.addEventListener('load', () => {
+            // 检查是否在24小时内用户暂停过音乐
+            const shouldRemainPaused = this.shouldMusicRemainPaused();
 
-        const tryPlay = () => {
+            // 如果不应该保持暂停状态，则尝试播放
             if (!shouldRemainPaused) {
                 this.audio.play().catch(() => {
+                    // 静默处理播放失败
+                    console.error('Failed to play audio.');
                 });
             }
-        };
-        tryPlay();
+        });
     }
 
     updateCustomStyles(container, theme) {
