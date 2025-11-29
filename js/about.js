@@ -329,8 +329,10 @@ class DataManager {
 
         } catch (e) {
             console.warn("GH API Fail", e);
-            this.renderUser(window.SiteConfig?.defaults?.user);
-            this.renderRepos(window.SiteConfig?.defaults?.repos);
+            const  githubUser = await this.fetchWithTimeout("./data/github_user.json", { timeout: 1000 });
+            const githubRepos =  await this.fetchWithTimeout("./data/github_repos.json", { timeout: 1000 });
+            this.renderUser(githubUser ? githubUser : window.SiteConfig?.defaults?.user);
+            this.renderRepos(githubRepos ? githubRepos : window.SiteConfig?.defaults?.repos);
         }
     }
 
