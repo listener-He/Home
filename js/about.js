@@ -839,10 +839,50 @@ class UIManager {
             return {...item, gradientId: gid};
         });
 
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-        container.innerHTML = '';
+        const currentState = window.matchMedia('(max-width: 768px)').matches ? 'mobile' : 'desktop';
+        // 检查是否已保存状态到 sessionStorage
+        const savedState = sessionStorage.getItem('techCloudState_' + currentState);
 
-        if (isMobile) {
+
+        if (savedState) {
+            const parsedState = JSON.parse(savedState);
+            // 如果当前状态与保存的状态一致，直接使用保存的内容
+            if (parsedState.type === currentState) {
+                container.innerHTML = parsedState.html;
+                if (currentState === 'mobile') {
+                    container.classList.add('mobile-scroll');
+                }
+                if (currentState === 'desktop') {
+                    container.classList.remove('mobile-scroll');
+                    // 重新初始化3D球体动画
+                    this.init3DSphereAnimation(container, techStack);
+                }
+                // 监听窗口大小变化
+                this.setupResizeListener(container, techStack, currentState);
+                return;
+            }
+        }
+
+        // 清空容器并重新生成
+        this.generateTechCloud(container, techStack, currentState);
+
+        // 监听窗口大小变化
+        this.setupResizeListener(container, techStack, currentState);
+    }
+
+    // 保存技术标签云状态到 sessionStorage
+    saveTechCloudState(container, type) {
+        const state = {
+            type: type,
+            html: container.innerHTML
+        };
+        sessionStorage.setItem('techCloudState_' + type, JSON.stringify(state));
+    }
+
+    // 生成技术标签云
+    generateTechCloud(container, techStack, type) {
+        container.innerHTML = '';
+        if (type === 'mobile') {
             // Mobile: 3-row seamless marquee
             container.classList.add('mobile-scroll');
             const rows = 3;
@@ -872,129 +912,158 @@ class UIManager {
         } else {
             // PC: 3D Sphere
             container.classList.remove('mobile-scroll');
-
-            // 使用防抖优化尺寸计算
-            let resizeTimeout;
-            const updateContainerSize = () => {
-                if (resizeTimeout) {
-                    clearTimeout(resizeTimeout);
-                }
-                resizeTimeout = setTimeout(() => {
-                    init3DSphere();
-                }, 100);
-            };
-
-            // 初始化3D球体
-            const init3DSphere = () => {
-                // 清除之前的动画
-                if (container.__animToken) {
-                    cancelAnimationFrame(container.__animToken);
-                }
-
-                // 清空容器
-                container.innerHTML = '';
-
-                const tags = [];
-
-                techStack.forEach((item, index) => {
-                    const el = document.createElement('a');
-                    el.className = 'tech-tag-3d';
-                    const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
-                    el.classList.add(colorClass);
-                    el.innerText = item.name;
-                    el.style.border = 'none';
-                    container.appendChild(el);
-                    tags.push({el, x: 0, y: 0, z: 0});
-                });
-
-                // 动态半径，避免容器溢出，使用防抖优化
-                let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
-                const dtr = Math.PI / 180;
-                let lasta = 1, lastb = 1;
-                let active = false, mouseX = 0, mouseY = 0;
-
-                // 初始化位置
-                tags.forEach((tag, i) => {
-                    let phi = Math.acos(-1 + (2 * i + 1) / tags.length);
-                    let theta = Math.sqrt(tags.length * Math.PI) * phi;
-                    tag.x = radius * Math.cos(theta) * Math.sin(phi);
-                    tag.y = radius * Math.sin(theta) * Math.sin(phi);
-                    tag.z = radius * Math.cos(phi);
-                });
-
-                container.onmouseover = () => active = true;
-                container.onmouseout = () => active = false;
-                container.onmousemove = (e) => {
-                    // 使用requestAnimationFrame处理鼠标移动事件，避免强制重排
-                    requestAnimationFrame(() => {
-                        let rect = container.getBoundingClientRect();
-                        mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
-                        mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
-                    });
-                };
-
-                const update = () => {
-                    let a, b;
-                    if (active) {
-                        a = (-Math.min(Math.max(-mouseY, -200), 200) / radius) * 2;
-                        b = (Math.min(Math.max(-mouseX, -200), 200) / radius) * 2;
-                    } else {
-                        a = lasta * 0.98; // Auto rotate
-                        b = lastb * 0.98;
-                    }
-                    lasta = a;
-                    lastb = b;
-
-                    if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01 && !active) a = 0.5; // Keep spinning slowly
-
-                    let sa = Math.sin(a * dtr), ca = Math.cos(a * dtr);
-                    let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
-
-                    // 批量更新样式以减少重排
-                    // 先收集所有需要更新的样式信息
-                    const updates = [];
-                    tags.forEach(tag => {
-                        let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
-                        let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
-                        tag.x = rx1 * cb + rz1 * sb;
-                        tag.y = ry2;
-                        tag.z = rz2;
-
-                        let scale = (tag.z + radius) / (2 * radius) + 0.45;
-                        scale = Math.min(Math.max(scale, 0.7), 1.15);
-                        const opacity = (tag.z + radius) / (2 * radius) + 0.2;
-                        const zIndex = parseInt(scale * 100);
-                        const left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
-                        const top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
-
-                        updates.push({
-                            el: tag.el,
-                            transform: `translate(${left}px, ${top}px) scale(${scale})`,
-                            opacity: opacity,
-                            zIndex: zIndex
-                        });
-                    });
-
-                    updates.forEach(update => {
-                        update.el.style.transform = update.transform;
-                        update.el.style.opacity = update.opacity;
-                        update.el.style.zIndex = update.zIndex;
-                    });
-
-                    container.__animToken = requestAnimationFrame(update);
-                };
-
-                container.__animToken = requestAnimationFrame(update);
-            };
-
-            // 初始化3D球体
-            init3DSphere();
-
-            // 监听窗口大小变化
-            window.addEventListener('resize', updateContainerSize);
+            this.init3DSphereAnimation(container, techStack);
         }
+
+        // 保存当前状态
+        this.saveTechCloudState(container, type);
     }
 
+    // 初始化3D球体动画
+    init3DSphereAnimation(container, techStack) {
+        // 清除之前的动画
+        if (container.__animToken) {
+            cancelAnimationFrame(container.__animToken);
+        }
+
+        // 清空容器
+        container.innerHTML = '';
+
+        const tags = [];
+
+        techStack.forEach((item, index) => {
+            const el = document.createElement('a');
+            el.className = 'tech-tag-3d';
+            const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
+            el.classList.add(colorClass);
+            el.innerText = item.name;
+            el.style.border = 'none';
+            container.appendChild(el);
+            tags.push({el, x: 0, y: 0, z: 0});
+        });
+
+        // 动态半径，避免容器溢出，使用防抖优化
+        let radius = Math.max(160, Math.min(container.offsetWidth, container.offsetHeight) / 2 - 24);
+        const dtr = Math.PI / 180;
+        let lasta = 1, lastb = 1;
+        let active = false, mouseX = 0, mouseY = 0;
+
+        // 初始化位置
+        tags.forEach((tag, i) => {
+            let phi = Math.acos(-1 + (2 * i + 1) / tags.length);
+            let theta = Math.sqrt(tags.length * Math.PI) * phi;
+            tag.x = radius * Math.cos(theta) * Math.sin(phi);
+            tag.y = radius * Math.sin(theta) * Math.sin(phi);
+            tag.z = radius * Math.cos(phi);
+        });
+
+        container.onmouseover = () => active = true;
+        container.onmouseout = () => active = false;
+        container.onmousemove = (e) => {
+            // 使用requestAnimationFrame处理鼠标移动事件，避免强制重排
+            requestAnimationFrame(() => {
+                let rect = container.getBoundingClientRect();
+                mouseX = (e.clientX - (rect.left + rect.width / 2)) / 5;
+                mouseY = (e.clientY - (rect.top + rect.height / 2)) / 5;
+            });
+        };
+
+        const update = () => {
+            let a, b;
+            if (active) {
+                a = (-Math.min(Math.max(-mouseY, -200), 200) / radius) * 2;
+                b = (Math.min(Math.max(-mouseX, -200), 200) / radius) * 2;
+            } else {
+                a = lasta * 0.98; // Auto rotate
+                b = lastb * 0.98;
+            }
+            lasta = a;
+            lastb = b;
+
+            if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01 && !active) a = 0.5; // Keep spinning slowly
+
+            let sa = Math.sin(a * dtr), ca = Math.cos(a * dtr);
+            let sb = Math.sin(b * dtr), cb = Math.cos(b * dtr);
+
+            // 批量更新样式以减少重排
+            // 先收集所有需要更新的样式信息
+            const updates = [];
+            tags.forEach(tag => {
+                let rx1 = tag.x, ry1 = tag.y * ca - tag.z * sa, rz1 = tag.y * sa + tag.z * ca;
+                let ry2 = ry1, rz2 = rx1 * -sb + rz1 * cb;
+                tag.x = rx1 * cb + rz1 * sb;
+                tag.y = ry2;
+                tag.z = rz2;
+
+                let scale = (tag.z + radius) / (2 * radius) + 0.45;
+                scale = Math.min(Math.max(scale, 0.7), 1.15);
+                const opacity = (tag.z + radius) / (2 * radius) + 0.2;
+                const zIndex = parseInt(scale * 100);
+                const left = tag.x + container.offsetWidth / 2 - tag.el.offsetWidth / 2;
+                const top = tag.y + container.offsetHeight / 2 - tag.el.offsetHeight / 2;
+
+                updates.push({
+                    el: tag.el,
+                    transform: `translate(${left}px, ${top}px) scale(${scale})`,
+                    opacity: opacity,
+                    zIndex: zIndex
+                });
+            });
+
+            updates.forEach(update => {
+                update.el.style.transform = update.transform;
+                update.el.style.opacity = update.opacity;
+                update.el.style.zIndex = update.zIndex;
+            });
+
+            container.__animToken = requestAnimationFrame(update);
+        };
+
+        container.__animToken = requestAnimationFrame(update);
+    }
+
+    // 设置窗口大小变化监听器
+    setupResizeListener(container, techStack, currentType) {
+        // 使用防抖优化尺寸计算
+        let resizeTimeout;
+        let windowRef = currentType;
+        const handleResize = () => {
+            if (resizeTimeout) {
+                clearTimeout(resizeTimeout);
+            }
+            resizeTimeout = setTimeout(() => {
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+                const currentState = isMobile ? 'mobile' : 'desktop';
+                if (windowRef === currentState) {
+                    console.log('Tech Cloud: Skipping resize, same state:', windowRef, currentState);
+                    return
+                }
+                windowRef = currentState;
+
+                // 检查 sessionStorage 中是否有对应状态的内容
+                const savedState = sessionStorage.getItem('techCloudState_' + currentState);
+                if (savedState) {
+                    // 直接使用保存的内容
+                    const parsedState = JSON.parse(savedState);
+                    container.innerHTML = parsedState.html;
+                    if (currentState === 'mobile') {
+                        container.classList.add('mobile-scroll');
+                    }
+                    if (currentState === 'desktop') {
+                        container.classList.remove('mobile-scroll');
+                        this.init3DSphereAnimation(container, techStack);
+                    }
+                } else {
+                    // 重新生成
+                    container.innerHTML = '';
+                    this.generateTechCloud(container, techStack, currentState);
+                }
+            }, 100);
+        };
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', handleResize);
+    }
 
     initFab() {
         const main = document.getElementById('fab-main');
