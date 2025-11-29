@@ -49,7 +49,7 @@
     --bg-grad-1: #2d3436;
     --bg-grad-2: #000000;
 
-    --glass-bg: rgba(30, 30, 35, 0.85); /* 提高背景不透明度增强可读性 */
+    --glass-bg: rgba(30, 30, 35, 0.55);
     --glass-border: 1px solid rgba(255, 255, 255, 0.15);
     --glass-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
 
