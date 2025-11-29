@@ -284,21 +284,53 @@ class DataManager {
 
         try {
             // Parallel Fetch with timeout
-            const uRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}`, { timeout: 1000 });
-            const userData = uRes.ok ? await uRes.json() : (window.SiteConfig?.defaults?.user);
-            let allRepos = [];
-            let page = 1;
-            const perPage = 100;
-            while (page <= 50) { // 最多抓取500条，直到满足条件或为空
-                const rRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}/repos?sort=pushed&direction=desc&per_page=${perPage}&page=${page}`, { timeout: 3000 });
-                if (!rRes.ok) break;
-                const repos = await rRes.json();
-                if (!Array.isArray(repos) || repos.length === 0) break;
-                allRepos = allRepos.concat(repos);
-                if (repos.length < perPage || allRepos.length >= 500) break; // 足量
-                page++;
+            let userData, repoData;
+
+            try {
+                const uRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}`, { timeout: 1000 });
+                if (uRes.ok) {
+                    userData = await uRes.json();
+                } else {
+                    const fallbackUser = await this.fetchWithTimeout("./data/github_user.json", { timeout: 200 });
+                    userData = await fallbackUser.json();
+                }
+            } catch (err) {
+                // Handle abort errors and other fetch errors
+                if (err.name === 'AbortError') {
+                    console.warn("GitHub user fetch aborted, using fallback data");
+                }
+                const fallbackUser = await this.fetchWithTimeout("./data/github_user.json", { timeout: 200 });
+                userData = await fallbackUser.json();
             }
-            let repoData = allRepos.length ? allRepos : (window.SiteConfig?.defaults?.repos);
+
+            try {
+                let allRepos = [];
+                let page = 1;
+                const perPage = 100;
+                while (page <= 50) { // 最多抓取500条，直到满足条件或为空
+                    const rRes = await this.fetchWithTimeout(`https://api.github.com/users/${user}/repos?sort=pushed&direction=desc&per_page=${perPage}&page=${page}`, { timeout: 3000 });
+                    if (!rRes.ok) break;
+                    const repos = await rRes.json();
+                    if (!Array.isArray(repos) || repos.length === 0) break;
+                    allRepos = allRepos.concat(repos);
+                    if (repos.length < perPage || allRepos.length >= 500) break; // 足量
+                    page++;
+                }
+
+                if (allRepos.length) {
+                    repoData = allRepos;
+                } else {
+                    const fallbackRepos = await this.fetchWithTimeout("./data/github_repos.json", { timeout: 300 });
+                    repoData = await fallbackRepos.json();
+                }
+            } catch (err) {
+                // Handle abort errors and other fetch errors
+                if (err.name === 'AbortError') {
+                    console.warn("GitHub repos fetch aborted, using fallback data");
+                }
+                const fallbackRepos = await this.fetchWithTimeout("./data/github_repos.json", { timeout: 300 });
+                repoData = await fallbackRepos.json();
+            }
 
             // 过滤掉fork项目并按星数排序
             if (Array.isArray(repoData)) {
@@ -329,10 +361,8 @@ class DataManager {
 
         } catch (e) {
             console.warn("GH API Fail", e);
-            const  githubUser = await this.fetchWithTimeout("./data/github_user.json", { timeout: 1000 });
-            const githubRepos =  await this.fetchWithTimeout("./data/github_repos.json", { timeout: 1000 });
-            this.renderUser(githubUser ? githubUser : window.SiteConfig?.defaults?.user);
-            this.renderRepos(githubRepos ? githubRepos : window.SiteConfig?.defaults?.repos);
+            this.renderUser(window.SiteConfig?.defaults?.user);
+            this.renderRepos(window.SiteConfig?.defaults?.repos);
         }
     }
 
