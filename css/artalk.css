@@ -622,9 +622,9 @@
 
 /* PC端黑夜模式下的输入框颜色和列表样式修正 - 全面优化版 */
 [data-theme="night"] .atk-editor-textarea {
-    background: rgba(30, 30, 35, 0.9) !important;
-    color: #e2e8f0 !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(30, 30, 35, 0.95) !important; /* 提高背景不透明度增强可读性 */
+    color: #ffffff !important; /* 使用更亮的文字颜色 */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important; /* 增强边框可见性 */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -634,14 +634,14 @@
 }
 
 [data-theme="night"] .atk-comment-wrap {
-    background: rgba(30, 30, 35, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(30, 30, 35, 0.95) !important; /* 提高背景不透明度增强可读性 */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 [data-theme="night"] .atk-comment-wrap:hover {
-    background: rgba(40, 40, 45, 0.9) !important;
-    border: 1px solid rgba(0, 206, 201, 0.3) !important;
+    background: rgba(40, 40, 45, 0.98) !important; /* 进一步提高背景不透明度 */
+    border: 1px solid rgba(0, 206, 201, 0.5) !important; /* 增强边框可见性 */
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
@@ -701,7 +701,7 @@
 }
 
 [data-theme="night"] .atk-comment .atk-content {
-    color: #e2e8f0 !important;
+    color: #ffffff !important; /* 使用更亮的文字颜色提高可读性 */
     line-height: 1.6 !important;
 }
 

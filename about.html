@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -10,6 +10,7 @@
     <!--SEO信息 -->
     <meta name="description" content="关于Honesty,关于HeHouHui,关于HeHui,关于明厚, About Me Honesty, About Me HeHouHui, About Me HeHui">
     <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
+    <link rel="canonical" href="https://www.hehouhui.cn/about.html">
     <meta name="author" content="Honesty">
 
     <!-- 社交平台分享优化 -->
@@ -20,6 +21,7 @@
     <meta property="og:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
     <meta property="og:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
     <meta property="og:site_name" content="Honesty的个人主页">
+    <meta property="og:locale" content="zh_CN">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -28,6 +30,9 @@
     <meta property="twitter:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
     <meta property="twitter:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
     <meta property="twitter:site" content="@Honesty861024">
+    <link rel="alternate" hreflang="zh-cn" href="https://www.hehouhui.cn/about.html">
+    <link rel="alternate" hreflang="en" href="https://www.hehouhui.cn/about.html?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://www.hehouhui.cn/about.html">
 
     <!-- 微信小程序/朋友圈分享 -->
     <meta property="wechat:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
@@ -84,11 +89,11 @@
                 <div class="nav-divider"></div>
 
                 <!-- 功能按钮 -->
-                <button id="lang-btn" class="action-btn" aria-label="Switch Language">
+                <button id="lang-btn" class="action-btn" aria-label="Switch Language" tabindex="0">
                     <i class="ri-translate-2"></i>
                     <span class="btn-text">CN/EN</span>
                 </button>
-                <button id="theme-btn" class="action-btn" aria-label="Toggle Theme">
+                <button id="theme-btn" class="action-btn" aria-label="Toggle Theme" tabindex="0">
                     <i class="ri-sun-line icon-sun"></i>
                     <i class="ri-moon-line icon-moon"></i>
                 </button>
@@ -117,12 +122,12 @@
                     </div>
                     <!-- 6个社交链接 (PC端显示) -->
                     <div class="social-dock desktop-social">
-                        <a href="https://github.com/listener-He" target="_blank" class="s-icon"><i class="ri-github-fill"></i></a>
-                        <a href="mailto:hehouhui@foxmail.com" class="s-icon"><i class="ri-mail-send-fill"></i></a>
-                        <a href="https://twitter.com/Honesty861024" target="_blank" class="s-icon"><i class="ri-twitter-line"></i></a>
-                        <a href="https://www.zhihu.com/people/wen-xin-92-2-57" target="_blank" class="s-icon"><i class="ri-zhihu-line"></i></a>
-                        <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon"><i class="ri-wechat-fill"></i></a>
-                        <a href="https://juejin.cn/user/3659591622878503" target="_blank" class="s-icon"><i class="ri-code-box-line"></i></a>
+                        <a href="https://github.com/listener-He" target="_blank" class="s-icon" aria-label="GitHub profile" tabindex="0"><i class="ri-github-fill"></i></a>
+                        <a href="mailto:hehouhui@foxmail.com" class="s-icon" aria-label="Email contact" tabindex="0"><i class="ri-mail-send-fill"></i></a>
+                        <a href="https://twitter.com/Honesty861024" target="_blank" class="s-icon" aria-label="Twitter profile" tabindex="0"><i class="ri-twitter-line"></i></a>
+                        <a href="https://www.zhihu.com/people/wen-xin-92-2-57" target="_blank" class="s-icon" aria-label="Zhihu profile" tabindex="0"><i class="ri-zhihu-line"></i></a>
+                        <a href="javascript:void(0);" onclick="toggleWechat()" class="s-icon" aria-label="WeChat QR code" tabindex="0"><i class="ri-wechat-fill"></i></a>
+                        <a href="https://juejin.cn/user/3659591622878503" target="_blank" class="s-icon" aria-label="Juejin profile" tabindex="0"><i class="ri-code-box-line"></i></a>
                     </div>
                 </div>
             </div>
@@ -235,12 +240,12 @@
 
             <!-- 移动端显示的社交栏 (6个链接) -->
             <div class="bento-card area-social-mobile mobile-social">
-                <a href="https://github.com/listener-He" class="ms-btn"><i class="ri-github-fill"></i></a>
-                <a href="mailto:hehouhui@foxmail.com" class="ms-btn"><i class="ri-mail-send-fill"></i></a>
-                <a href="https://twitter.com/Honesty861024" class="ms-btn"><i class="ri-twitter-line"></i></a>
-                <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="ms-btn"><i class="ri-zhihu-line"></i></a>
-                <a href="javascript:void(0);" onclick="toggleWechat()" class="ms-btn"><i class="ri-wechat-fill"></i></a>
-                <a href="https://juejin.cn/user/3659591622878503" class="ms-btn"><i class="ri-code-box-line"></i></a>
+                <a href="https://github.com/listener-He" class="ms-btn" aria-label="GitHub profile" tabindex="0"><i class="ri-github-fill"></i></a>
+                <a href="mailto:hehouhui@foxmail.com" class="ms-btn" aria-label="Email contact" tabindex="0"><i class="ri-mail-send-fill"></i></a>
+                <a href="https://twitter.com/Honesty861024" class="ms-btn" aria-label="Twitter profile" tabindex="0"><i class="ri-twitter-line"></i></a>
+                <a href="https://www.zhihu.com/people/wen-xin-92-2-57" class="ms-btn" aria-label="Zhihu profile" tabindex="0"><i class="ri-zhihu-line"></i></a>
+                <a href="javascript:void(0);" onclick="toggleWechat()" class="ms-btn" aria-label="WeChat QR code" tabindex="0"><i class="ri-wechat-fill"></i></a>
+                <a href="https://juejin.cn/user/3659591622878503" class="ms-btn" aria-label="Juejin profile" tabindex="0"><i class="ri-code-box-line"></i></a>
             </div>
         </div>
 
@@ -289,11 +294,11 @@
 
         <!-- 移动端悬浮功能按钮 -->
         <div class="mobile-fab">
-            <button id="fab-main" class="fab-main" aria-label="Actions"><i class="ri-magic-line"></i><span class="fab-label">Tools</span></button>
+            <button id="fab-main" class="fab-main" aria-label="Actions" tabindex="0"><i class="ri-magic-line"></i><span class="fab-label">Tools</span></button>
             <div class="fab-menu" id="fab-menu">
-                <button id="fab-lang" class="fab-item"><i class="ri-translate-2"></i><span class="fab-text">Lang</span></button>
-                <button id="fab-theme" class="fab-item"><i class="ri-moon-line"></i><span class="fab-text">Theme</span></button>
-                <button id="fab-music" class="fab-item"><i class="ri-music-2-line"></i><span class="fab-text">Play</span></button>
+                <button id="fab-lang" class="fab-item" tabindex="0"><i class="ri-translate-2"></i><span class="fab-text">Lang</span></button>
+                <button id="fab-theme" class="fab-item" tabindex="0"><i class="ri-moon-line"></i><span class="fab-text">Theme</span></button>
+                <button id="fab-music" class="fab-item" tabindex="0"><i class="ri-music-2-line"></i><span class="fab-text">Play</span></button>
             </div>
         </div>
         <audio id="site-audio" class="site-audio" src="data/至少做一件离谱的事-Kiri T_compressed.mp3" loop preload="none"></audio>

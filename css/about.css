@@ -49,18 +49,18 @@
     --bg-grad-1: #2d3436;
     --bg-grad-2: #000000;
 
-    --glass-bg: rgba(30, 30, 35, 0.55);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(30, 30, 35, 0.85); /* 提高背景不透明度增强可读性 */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.15);
     --glass-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
 
-    --text-primary: #dfe6e9;
-    --text-secondary: #b2bec3;
-    --text-tertiary: #636e72;
+    --text-primary: #ffffff; /* 使用更明亮的白色提高对比度 */
+    --text-secondary: #e0e0e0; /* 提高二级文本亮度 */
+    --text-tertiary: #b0b0b0; /* 提高三级文本亮度 */
 
     --accent: #00cec9;
     --accent-glow: rgba(0, 206, 201, 0.4);
 
-    --dock-bg: rgba(30, 30, 35, 0.9);
+    --dock-bg: rgba(30, 30, 35, 0.95); /* 提高底层面板不透明度 */
 }
 
 /* Global Reset */
@@ -143,8 +143,9 @@ body {
 }
 
 [data-theme="night"] .neon-font {
-    color: #fff;
-    text-shadow: 0 0 10px var(--accent);
+    color: #ffffff;
+    text-shadow: 0 0 15px var(--accent), 0 0 25px var(--accent);
+    font-weight: bold;
 }
 
 [data-theme="day"] .icon-sun {
@@ -1821,8 +1822,8 @@ body {
 
 /* 黑夜模式样式增强 */
 [data-theme="night"] .area-stats {
-    background: rgba(30, 30, 35, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(30, 30, 35, 0.85); /* 提高统计区域背景不透明度 */
+    border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
@@ -1832,11 +1833,11 @@ body {
 }
 
 [data-theme="night"] .stat-item {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.15); /* 提高统计项目背景不透明度 */
 }
 
 [data-theme="night"] .stat-item:hover {
-    background: rgba(108, 92, 231, 0.2);
+    background: rgba(108, 92, 231, 0.3); /* 提高悬停时的背景不透明度 */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 

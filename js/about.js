@@ -569,7 +569,8 @@ class UIManager {
                     locale: isZh ? 'zh-CN' : 'en',
                     // 自定义占位符（支持多语言）
                     placeholder: isZh ? '说点什么吧...支持 Markdown 语法，可 @用户、发送表情' : 'Leave a comment... Supports Markdown, @mentions, and Send 😊',
-
+                    // 无评论时显示
+                    noComment: isZh ? '快来成为第一个评论的人吧~' : 'Be the first to leave a comment~😍',
                     // 发送按钮文字（多语言）
                     sendBtn: isZh ? '发送' : 'Send',
                     loginBtn: isZh ? '发送' : 'Send',
@@ -582,11 +583,7 @@ class UIManager {
                         // 启用 Markdown
                         markdown: true,
 
-                        // 表情面板
-                        emoji: {
-                            // 使用默认表情包
-                            preset: 'twemoji'
-                        },
+                        emoticons: "https://emoticons.hzchu.top/json/artalk/zaoandandandeyouyongquan.json",
 
                         // 启用 @ 用户提醒功能
                         mention: true,
@@ -649,8 +646,8 @@ class UIManager {
                     }
                 };
 
-                Artalk.init(artalkConfig);
-                this.enhanceArtalkUI();
+                let artalkRef = Artalk.init(artalkConfig);
+                this.enhanceArtalkUI(artalkRef);
             } catch (e) {
                 console.error("Artalk Error", e);
                 const msg = isZh ? '当前评论区已关闭' : 'Comments are closed';
@@ -684,7 +681,7 @@ class UIManager {
         this.initArtalk();
     }
 
-    enhanceArtalkUI() {
+    enhanceArtalkUI(artalkRef) {
         const container = document.getElementById('artalk-container');
         if (!container) return;
 
@@ -709,11 +706,24 @@ class UIManager {
             const newTheme = document.documentElement.getAttribute('data-theme');
             const newLang = document.documentElement.getAttribute('data-lang');
             console.log('Theme/Language changed:', newTheme, newLang);
-            // 延迟执行
-            setTimeout(() => {
-                // 重新加载整个评论组件
-                this.reloadArtalk();
-            }, 300);
+            if (newLang && newLang !== lang) {
+                // 延迟执行
+                setTimeout(() => {
+                    // 重新加载整个评论组件
+                    this.reloadArtalk();
+                }, 300);
+            } else if (newTheme && newTheme !== currentTheme) {
+                try {
+                    artalkRef.ui.setDarkMode(newTheme === 'night')
+                } catch (e) {
+                    setTimeout(() => {
+                        // 重新加载整个评论组件
+                        this.reloadArtalk();
+                    }, 300);
+                }
+
+            }
+
         });
 
         themeObserver.observe(document.documentElement, {
