@@ -653,6 +653,25 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+/* 修复黑夜模式下插件面板的背景色问题 */
+[data-theme="night"] .atk-editor-plug-wrap,
+[data-theme="night"] .atk-plug-panel-wrap,
+[data-theme="night"] .atk-editor-plug-emoticons,
+[data-theme="night"] .atk-editor-plug-preview {
+    background: rgba(30, 30, 35, 0.95) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="night"] .atk-plug-panel-wrap {
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="night"] .atk-editor-plug-emoticons {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
 /* 优化评论底部工具栏在黑夜模式下的样式 */
 [data-theme="night"] .atk-editor-bottom {
     background: rgba(40, 40, 45, 0.7) !important;
@@ -718,4 +737,36 @@
 
 [data-theme="night"] .atk-actions .atk-action:hover {
     color: #00cec9 !important;
+}
+
+/* 修复黑夜模式下评论计数和下拉菜单的可见性 */
+[data-theme="night"] .atk-comment-count {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="night"] .atk-dropdown-wrap {
+    background: rgba(30, 30, 35, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="night"] .atk-dropdown-item {
+    color: #ffffff !important;
+}
+
+[data-theme="night"] .atk-dropdown-item:hover {
+    background: rgba(0, 206, 201, 0.2) !important;
+    color: #00cec9 !important;
+}
+
+[data-theme="night"] .atk-dropdown-item.active {
+    background: rgba(0, 206, 201, 0.3) !important;
+    color: #00cec9 !important;
+}
+
+[data-theme="night"] .atk-arrow-down-icon {
+    filter: brightness(2) !important;
 }
