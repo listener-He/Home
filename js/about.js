@@ -1133,12 +1133,35 @@ class UIManager {
             const shouldRemainPaused = this.shouldMusicRemainPaused();
             // 如果不应该保持暂停状态，则尝试播放
             if (!shouldRemainPaused) {
-                requestAnimationFrame(() => {
-                    this.audio.play().catch(() => {
-                        // 静默处理播放失败
-                        console.error('Failed to play audio.');
-                    });
-                });
+                this.audio.autoplay = true;
+                // 添加用户交互检查，避免浏览器阻止自动播放
+                const attemptAutoplay = () => {
+                    // 检查是否已有用户交互
+                    if (this.userInteracted) {
+                        this.audio.play().catch(() => {
+                            // 静默处理播放失败
+                            console.error('Failed to play audio.');
+                        });
+                    } else {
+                        // 添加一次性用户交互监听器
+                        const enableAudio = () => {
+                            this.userInteracted = true;
+                            this.audio.play().catch(() => {
+                                console.error('Failed to play audio.');
+                            });
+                            document.removeEventListener('click', enableAudio);
+                            document.removeEventListener('touchstart', enableAudio);
+                            document.removeEventListener('keydown', enableAudio);
+                            document.removeEventListener('mousemove', enableAudio);
+                        };
+
+                        document.addEventListener('click', enableAudio, { once: true });
+                        document.addEventListener('touchstart', enableAudio, { once: true });
+                        document.addEventListener('keydown', enableAudio, { once: true });
+                        document.addEventListener('mousemove', enableAudio, { once: true });
+                    }
+                };
+                requestAnimationFrame(attemptAutoplay);
             }
         });
     }
