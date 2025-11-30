@@ -450,6 +450,12 @@
     height: 28px !important;
     object-fit: cover; /* 修复移动端头像拉伸问题 */
   }
+  .atk-comment>.atk-avatar img {
+    object-fit: cover;
+    object-position: center;
+    width: 28px !important;
+    height: 28px !important;
+  }
 
   .atk-meta {
     font-size: 12px !important;

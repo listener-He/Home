@@ -1133,22 +1133,22 @@ class UIManager {
             const shouldRemainPaused = this.shouldMusicRemainPaused();
             // 如果不应该保持暂停状态，则尝试播放
             if (!shouldRemainPaused) {
-                this.audio.autoplay = true;
+                let userInteracted = true;
+                this.audio.play().catch(() => {
+                    // 静默处理播放失败
+                    userInteracted = false;
+                });
                 // 添加用户交互检查，避免浏览器阻止自动播放
                 const attemptAutoplay = () => {
                     // 检查是否已有用户交互
-                    if (this.userInteracted) {
-                        this.audio.play().catch(() => {
-                            // 静默处理播放失败
-                            console.error('Failed to play audio.');
-                        });
-                    } else {
+                    if (this.userInteracted === false)  {
                         // 添加一次性用户交互监听器
                         const enableAudio = () => {
                             this.userInteracted = true;
-                            this.audio.play().catch(() => {
-                                console.error('Failed to play audio.');
-                            });
+                            setTimeout(() => {
+                                this.audio.play().catch(() => {
+                                });
+                            }, 1000);
                             document.removeEventListener('click', enableAudio);
                             document.removeEventListener('touchstart', enableAudio);
                             document.removeEventListener('keydown', enableAudio);
