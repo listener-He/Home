@@ -584,8 +584,6 @@ body {
     contain: layout style;
 }
 
-
-
 .avatar-ring {
     position: relative;
     width: 120px;
@@ -638,6 +636,48 @@ body {
     justify-content: center;
     gap: 4px;
 }
+/* Social Links */
+.social-dock {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.s-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(128, 128, 128, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.s-icon:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-3px);
+}
+.s-icon:hover i {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent;
+}
+.s-icon i {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+.s-icon[href*="github.com"] i { background: var(--gradient-7); }
+.s-icon[href^="mailto:"] i { background: var(--gradient-6); }
+.s-icon[href*="blog.hehouhui.cn"] i { background: var(--gradient-3); }
+.s-icon[href*="zhihu.com"] i { background: var(--gradient-4); }
+.s-icon[href*="juejin.cn"] i { background: var(--gradient-1); }
+.s-icon[onclick*="toggleWechat"] i { background: var(--gradient-5); }
+
 /* Tablet Profile Layout */
 @media (min-width: 769px) and (max-width: 1024px) {
     .area-profile {
@@ -689,6 +729,40 @@ body {
     .desktop-social {
         display: none;
     }
+
+    /* 移动端推荐分享模块调整 */
+    .recommend-share-module {
+        right: 15px;
+        bottom: 15px;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: shareModuleFadeIn 0.5s ease-out 0.5s forwards;
+    }
+
+    @keyframes shareModuleFadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .share-link {
+        width: 36px;
+        height: 36px;
+    }
+
+    .share-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .badge-dot {
+        width: 6px;
+        height: 6px;
+        top: 1px;
+        right: 1px;
+        border-width: 1px;
+    }
 }
 
 /* Night Theme Profile Styles */
@@ -704,10 +778,10 @@ body {
     background-clip: text !important;
     color: transparent !important;
     text-shadow:
-            0 0 10px rgba(255, 126, 179, 0.8),
-            0 0 20px rgba(255, 117, 140, 0.7),
-            0 0 30px rgba(255, 107, 107, 0.6),
-            0 0 40px rgba(255, 154, 139, 0.5);
+            0 0 2px rgba(255, 126, 179, 0.3),
+            0 0 6px rgba(255, 117, 140, 0.1),
+            0 0 32px rgba(255, 107, 107, 0.4),
+            0 0 10px rgba(255, 154, 139, 0.5);
     transform: translateZ(0);
     -webkit-text-stroke: 0.3px rgba(0, 0, 0, 0.3);
 }
@@ -725,16 +799,29 @@ body {
     -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.2);
 }
 
-/* Social Links */
-.social-dock {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
+
+
+/* 推荐分享模块 */
+.recommend-share-module {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: shareModuleFadeIn 0.5s ease-out 0.5s forwards;
 }
 
-.s-icon {
-    width: 46px;
-    height: 46px;
+@keyframes shareModuleFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.share-link {
+    position: relative;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: rgba(128, 128, 128, 0.1);
     display: flex;
@@ -743,29 +830,51 @@ body {
     color: var(--text-secondary);
     transition: all 0.3s;
     text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.s-icon:hover {
+.share-link:hover {
     background: var(--accent);
     color: #fff;
     transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-.s-icon:hover i {
-    color: transparent !important;
-    -webkit-text-fill-color: transparent;
+
+.share-icon {
+    width: 18px;
+    height: 18px;
 }
-.s-icon i {
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
+
+.share-icon path {
+    stroke: #32F08C;
 }
-.s-icon[href*="github.com"] i { background: var(--gradient-7); }
-.s-icon[href^="mailto:"] i { background: var(--gradient-6); }
-.s-icon[href*="blog.hehouhui.cn"] i { background: var(--gradient-3); }
-.s-icon[href*="zhihu.com"] i { background: var(--gradient-4); }
-.s-icon[href*="juejin.cn"] i { background: var(--gradient-1); }
-.s-icon[onclick*="toggleWechat"] i { background: var(--gradient-5); }
+
+.badge-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    background: #ff4757;
+    border-radius: 50%;
+    border: 2px solid var(--bg-base);
+}
+
+/* 夜间模式下的推荐分享模块 */
+[data-theme="night"] .share-link {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="night"] .share-link:hover {
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+/* 夜间模式下的SVG图标 */
+[data-theme="night"] .share-icon path {
+    stroke: #32F08C;
+    filter: drop-shadow(0 0 4px rgba(50, 240, 140, 0.4));
+}
 
 /* Night Theme Social Styles */
 [data-theme="night"] .s-icon {
@@ -785,9 +894,19 @@ body {
         display: none !important;
     }
 
-    .social-dock { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
-    .s-icon { width: 42px; height: 42px; }
-    .s-icon i { font-size: 1.6rem; }
+    .social-dock {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        justify-items: center;
+    }
+    .s-icon {
+        width: 42px;
+        height: 42px;
+    }
+    .s-icon i {
+        font-size: 1.6rem;
+    }
 }
 
 /* Mobile Social Layout */
@@ -801,9 +920,8 @@ body {
         justify-content: space-around;
         padding: 20px;
     }
-    .desktop-social {
-        display: none;
-    }
+
+
     .ms-btn {
         width: 40px;
         height: 40px;
