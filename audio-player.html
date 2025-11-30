@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <audio id="audio-player" controls autoplay style="display: none;"></audio>
+    
+    <script>
+        const audio = document.getElementById('audio-player');
+        let currentSrc = '';
+        let isStateBroadcasting = false;
+        
+        // 监听来自主页面的消息
+        window.addEventListener('message', function(event) {
+            // 允许来自同域的所有窗口的消息
+            if (event.origin !== window.location.origin) return;
+            
+            const data = event.data;
+            
+            switch (data.action) {
+                case 'play':
+                    // 如果当前正在播放，则暂停；否则播放
+                    if (audio.paused) {
+                        audio.play().catch(e => console.error('播放失败:', e));
+                    } else {
+                        audio.pause();
+                    }
+                    // 发送状态更新回所有可能的窗口
+                    broadcastState();
+                    break;
+                    
+                case 'pause':
+                    if (!audio.paused) {
+                        audio.pause();
+                    }
+                    broadcastState();
+                    break;
+                    
+                case 'setTrack':
+                    if (currentSrc !== data.src) {
+                        currentSrc = data.src;
+                        audio.src = data.src;
+                        audio.load();
+                        // 自动播放新曲目
+                        setTimeout(() => {
+                            audio.play().catch(e => console.error('播放失败:', e));
+                            broadcastState();
+                        }, 100);
+                    }
+                    break;
+                    
+                case 'setVolume':
+                    audio.volume = data.volume;
+                    broadcastState();
+                    break;
+                    
+                case 'getCurrentState':
+                    // 向请求方发送当前状态
+                    event.source.postMessage({
+                        action: 'currentState',
+                        playing: !audio.paused,
+                        src: audio.src,
+                        volume: audio.volume,
+                        currentTime: audio.currentTime,
+                        duration: audio.duration || 0
+                    }, event.origin);
+                    break;
+            }
+        });
+        
+        // 广播状态到所有可能监听的窗口
+        function broadcastState() {
+            if (isStateBroadcasting) return; // 防止状态广播循环
+            
+            isStateBroadcasting = true;
+            window.parent.postMessage({
+                action: 'stateChange',
+                playing: !audio.paused,
+                src: audio.src,
+                volume: audio.volume,
+                currentTime: audio.currentTime,
+                duration: audio.duration || 0
+            }, '*');
+            
+            // 保存播放状态
+            savePlaybackState();
+            
+            setTimeout(() => {
+                isStateBroadcasting = false;
+            }, 10);
+        }
+        
+        // 监听音频事件并通知主页面
+        audio.addEventListener('play', function() {
+            broadcastState();
+        });
+        
+        audio.addEventListener('pause', function() {
+            broadcastState();
+        });
+        
+        audio.addEventListener('ended', function() {
+            window.parent.postMessage({
+                action: 'trackEnded'
+            }, '*');
+        });
+        
+        // 页面加载完成后通知主页面
+        window.addEventListener('load', function() {
+            // 恢复之前保存的播放状态
+            restorePlaybackState();
+            
+            window.parent.postMessage({
+                action: 'playerReady'
+            }, '*');
+        });
+        
+        // 页面可见性变化时处理
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 页面变为可见时，广播当前状态
+                setTimeout(broadcastState, 100);
+            }
+        });
+        
+        // 页面即将卸载时保存播放状态
+        window.addEventListener('beforeunload', function() {
+            savePlaybackState();
+        });
+        
+        // 保存播放状态到 sessionStorage
+        function savePlaybackState() {
+            try {
+                sessionStorage.setItem('audioState', JSON.stringify({
+                    src: audio.src,
+                    currentTime: audio.currentTime,
+                    playing: !audio.paused,
+                    volume: audio.volume,
+                    timestamp: Date.now()
+                }));
+            } catch (e) {
+                console.error('保存音频状态失败:', e);
+            }
+        }
+        
+        // 从 sessionStorage 恢复播放状态
+        function restorePlaybackState() {
+            try {
+                const savedState = sessionStorage.getItem('audioState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    // 如果状态保存时间不超过1小时，则恢复播放
+                    if (Date.now() - state.timestamp < 3600000) {
+                        currentSrc = state.src;
+                        audio.src = state.src;
+                        audio.volume = state.volume !== undefined ? state.volume : 1.0;
+                        audio.currentTime = state.currentTime || 0;
+                        
+                        // 确保在用户交互后才尝试播放
+                        if (state.playing) {
+                            // 检查是否已经有用户交互
+                            if (document.hasFocus()) {
+                                // 稍微延迟播放，确保一切准备就绪
+                                setTimeout(() => {
+                                    audio.play().catch(e => {
+                                        console.error('恢复播放失败:', e);
+                                        // 如果自动播放失败，等待用户交互后再播放
+                                        const tryPlayOnInteraction = () => {
+                                            audio.play().catch(console.error);
+                                            document.removeEventListener('click', tryPlayOnInteraction);
+                                            document.removeEventListener('touchstart', tryPlayOnInteraction);
+                                        };
+                                        
+                                        document.addEventListener('click', tryPlayOnInteraction, { once: true });
+                                        document.addEventListener('touchstart', tryPlayOnInteraction, { once: true });
+                                    });
+                                }, 300);
+                            } else {
+                                // 等待用户交互后再播放
+                                const tryPlayOnInteraction = () => {
+                                    audio.play().catch(console.error);
+                                    document.removeEventListener('click', tryPlayOnInteraction);
+                                    document.removeEventListener('touchstart', tryPlayOnInteraction);
+                                };
+                                
+                                document.addEventListener('click', tryPlayOnInteraction, { once: true });
+                                document.addEventListener('touchstart', tryPlayOnInteraction, { once: true });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('恢复音频状态失败:', e);
+            }
+        }
+    </script>
+</body>
+</html>

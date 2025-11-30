@@ -534,6 +534,9 @@ class DataManager {
    =========================== */
 class UIManager {
     constructor() {
+        this.userInteracted = false;
+        this.audioPlayer = null;
+        this.audioIframe = null;
         this.initTechCloud();
         this.initModal();
         this.initArtalk();
@@ -1080,10 +1083,33 @@ class UIManager {
                 const theme = getStoredTheme();
                 fLang.querySelector('.fab-text').textContent = lang === 'zh' ? 'English' : '中文';
                 fTheme.querySelector('.fab-text').textContent = theme === 'night' ? 'Day' : 'Night';
-                const playing = (this.audio && !this.audio.paused);
-                fMusic.querySelector('.fab-text').textContent = lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
+                // 音频播放状态需要通过iframe通信获取
+                const audioIframe = document.getElementById('audio-player-iframe');
+                if (audioIframe && audioIframe.contentWindow) {
+                    // 请求当前播放状态
+                    audioIframe.contentWindow.postMessage({
+                        action: 'getCurrentState'
+                    }, '*');
+                }
             });
         };
+
+        // 监听来自iframe的音频状态更新
+        window.addEventListener('message', (event) => {
+            const audioIframe = document.getElementById('audio-player-iframe');
+            if (!audioIframe || event.source !== audioIframe.contentWindow) return;
+
+            const data = event.data;
+            if (data.action === 'currentState') {
+                const fMusic = document.getElementById('fab-music');
+                if (fMusic) {
+                    const lang = getStoredLanguage();
+                    fMusic.querySelector('.fab-text').textContent =
+                        lang === 'zh' ? (data.playing ? '暂停' : '播放') : (data.playing ? 'Pause' : 'Play');
+                }
+            }
+        });
+
         main.addEventListener('click', () => {
             menu.classList.toggle('open');
             main.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
@@ -1101,17 +1127,15 @@ class UIManager {
             requestAnimationFrame(updateLabels);
         });
         fMusic.addEventListener('click', () => {
-            if (this.audio) {
-                if (this.audio.paused) {
-                    this.audio.play().catch(() => {
-                    });
-                    // 清除暂停时间记录，允许下次自动播放
-                    this.clearMusicPauseTime();
-                } else {
-                    this.audio.pause();
-                    // 记录暂停时间
-                    this.setMusicPauseTime();
-                }
+            const audioIframe = document.getElementById('audio-player-iframe');
+            if (audioIframe && audioIframe.contentWindow) {
+                // 直接发送播放指令，让iframe内部处理播放/暂停切换
+                audioIframe.contentWindow.postMessage({
+                    action: 'play'
+                }, '*');
+
+                // 记录用户操作
+                this.setMusicPauseTime(); // 先记录暂停时间
             }
             // 延迟更新标签以避免阻塞
             requestAnimationFrame(updateLabels);
@@ -1122,33 +1146,33 @@ class UIManager {
 
 
     initAudio() {
-        const el = document.getElementById('site-audio');
-        if (!el) return;
-        this.audio = el;
-        this.audio.loop = true;
+        // 获取已存在的iframe或创建新的
+        let audioIframe = document.getElementById('audio-player-iframe');
+        if (!audioIframe) {
+            audioIframe = document.createElement('iframe');
+            audioIframe.src = 'audio-player.html';
+            audioIframe.style.display = 'none';
+            audioIframe.id = 'audio-player-iframe';
+            document.body.appendChild(audioIframe);
+        }
+        this.audioIframe = audioIframe;
 
-        // 页面加载完成后根据条件决定是否播放
-        window.addEventListener('load', () => {
+
+        const autoPlayer = () => {
             // 检查是否在24小时内用户暂停过音乐
             const shouldRemainPaused = this.shouldMusicRemainPaused();
             // 如果不应该保持暂停状态，则尝试播放
             if (!shouldRemainPaused) {
-                this.audio.autoplay = true;
                 // 添加用户交互检查，避免浏览器阻止自动播放
                 const attemptAutoplay = () => {
                     // 检查是否已有用户交互
                     if (this.userInteracted) {
-                        this.audio.play().catch(() => {
-                            // 静默处理播放失败
-                            console.error('Failed to play audio.');
-                        });
+                        this.playAudio();
                     } else {
                         // 添加一次性用户交互监听器
                         const enableAudio = () => {
                             this.userInteracted = true;
-                            this.audio.play().catch(() => {
-                                console.error('Failed to play audio.');
-                            });
+                            this.playAudio();
                             document.removeEventListener('click', enableAudio);
                             document.removeEventListener('touchstart', enableAudio);
                             document.removeEventListener('keydown', enableAudio);
@@ -1161,9 +1185,86 @@ class UIManager {
                         document.addEventListener('mousemove', enableAudio, { once: true });
                     }
                 };
-                requestAnimationFrame(attemptAutoplay);
+                setTimeout(attemptAutoplay, 500); // 稍微延迟以确保iframe加载完成
             }
-        });
+        }
+
+        // 监听iframe发来的消息
+        const handleMessage = (event) => {
+            // 确保消息来自我们的iframe
+            if (event.source !== this.audioIframe.contentWindow) return;
+
+            const data = event.data;
+            switch (data.action) {
+                case 'playerReady':
+                    // iframe准备就绪，设置初始音频
+                    this.setAudioTrack('data/至少做一件离谱的事-Kiri T_compressed.mp3');
+                    autoPlayer();
+                    break;
+
+                case 'stateChange':
+                    // 音频状态改变，更新UI
+                    this.updateAudioUI(data.playing);
+                    break;
+
+                case 'trackEnded':
+                    // 曲目结束
+                    this.updateAudioUI(false);
+                    break;
+
+                case 'currentState':
+                    // 当前状态响应
+                    this.updateAudioUI(data.playing);
+                    if (!data.playing) {
+                        autoPlayer();
+                    }
+                    break;
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+    }
+
+    // 播放音频
+    playAudio() {
+        const audioIframe = document.getElementById('audio-player-iframe');
+        if (audioIframe && audioIframe.contentWindow) {
+            audioIframe.contentWindow.postMessage({
+                action: 'play'
+            }, '*');
+        }
+    }
+
+    // 暂停音频
+    pauseAudio() {
+        const audioIframe = document.getElementById('audio-player-iframe');
+        if (audioIframe && audioIframe.contentWindow) {
+            audioIframe.contentWindow.postMessage({
+                action: 'pause'
+            }, '*');
+        }
+    }
+
+    // 设置音频曲目
+    setAudioTrack(src) {
+        const audioIframe = document.getElementById('audio-player-iframe');
+        if (audioIframe && audioIframe.contentWindow) {
+            audioIframe.contentWindow.postMessage({
+                action: 'setTrack',
+                src: src
+            }, '*');
+        }
+    }
+
+    // 更新音频UI状态
+    updateAudioUI(playing) {
+        // 更新移动端fab按钮的文本
+        const fMusic = document.getElementById('fab-music');
+        if (fMusic) {
+            const lang = getStoredLanguage();
+            fMusic.querySelector('.fab-text').textContent =
+                lang === 'zh' ? (playing ? '暂停' : '播放') : (playing ? 'Pause' : 'Play');
+        }
     }
 
     updateCustomStyles(container, theme) {

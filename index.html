@@ -413,5 +413,26 @@
         }()
     }({id: SiteConfig.analytics.tencent.id, ck: SiteConfig.analytics.tencent.ck});
 </script>
+
+    <!-- 隐藏的音频播放iframe -->
+    <iframe id="audio-player-iframe" src="audio-player.html" style="display: none;"></iframe>
+
+    <script>
+        // 音频控制逻辑
+        let audioIframe = document.getElementById('audio-player-iframe');
+        // 监听来自iframe的消息
+        window.addEventListener('message', function(event) {
+            // 确保消息来自我们的iframe
+            if (event.source !== audioIframe.contentWindow) return;
+            const data = event.data;
+            if (data.playing && data.action === 'playerReady') {
+                // iframe准备就绪，设置初始音频
+                audioIframe.contentWindow.postMessage({
+                    action: 'setTrack',
+                    src: 'data/至少做一件离谱的事-Kiri T_compressed.mp3'
+                }, '*');
+            }
+        });
+    </script>
 </body>
 </html>
