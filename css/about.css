@@ -37,10 +37,22 @@
     --gradient-8: linear-gradient(135deg, #fccb90, #d57eeb);
     --gradient-9: linear-gradient(135deg, #ffecd2, #fcb69f);
     --gradient-10: linear-gradient(135deg, #cfd9df, #e2ebf0);
-    --day-tag-1: #0ea5e9;
-    --day-tag-2: #ef4444;
-    --day-tag-3: #10b981;
-    --day-tag-4: #f59e0b;
+    --gradient-11: linear-gradient(135deg, #74ebd5, #ACB6E5); /* 薄荷绿+浅紫蓝 */
+    --gradient-12: linear-gradient(135deg, #ff7e5f, #feb47b); /* 珊瑚橙+浅橙 */
+    --gradient-13: linear-gradient(135deg, #667eea, #764ba2); /* 深紫蓝+紫罗兰 */
+    --gradient-14: linear-gradient(135deg, #ff8080, #92fe9d); /* 柔粉+嫩绿 */
+    --gradient-15: linear-gradient(135deg, #a18cd1, #fbc2eb); /* 淡紫+粉紫 */
+    --gradient-16: linear-gradient(135deg, #2af598, #009efd); /* 荧光绿+天蓝 */
+    --gradient-17: linear-gradient(135deg, #ffd1ff, #fa8bff); /* 浅粉紫+亮粉 */
+    --gradient-18: linear-gradient(135deg, #89f7fe, #66a6ff); /* 冰蓝+浅蓝 */
+    --gradient-19: linear-gradient(135deg, #ff9a9e, #fad0c4); /* 蜜桃粉+浅桃色 */
+    --gradient-20: linear-gradient(135deg, #642b73, #c6426e); /* 深紫+玫红 */
+    --gradient-21: linear-gradient(135deg, #43e97b, #38f9d7); /* 青柠绿+青蓝 */
+    --gradient-22: linear-gradient(135deg, #f12711, #f5af19); /* 猩红+金黄 */
+    --gradient-23: linear-gradient(135deg, #4158d0, #c850c0); /* 蓝紫+玫紫 */
+    --gradient-24: linear-gradient(135deg, #ffffff, #ddd6fe); /* 纯白+淡紫 */
+    --gradient-25: linear-gradient(135deg, #00dbde, #fc00ff); /* 青蓝+霓虹粉 */
+
 }
 
 [data-theme="night"] {
@@ -1321,6 +1333,81 @@ body {
 [data-theme="day"] .tech-tag-mobile.tag-color-9 { color: #6b7280 !important; -webkit-text-fill-color: #6b7280 !important; }
 [data-theme="day"] .tech-tag-3d.tag-color-10,
 [data-theme="day"] .tech-tag-mobile.tag-color-10 { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; }
+[data-theme="day"] .tech-tag-3d.tag-color-11,
+[data-theme="day"] .tech-tag-mobile.tag-color-11 {
+    color: #ACB6E5 !important;
+    -webkit-text-fill-color: #ACB6E5 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-12,
+[data-theme="day"] .tech-tag-mobile.tag-color-12 {
+    color: #ff7e5f !important;
+    -webkit-text-fill-color: #ff7e5f !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-13,
+[data-theme="day"] .tech-tag-mobile.tag-color-13 {
+    color: #764ba2 !important;
+    -webkit-text-fill-color: #764ba2 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-14,
+[data-theme="day"] .tech-tag-mobile.tag-color-14 {
+    color: #ff8080 !important;
+    -webkit-text-fill-color: #ff8080 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-15,
+[data-theme="day"] .tech-tag-mobile.tag-color-15 {
+    color: #2af598 !important;
+    -webkit-text-fill-color: #2af598 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-16,
+[data-theme="day"] .tech-tag-mobile.tag-color-16 {
+    color: #ffd1ff !important;
+    -webkit-text-fill-color: #ffd1ff !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-17,
+[data-theme="day"] .tech-tag-mobile.tag-color-17 {
+    color: #89f7fe !important;
+    -webkit-text-fill-color: #89f7fe !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-18,
+[data-theme="night"] .tech-tag-mobile.tag-color-18 {
+    color: #ff9a9e !important;
+    -webkit-text-fill-color: #ff9a9e !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-19,
+[data-theme="day"] .tech-tag-mobile.tag-color-19 {
+    color: #642b73 !important;
+    -webkit-text-fill-color: #642b73 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-20,
+[data-theme="day"] .tech-tag-mobile.tag-color-20 {
+    color: #38f9d7 !important;
+    -webkit-text-fill-color: #38f9d7 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-21,
+[data-theme="day"] .tech-tag-mobile.tag-color-21 {
+    color: #f5af19 !important;
+    -webkit-text-fill-color: #f5af19 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-22,
+[data-theme="day"] .tech-tag-mobile.tag-color-22 {
+    color: #c850c0 !important;
+    -webkit-text-fill-color: #c850c0 !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-23,
+[data-theme="day"] .tech-tag-mobile.tag-color-23 {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-24,
+[data-theme="day"] .tech-tag-mobile.tag-color-24 {
+    color: #fc00ff !important;
+    -webkit-text-fill-color: #fc00ff !important;
+}
+[data-theme="day"] .tech-tag-3d.tag-color-25,
+[data-theme="day"] .tech-tag-mobile.tag-color-25 {
+    color: #fad0c4 !important;
+    -webkit-text-fill-color: #fad0c4 !important;
+}
 
 /* Night Theme */
 [data-theme="night"] .tech-tag-3d.tag-color-1,
@@ -1413,6 +1500,142 @@ body {
     background-color: transparent !important;
     -webkit-text-fill-color: transparent !important;
 }
+[data-theme="night"] .tech-tag-3d.tag-color-11,
+[data-theme="night"] .tech-tag-mobile.tag-color-11 {
+    background: var(--gradient-11) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-12,
+[data-theme="night"] .tech-tag-mobile.tag-color-12 {
+    background: var(--gradient-12) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-13,
+[data-theme="night"] .tech-tag-mobile.tag-color-13 {
+    background: var(--gradient-13) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-14,
+[data-theme="night"] .tech-tag-mobile.tag-color-14 {
+    background: var(--gradient-14) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-15,
+[data-theme="night"] .tech-tag-mobile.tag-color-15 {
+    background: var(--gradient-15) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-16,
+[data-theme="night"] .tech-tag-mobile.tag-color-16 {
+    background: var(--gradient-16) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-17,
+[data-theme="night"] .tech-tag-mobile.tag-color-17 {
+    background: var(--gradient-17) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-18,
+[data-theme="night"] .tech-tag-mobile.tag-color-18 {
+    background: var(--gradient-18) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-19,
+[data-theme="night"] .tech-tag-mobile.tag-color-19 {
+    background: var(--gradient-19) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-20,
+[data-theme="night"] .tech-tag-mobile.tag-color-20 {
+    background: var(--gradient-20) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-21,
+[data-theme="night"] .tech-tag-mobile.tag-color-21 {
+    background: var(--gradient-21) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-22,
+[data-theme="night"] .tech-tag-mobile.tag-color-22 {
+    background: var(--gradient-22) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-23,
+[data-theme="night"] .tech-tag-mobile.tag-color-23 {
+    background: var(--gradient-23) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-24,
+[data-theme="night"] .tech-tag-mobile.tag-color-24 {
+    background: var(--gradient-24) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+[data-theme="night"] .tech-tag-3d.tag-color-25,
+[data-theme="night"] .tech-tag-mobile.tag-color-25 {
+    background: var(--gradient-25) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
 /* Gradient Fallback for Unsupported Browsers */
 @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
     .tech-tag-3d, .tech-tag-mobile {

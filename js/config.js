@@ -15,7 +15,7 @@ const SiteConfig = {
       increment: 150
     }
   },
-  
+
   background: {
     imagePaths: [
       "/images/bj/1.webp",
@@ -27,7 +27,7 @@ const SiteConfig = {
       "/images/bj/7.webp"
     ]
   },
-  
+
   hitokoto: {
     apiUrl: 'https://v1.hitokoto.cn?c=c&c=d&c=i&c=k'
   },
@@ -36,7 +36,7 @@ const SiteConfig = {
   github: {
     username: 'listener-He'
   },
-  
+
   blog: {
     rssUrl: 'https://blog.hehouhui.cn/api/rss'
   },
@@ -47,7 +47,7 @@ const SiteConfig = {
     blog: { key: 'blog_data_v2', ttlMs: 3600000 },
     theme: { key: 'theme_v2', ttlMs: 3600000 }
   },
-  
+
   techStack: [
     { name: 'Java', category: 'core', weight: 5 },
     { name: 'Spring Boot', category: 'backend', weight: 5 },
@@ -115,13 +115,13 @@ const SiteConfig = {
     ],
     user: { repos: 165, followers: 6, created: "2018-05-14" }
   },
-  
+
   socialCards: {
     rings: [130, 180, 230],
     goldenAngle: 137.5,
     baseSpeed: 16
   },
-  
+
   artalk: {
     server: 'https://artalk.hehouhui.cn',
     site: 'Honesty的主页',
@@ -129,7 +129,7 @@ const SiteConfig = {
     noComment: '暂无评论',
     sendBtn: '发送'
   },
-  
+
   // 站点统计配置
   analytics: {
     busuanzi: {
@@ -152,7 +152,7 @@ const SiteConfig = {
       ck: '3OBGjwDdEIRS7XZ1'
     }
   },
-  
+
   animationSettings: {
     observerOptions: {
       threshold: 0.1,
@@ -163,36 +163,13 @@ const SiteConfig = {
       rootMargin: '0px 0px -20px 0px'
     }
   },
-  
+
   // 开发环境配置
   dev: {
     isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
   }
 };
 
-if (Array.isArray(SiteConfig.techStack)) {
-  const categoryGradientMap = {
-    core: 7,
-    backend: 4,
-    data: 9,
-    ops: 10,
-    ai: 3
-  };
-  const vividSet = [1, 4, 7, 8];
-
-  SiteConfig.techStack = SiteConfig.techStack.map((item) => {
-    const name = item.name || '';
-    const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
-    if (item.gradientId && Number.isFinite(Number(item.gradientId))) {
-      return { ...item, gradientId: Math.max(1, Math.min(10, Number(item.gradientId))) };
-    }
-    let base = categoryGradientMap[item.category] || ((hash % 10) + 1);
-    if (Number(item.weight) >= 5) {
-      base = vividSet[hash % vividSet.length];
-    }
-    return { ...item, gradientId: base };
-  });
-}
 
 // 导出配置
 if (typeof module !== 'undefined' && module.exports) {

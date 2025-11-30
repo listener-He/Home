@@ -834,8 +834,8 @@ class UIManager {
             //const name = item.name || '';
             //const hash = Array.from(name).reduce((a, c) => a + c.charCodeAt(0), 0);
             const gid = Number(item.gradientId) && Number.isFinite(Number(item.gradientId))
-                ? Math.max(1, Math.min(10, Number(item.gradientId)))
-                : (idx % 10) + 1;
+                ? Math.max(1, Math.min(25, Number(item.gradientId)))
+                : (idx % 25) + 1;
             return {...item, gradientId: gid};
         });
 
@@ -894,7 +894,7 @@ class UIManager {
             const appendItem = (rowEl, item, idx) => {
                 const el = document.createElement('span');
                 el.className = 'tech-tag-mobile';
-                const colorClass = `tag-color-${item.gradientId || ((idx % 10) + 1)}`;
+                const colorClass = `tag-color-${item.gradientId || ((idx % 25) + 1)}`;
                 el.classList.add(colorClass);
                 el.innerText = item.name;
                 el.style.border = 'none';
@@ -934,7 +934,7 @@ class UIManager {
         techStack.forEach((item, index) => {
             const el = document.createElement('a');
             el.className = 'tech-tag-3d';
-            const colorClass = `tag-color-${item.gradientId || ((index % 10) + 1)}`;
+            const colorClass = `tag-color-${item.gradientId || ((index % 25) + 1)}`;
             el.classList.add(colorClass);
             el.innerText = item.name;
             el.style.border = 'none';
@@ -1035,7 +1035,6 @@ class UIManager {
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 const currentState = isMobile ? 'mobile' : 'desktop';
                 if (windowRef === currentState) {
-                    console.log('Tech Cloud: Skipping resize, same state:', windowRef, currentState);
                     return
                 }
                 windowRef = currentState;
