@@ -32,7 +32,7 @@
   background: rgba(128, 128, 128, 0.08);
 }
 
-#artalk-container .atk-dialog, 
+#artalk-container .atk-dialog,
 #artalk-container .atk-layer .atk-dialog {
   background: var(--glass-bg);
   color: var(--text-primary);
@@ -45,7 +45,6 @@
 
 /* Light theme styles */
 .atk-main-editor {
-  background: rgba(255, 255, 255, 0.85) !important;
   backdrop-filter: blur(28px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
   border: 1px solid rgba(108, 92, 231, 0.2) !important;
@@ -398,42 +397,42 @@
   .atk-header {
     padding: 15px !important;
   }
-  
+
   .atk-editor-plug-wrap {
     padding: 0 15px 15px !important;
   }
-  
+
   .atk-editor-textarea {
     padding: 12px !important;
   }
-  
+
   .atk-editor-bottom {
     padding: 0 15px 15px !important;
   }
-  
+
   .atk-list-header {
     padding: 15px !important;
   }
-  
+
   .atk-comment-wrap {
     padding: 15px !important;
   }
-  
+
   .atk-pagination {
     padding: 15px !important;
   }
-  
+
   .atk-pagination .atk-page-item {
     padding: 6px 12px !important;
     margin: 0 3px !important;
     font-size: 0.9rem !important;
   }
-  
+
   /* 移动端增强样式 */
   .atk-main-editor {
     border-radius: 16px !important;
   }
-  
+
   .atk-comment-wrap {
     padding: 12px 0 !important;
     font-size: 0.95rem !important;
@@ -445,24 +444,24 @@
     border-top: none !important;
     background: transparent !important;
   }
-  
+
   .atk-avatar {
     width: 28px !important;
     height: 28px !important;
     object-fit: cover; /* 修复移动端头像拉伸问题 */
   }
-  
+
   .atk-meta {
     font-size: 12px !important;
   }
-  
+
   /* 修复移动端输入框底色问题 */
   [data-theme="night"] .atk-editor-textarea {
     background: rgba(40, 40, 45, 0.5) !important;
     color: #dfe6e9 !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
-  
+
   /* 完全移除评论区域的容器样式以节省宽度 */
   #artalk-container {
     border-radius: 0 !important;
@@ -471,12 +470,12 @@
     border: none !important;
     box-shadow: none !important;
   }
-  
+
   /* 黑夜模式下移动端评论背景色优化 */
   [data-theme="night"] .atk-comment-wrap {
     background: rgba(40, 40, 45, 0.9) !important; /* 提高移动端黑夜模式下的背景不透明度 */
   }
-  
+
   [data-theme="night"] .atk-comment-wrap:hover {
     background: rgba(45, 45, 50, 0.95) !important;
   }
@@ -748,9 +747,6 @@
 
 [data-theme="night"] .atk-dropdown-wrap {
     background: rgba(30, 30, 35, 0.95) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 [data-theme="night"] .atk-dropdown-item {

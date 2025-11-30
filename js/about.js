@@ -1132,12 +1132,13 @@ class UIManager {
         window.addEventListener('load', () => {
             // 检查是否在24小时内用户暂停过音乐
             const shouldRemainPaused = this.shouldMusicRemainPaused();
-
             // 如果不应该保持暂停状态，则尝试播放
             if (!shouldRemainPaused) {
-                this.audio.play().catch(() => {
-                    // 静默处理播放失败
-                    console.error('Failed to play audio.');
+                requestAnimationFrame(() => {
+                    this.audio.play().catch(() => {
+                        // 静默处理播放失败
+                        console.error('Failed to play audio.');
+                    });
                 });
             }
         });
