@@ -1513,8 +1513,8 @@ body {
 }
 [data-theme="day"] .tech-tag-3d.tag-color-23,
 [data-theme="day"] .tech-tag-mobile.tag-color-23 {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
+    color: #d57eeb !important;
+    -webkit-text-fill-color: #d57eeb !important;
 }
 [data-theme="day"] .tech-tag-3d.tag-color-24,
 [data-theme="day"] .tech-tag-mobile.tag-color-24 {
