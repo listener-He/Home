@@ -1123,6 +1123,18 @@ body {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
 }
 
+@media (min-width: 769px) and (max-width: 1445px){
+    [data-lang="en"] .stat-key {
+        font-size: 0.5rem !important;
+    }
+}
+
+@media (min-width: 1030px) and (max-width: 1445px) {
+    [data-lang="en"] .mbti-tags .tag {
+        font-size: 0.5rem !important;
+    }
+}
+
 /* Responsive Stats Layout */
 @media (min-width: 1025px) and (max-width: 1445px), (min-width: 1201px) {
     .area-stats {
@@ -2413,12 +2425,7 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Fix Stat Key Font Size on English Mobile */
-@media (max-width: 768px)  {
-    [data-lang="en"] .stat-key {
-    font-size: 6px !important;
-}
-}
+
 
 /* Final Theme Consistency Checks */
 [data-theme="night"] {
