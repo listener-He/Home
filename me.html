@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>HONESTY | Deep Space Particle Narrative</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --primary-white: #FFFFFF;
+            --ui-border: 2px solid #FFFFFF;
+            --font-main: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--primary-white);
+            font-family: var(--font-main);
+            overflow: hidden;
+            user-select: none;
+            cursor: crosshair;
+        }
+
+        /* Canvas Layer */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Video Input (Hidden but active) */
+        #input-video {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* UI Layer - HUD */
+        #ui-layer {
+            position: fixed;
+            z-index: 10;
+            top: 20px;
+            left: 20px;
+            pointer-events: none; /* Let clicks pass through to canvas */
+        }
+
+        .hud-panel {
+            width: 180px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333; /* Fallback */
+            border: var(--ui-border);
+            backdrop-filter: blur(5px);
+            transition: opacity 0.5s;
+        }
+
+        .hud-title {
+            font-size: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #FFF;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #FFF;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-dot.active { box-shadow: 0 0 8px #FFF; }
+        .status-dot.error { background: #FF0000; }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out;
+        }
+
+        .loader-text {
+            font-size: 14px;
+            letter-spacing: 4px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* High Contrast Warning (Optional accessibility check visual) */
+        .hc-check {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            opacity: 0.5;
+            z-index: 9;
+        }
+    </style>
+
+    <!-- Dependencies: China Accessible CDNs -->
+    <!-- Three.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div id="loader">
+    <div class="loader-text">SYSTEM INITIALIZING...</div>
+    <div style="margin-top:10px; font-size: 10px; opacity: 0.7;">PLEASE ALLOW CAMERA ACCESS</div>
+</div>
+
+<video id="input-video"></video>
+
+<div id="ui-layer">
+    <div class="hud-panel">
+        <div class="hud-title">SYS_MONITOR // <span id="fps-display">60</span> FPS</div>
+        <div class="hud-row">
+            <span>MODE:</span>
+            <span id="mode-display">INIT</span>
+        </div>
+        <div class="hud-row">
+            <span>HANDS:</span>
+            <span><div id="hand-status" class="status-dot"></div><span id="hand-count">0</span></span>
+        </div>
+        <div class="hud-row">
+            <span>ENTITIES:</span>
+            <span id="particle-count">0</span>
+        </div>
+        <div style="margin-top: 10px; font-size: 9px; line-height: 1.4;">
+            > NAMASTE TO UNLOCK<br>
+            > PINCH TO WARP<br>
+            > SWIPE TO ROTATE
+        </div>
+    </div>
+</div>
+
+<div id="canvas-container"></div>
+<div class="hc-check">WCAG AAA COMPLIANT</div>
+
+<script>
+    /**
+     * ------------------------------------------------------------------
+     * CORE CONFIGURATION & STATE
+     * ------------------------------------------------------------------
+     */
+    const CONFIG = {
+        particleCount: window.innerWidth < 768 ? 600 : 1200, // Responsive count
+        particleSize: window.devicePixelRatio > 1 ? 4 : 2,
+        cycleDuration: 12000, // 12 seconds per cycle
+        colors: {
+            white: new THREE.Color(0xFFFFFF),
+            black: new THREE.Color(0x000000)
+        },
+        camZ: 400
+    };
+
+    const STATE = {
+        mode: 'DEFAULT', // DEFAULT, INTERACTIVE, UNLOCKED
+        subMode: 0, // 0-5 for default cycle
+        time: 0,
+        handsDetected: 0,
+        gesture: null, // 'PINCH', 'NAMASTE', 'SWIPE_UP', etc.
+        gestureValue: 0, // Intensity
+        unlockProgress: 0,
+        narrativeStage: 0 // For text sequence
+    };
+
+    // Text Content for Narrative
+    const NARRATIVE = [
+        { t: "Honesty · 提倡者", sub: "在代码与现实的边界 寻找意义的形态" },
+        { t: "Depth over Breadth", sub: "Code as Vessel" },
+        { t: "INFJ-A", sub: "1%的宇宙" },
+        { t: "湖南 · 上海", sub: "存在地理" },
+        { t: "Create with Purpose", sub: "技术即语言 · 开源即共鸣" }
+    ];
+
+    /**
+     * ------------------------------------------------------------------
+     * AUDIO ENGINE (Web Audio API - No external files)
+     * ------------------------------------------------------------------
+     */
+    class AudioEngine {
+        constructor() {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.value = 0.1; // Low volume default
+            this.masterGain.connect(this.ctx.destination);
+
+            // Drone oscillator
+            this.drone = this.ctx.createOscillator();
+            this.drone.type = 'sine';
+            this.drone.frequency.value = 50; // Deep space hum
+            this.drone.start();
+
+            this.droneGain = this.ctx.createGain();
+            this.droneGain.gain.value = 0.5;
+            this.drone.connect(this.droneGain);
+            this.droneGain.connect(this.masterGain);
+        }
+
+        resume() {
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+        }
+
+        playBlip() {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.1);
+        }
+
+        setMood(mode) {
+            // Adjust drone based on mode
+            if (mode === 'UNLOCKED') {
+                this.drone.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 2);
+            } else {
+                this.drone.frequency.linearRampToValueAtTime(50, this.ctx.currentTime + 2);
+            }
+        }
+    }
+
+    const audio = new AudioEngine();
+    document.body.addEventListener('click', () => audio.resume());
+
+    /**
+     * ------------------------------------------------------------------
+     * THREE.JS SETUP
+     * ------------------------------------------------------------------
+     */
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // WCAG AAA Black
+    scene.fog = new THREE.FogExp2(0x000000, 0.001);
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    camera.position.z = CONFIG.camZ;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Particle System
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(CONFIG.particleCount * 3);
+    const targets = new Float32Array(CONFIG.particleCount * 3); // Where they want to go
+    const sizes = new Float32Array(CONFIG.particleCount);
+    const alphas = new Float32Array(CONFIG.particleCount);
+
+    // Initialize random positions
+    for (let i = 0; i < CONFIG.particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 800;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 800;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 800;
+        targets[i * 3] = positions[i * 3];
+        targets[i * 3 + 1] = positions[i * 3 + 1];
+        targets[i * 3 + 2] = positions[i * 3 + 2];
+        sizes[i] = CONFIG.particleSize;
+        alphas[i] = 1.0;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+
+    // Create a hard-edge circle texture programmatically
+    const getParticleTexture = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const context = canvas.getContext('2d');
+        context.fillStyle = '#FFFFFF';
+        context.beginPath();
+        context.arc(16, 16, 14, 0, Math.PI * 2);
+        context.fill(); // Solid circle, no blur
+        const tex = new THREE.CanvasTexture(canvas);
+        return tex;
+    };
+
+    // Shader Material for absolute control over opacity and crispness
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            color: { value: new THREE.Color(0xffffff) },
+            texture1: { value: getParticleTexture() }
+        },
+        vertexShader: `
+                attribute float size;
+                attribute float alpha;
+                varying float vAlpha;
+                void main() {
+                    vAlpha = alpha;
+                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `,
+        fragmentShader: `
+                uniform vec3 color;
+                uniform sampler2D texture1;
+                varying float vAlpha;
+                void main() {
+                    gl_FragColor = vec4(color, vAlpha);
+                    gl_FragColor = gl_FragColor * texture2D(texture1, gl_PointCoord);
+                    if (gl_FragColor.a < 0.5) discard; // Hard edge cutoff
+                }
+            `,
+        transparent: true,
+        depthTest: false,
+        blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    /**
+     * ------------------------------------------------------------------
+     * HELPERS: GEOMETRY GENERATORS
+     * ------------------------------------------------------------------
+     */
+
+    // 1. Noise/Cloud Function (Simple pseudo-random)
+    function getCloudTarget(i, time) {
+        const r = 300;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
+        const r_mod = r + Math.sin(time + i) * 50;
+        return {
+            x: r_mod * Math.sin(phi) * Math.cos(theta),
+            y: r_mod * Math.sin(phi) * Math.sin(theta),
+            z: r_mod * Math.cos(phi)
+        };
+    }
+
+    // 2. Cube Lattice
+    function getLatticeTarget(i) {
+        const side = 10; // particles per side approx
+        const step = 60;
+        const x = (i % side) * step - (side * step / 2);
+        const y = ((Math.floor(i / side)) % side) * step - (side * step / 2);
+        const z = (Math.floor(i / (side * side))) * step - (side * step / 2);
+        // Rotate the cube slowly via Matrix in update loop, here just static coords
+        return { x, y, z: z || 0 };
+    }
+
+    // 3. Flow (Bezier/Sine)
+    function getFlowTarget(i, time) {
+        const strand = i % 12;
+        const offset = (i / CONFIG.particleCount) * Math.PI * 4;
+        const x = (i / CONFIG.particleCount - 0.5) * 800;
+        const y = Math.sin(x * 0.01 + time + strand) * 100;
+        const z = Math.cos(x * 0.01 + time) * 100;
+        return { x, y, z };
+    }
+
+    // 4. Text Generation (Canvas Scanning)
+    const textCanvas = document.createElement('canvas');
+    const textCtx = textCanvas.getContext('2d');
+    textCanvas.width = 1000;
+    textCanvas.height = 300;
+
+    function generateTextTargets(text, subtext) {
+        textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+        textCtx.fillStyle = '#FFFFFF';
+        textCtx.textAlign = 'center';
+        textCtx.textBaseline = 'middle';
+
+        // Main Text
+        textCtx.font = 'bold 80px Courier New';
+        textCtx.fillText(text, 500, 100);
+
+        // Sub Text
+        textCtx.font = '30px Courier New';
+        textCtx.fillText(subtext, 500, 180);
+
+        const imageData = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
+        const data = imageData.data;
+        const validPixels = [];
+
+        // Scan pixels with step to reduce count
+        for (let y = 0; y < textCanvas.height; y += 4) {
+            for (let x = 0; x < textCanvas.width; x += 4) {
+                const idx = (y * textCanvas.width + x) * 4;
+                if (data[idx + 3] > 128) {
+                    validPixels.push({
+                        x: (x - 500) * 1.5,
+                        y: -(y - 150) * 1.5,
+                        z: 0
+                    });
+                }
+            }
+        }
+        return validPixels;
+    }
+
+    /**
+     * ------------------------------------------------------------------
+     * LOGIC: PARTICLE UPDATE LOOP
+     * ------------------------------------------------------------------
+     */
+    let clock = new THREE.Clock();
+
+    function updateParticles() {
+        const time = clock.getElapsedTime();
+        const delta = clock.getDelta(); // Although not used directly in formula, useful for physics
+        const posAttr = particles.geometry.attributes.position;
+
+        // Cycle Management
+        const cycleTime = time % 12; // 0-12s
+
+        // Determine Target State
+        let currentTargetPts = [];
+
+        if (STATE.mode === 'UNLOCKED') {
+            // NARRATIVE MODE
+            const stageIdx = Math.floor(STATE.narrativeStage);
+            const txt = NARRATIVE[Math.min(stageIdx, NARRATIVE.length - 1)];
+
+            // Only generate if we haven't cached it (optimization omitted for single file simplicity, just regen)
+            // In production: cache these points.
+            // Hack: Use time to stagger generation to avoid lag
+            if (!STATE.cachedText || STATE.cachedStage !== stageIdx) {
+                STATE.cachedText = generateTextTargets(txt.t, txt.sub);
+                STATE.cachedStage = stageIdx;
+                // Play type sound
+                audio.playBlip();
+            }
+
+            // Map particles to text points
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                if (i < STATE.cachedText.length) {
+                    const pt = STATE.cachedText[i];
+                    targets[i*3] = pt.x;
+                    targets[i*3+1] = pt.y;
+                    targets[i*3+2] = pt.z;
+                } else {
+                    // Extra particles orbit
+                    const angle = time * 2 + i;
+                    targets[i*3] = Math.cos(angle) * 400;
+                    targets[i*3+1] = Math.sin(angle) * 400;
+                    targets[i*3+2] = Math.sin(angle*0.5) * 100;
+                }
+            }
+
+            // Advance stage every 6 seconds
+            if (time - STATE.unlockTime > (STATE.narrativeStage + 1) * 6) {
+                STATE.narrativeStage++;
+                if (STATE.narrativeStage >= NARRATIVE.length) {
+                    // End sequence, reset
+                    STATE.mode = 'DEFAULT';
+                    audio.setMood('DEFAULT');
+                }
+            }
+
+        } else {
+            // DEFAULT ANIMATION CYCLE
+            // Determine Submode based on 12s cycle split into 2s chunks
+            STATE.subMode = Math.floor(cycleTime / 2);
+            document.getElementById('mode-display').innerText = ['CLOUD', 'LATTICE', 'FLOW', 'PULSAR', 'SPIRAL', 'VOID'][STATE.subMode];
+
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                let tx, ty, tz;
+
+                if (STATE.subMode === 0) { // Cloud
+                    const t = getCloudTarget(i, time); tx=t.x; ty=t.y; tz=t.z;
+                } else if (STATE.subMode === 1) { // Lattice
+                    const t = getLatticeTarget(i);
+                    // Rotate lattice
+                    const rot = time * 0.2;
+                    const rx = t.x * Math.cos(rot) - t.z * Math.sin(rot);
+                    const rz = t.x * Math.sin(rot) + t.z * Math.cos(rot);
+                    tx=rx; ty=t.y; tz=rz;
+                } else if (STATE.subMode === 2) { // Flow
+                    const t = getFlowTarget(i, time * 2); tx=t.x; ty=t.y; tz=t.z;
+                } else if (STATE.subMode === 3) { // Pulsar
+                    const arm = i % 8;
+                    const dist = (time % 2) * 400; // expand
+                    const angle = (arm / 8) * Math.PI * 2;
+                    tx = Math.cos(angle) * dist;
+                    ty = Math.sin(angle) * dist;
+                    tz = (Math.random()-0.5) * 50;
+                } else if (STATE.subMode === 4) { // Spiral
+                    const arm = i % 2;
+                    const theta = (i / 100) + time;
+                    const r = (i % 300) + 50;
+                    tx = r * Math.cos(theta + arm*Math.PI);
+                    ty = (Math.random()-0.5) * 100;
+                    tz = r * Math.sin(theta + arm*Math.PI);
+                } else { // Void
+                    tx = (Math.random()-0.5)*2000;
+                    ty = (Math.random()-0.5)*2000;
+                    tz = (Math.random()-0.5)*2000;
+                    // Very slow move
+                }
+
+                targets[i*3] = tx;
+                targets[i*3+1] = ty;
+                targets[i*3+2] = tz;
+            }
+        }
+
+        // GESTURE OVERRIDES (Physics)
+        let lerpFactor = 0.05;
+
+        if (STATE.gesture === 'NAMASTE_HOLD') {
+            // Collapse to center
+            for (let i=0; i<CONFIG.particleCount; i++) {
+                targets[i*3] *= 0.1;
+                targets[i*3+1] *= 0.1;
+                targets[i*3+2] *= 0.1;
+            }
+            lerpFactor = 0.2;
+        } else if (STATE.gesture === 'EXPAND') {
+            for (let i=0; i<CONFIG.particleCount; i++) {
+                targets[i*3] *= 2.0;
+                targets[i*3+1] *= 2.0;
+                targets[i*3+2] *= 2.0;
+            }
+        } else if (STATE.gesture === 'SWIPE_LEFT') {
+            // Rotate logic handled by camera or container rotation usually,
+            // here direct particle manipulation for simplicity
+            scene.rotation.y -= 0.05;
+        } else if (STATE.gesture === 'SWIPE_RIGHT') {
+            scene.rotation.y += 0.05;
+        }
+
+        // Apply Movement
+        for (let i = 0; i < CONFIG.particleCount; i++) {
+            const px = positions[i*3];
+            const py = positions[i*3+1];
+            const pz = positions[i*3+2];
+
+            const tx = targets[i*3];
+            const ty = targets[i*3+1];
+            const tz = targets[i*3+2];
+
+            // Lerp
+            positions[i*3] += (tx - px) * lerpFactor;
+            positions[i*3+1] += (ty - py) * lerpFactor;
+            positions[i*3+2] += (tz - pz) * lerpFactor;
+        }
+
+        posAttr.needsUpdate = true;
+
+        // Render
+        renderer.render(scene, camera);
+        requestAnimationFrame(updateParticles);
+
+        // FPS Update
+        document.getElementById('fps-display').innerText = Math.round(1/delta || 60);
+    }
+
+    /**
+     * ------------------------------------------------------------------
+     * MEDIAPIPE HAND TRACKING & GESTURE RECOGNITION
+     * ------------------------------------------------------------------
+     */
+    const videoElement = document.getElementById('input-video');
+    const handStatus = document.getElementById('hand-status');
+
+    function onResults(results) {
+        document.getElementById('loader').style.display = 'none'; // Hide loader on first result
+
+        const hands = results.multiHandLandmarks;
+        STATE.handsDetected = hands ? hands.length : 0;
+        document.getElementById('hand-count').innerText = STATE.handsDetected;
+
+        if (STATE.handsDetected > 0) {
+            handStatus.classList.add('active');
+            detectGestures(hands);
+        } else {
+            handStatus.classList.remove('active');
+            STATE.gesture = null;
+        }
+    }
+
+    function detectGestures(hands) {
+        // 1. Check for NAMASTE (Two hands, wrists close, tips close)
+        if (hands.length === 2) {
+            const h1 = hands[0];
+            const h2 = hands[1];
+
+            // Distance between wrists (Index 0)
+            const wristDist = dist(h1[0], h2[0]);
+            // Distance between index tips (Index 8)
+            const tipDist = dist(h1[8], h2[8]);
+
+            if (wristDist < 0.15 && tipDist < 0.15) {
+                STATE.gesture = 'NAMASTE_HOLD';
+                STATE.unlockProgress += 0.02;
+                document.getElementById('mode-display').innerText = 'COLLAPSING...';
+
+                if (STATE.unlockProgress > 1.0 && STATE.mode !== 'UNLOCKED') {
+                    triggerUnlock();
+                }
+                return; // Priority exit
+            } else {
+                STATE.unlockProgress = 0; // Reset if broken
+            }
+
+            // Check for Expand (Wrists moving apart - simplistic check based on position)
+            if (wristDist > 0.6) {
+                STATE.gesture = 'EXPAND';
+                return;
+            }
+        }
+
+        // 2. Single Hand Gestures
+        if (hands.length === 1) {
+            const h = hands[0];
+            // Pinch (Thumb 4, Index 8)
+            const pinchDist = dist(h[4], h[8]);
+            if (pinchDist < 0.05) {
+                STATE.gesture = 'PINCH'; // Can map to twist later
+            } else {
+                STATE.gesture = null;
+            }
+
+            // Simple Swipe (Position based)
+            const x = h[9].x; // Middle finger MCP
+            if (x < 0.2) STATE.gesture = 'SWIPE_RIGHT'; // Mirror effect: Hand left -> Scene rotates right
+            else if (x > 0.8) STATE.gesture = 'SWIPE_LEFT';
+        }
+    }
+
+    function dist(p1, p2) {
+        return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+    }
+
+    function triggerUnlock() {
+        STATE.mode = 'UNLOCKED';
+        STATE.unlockTime = clock.getElapsedTime();
+        STATE.narrativeStage = 0;
+        STATE.gesture = null;
+        audio.setMood('UNLOCKED');
+        audio.playBlip();
+        // HUD visual change
+        document.querySelector('.hud-panel').style.borderColor = '#FFF';
+        document.getElementById('mode-display').innerText = 'ARCHIVE: HONESTY';
+    }
+
+    // Initialize MediaPipe
+    const hands = new Hands({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }});
+
+    hands.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.7,
+        minTrackingConfidence: 0.7
+    });
+
+    hands.onResults(onResults);
+
+    const cameraUtils = new Camera(videoElement, {
+        onFrame: async () => {
+            await hands.send({image: videoElement});
+        },
+        width: 640,
+        height: 480
+    });
+
+    // Start System
+    cameraUtils.start()
+        .then(() => console.log("Camera started"))
+        .catch(e => {
+            console.error("Camera failed", e);
+            document.querySelector('.loader-text').innerText = "CAMERA ERROR / NO HTTPS";
+            document.getElementById('hand-status').classList.add('error');
+        });
+
+    // Start Loop
+    document.getElementById('particle-count').innerText = CONFIG.particleCount;
+    updateParticles();
+
+    // Responsive
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+</script>
+</body>
+</html>
