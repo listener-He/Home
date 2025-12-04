@@ -584,14 +584,14 @@
     setTimeout(() => {
         if (!APP_STATE.isLoaded) {
             safeClass(DOM_CACHE.permHint, 'add', 'show');
-
+            
             // 显示直接进入选项
             DOM_CACHE.directEnterContainer.style.opacity = '1';
-
-            // 3秒后自动进入
+            
+            // 3秒后自动进入动画模式
             CAMERA_STATE.autoEnterTimeout = setTimeout(() => {
                 enterWithoutCamera();
-            }, 5000);
+            }, 3000);
         }
     }, 5000);
 
@@ -862,10 +862,10 @@
      */
     let narrativeTimer = null;
 
-    // 无摄像头进入档案馆
+    // 无摄像头进入动画模式（不是叙事模式）
     function enterWithoutCamera() {
-        if (APP_STATE.mode === 'UNLOCKED') return;
-        APP_STATE.mode = 'UNLOCKED';
+        if (APP_STATE.isLoaded) return;
+        APP_STATE.isLoaded = true;
         CAMERA_STATE.enabled = false;
 
         // 隐藏加载屏幕
@@ -877,14 +877,9 @@
         // 更新UI提示
         safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.cameraDisabledMainHint);
         safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraDisabledSubHint);
-
-        // 显示退出按钮
-        safeClass(DOM_CACHE.exitBtn, 'add', 'visible');
-
-        // 粒子爆炸效果
-        explode(300);
-
-        startNarrative();
+        
+        // 清除加载文案定时器
+        clearInterval(loadTimer);
     }
 
     window.enterArchive = function () {
@@ -1060,7 +1055,7 @@
 
     DOM_CACHE.subHint.addEventListener('click', () => {
         // 只有在无摄像头模式下才允许重新申请权限
-        if (!CAMERA_STATE.enabled && APP_STATE.mode === 'UNLOCKED') {
+        if (!CAMERA_STATE.enabled && APP_STATE.isLoaded) {
             requestCameraAccess();
         }
     });
