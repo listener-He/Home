@@ -406,15 +406,39 @@
 
     APP_STATE.namasteStableFrames = 0;
 
+    // 缓存频繁访问的DOM元素以提高性能
+    const DOM_CACHE = {
+        // 加载屏幕相关元素
+        startScreen: document.getElementById('start-screen'),
+        loaderMsg: document.getElementById('loader-msg'),
+        permHint: document.getElementById('perm-guide'),
+        
+        // 叙事层相关元素
+        narrativeLayer: document.getElementById('narrative-layer'),
+        nTitle: document.getElementById('n-title'),
+        nSub: document.getElementById('n-sub'),
+        
+        // UI层相关元素
+        uiLayer: document.getElementById('ui-layer'),
+        sysStatus: document.getElementById('sys-status'),
+        themeDisplay: document.getElementById('theme-display'),
+        langDisplay: document.getElementById('lang-display'),
+        mainHint: document.getElementById('main-hint'),
+        subHint: document.getElementById('sub-hint'),
+        exitBtn: document.getElementById('exit-btn'),
+        
+        // 其他元素
+        canvasContainer: document.getElementById('canvas-container'),
+        inputVideo: document.getElementById('input-video')
+    };
+
     // 安全DOM操作，防止报错
-    function safeUpdateText(id, text) {
-        const el = document.getElementById(id);
-        if (el) el.innerText = text;
+    function safeUpdateText(element, text) {
+        if (element) element.innerText = text;
     }
 
-    function safeClass(id, method, className) {
-        const el = document.getElementById(id);
-        if (el) el.classList[method](className);
+    function safeClass(element, method, className) {
+        if (element) element.classList[method](className);
     }
 
     /**
@@ -451,8 +475,8 @@
 
     // 应用主题
     document.documentElement.setAttribute('data-theme', ENV.theme);
-    safeUpdateText('theme-display', `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
-    safeUpdateText('lang-display', ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
+    safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
+    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
 
     /**
      * ============================================================================
@@ -508,17 +532,17 @@
             clearInterval(loadTimer);
             return;
         }
-        safeUpdateText('loader-msg', CONTENT.load[loadIdx > maxIdx ? maxIdx : loadIdx]);
+        safeUpdateText(DOM_CACHE.loaderMsg, CONTENT.load[loadIdx > maxIdx ? maxIdx : loadIdx]);
         loadIdx++;
     }, 600);
 
     // 权限超时提示
     setTimeout(() => {
-        if (!APP_STATE.isLoaded) safeClass('perm-hint', 'add', 'show');
+        if (!APP_STATE.isLoaded) safeClass(DOM_CACHE.permHint, 'add', 'show');
     }, 5000);
 
-    safeUpdateText('main-hint', CONTENT.hints.main);
-    safeUpdateText('sub-hint', CONTENT.hints.sub);
+    safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+    safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
 
     /**
      * ============================================================================
@@ -548,7 +572,7 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
-    document.getElementById('canvas-container').appendChild(renderer.domElement);
+    DOM_CACHE.canvasContainer.appendChild(renderer.domElement);
 
     const composer = new THREE.EffectComposer(renderer);
     composer.addPass(new THREE.RenderPass(scene, camera));
@@ -789,10 +813,10 @@
         APP_STATE.mode = 'UNLOCKED';
 
         // UI
-        safeClass('main-hint', 'add', 'hidden'); // 隐藏主提示 (CSS需支持或直接display)
-        document.getElementById('main-hint').style.display = 'none';
-        document.getElementById('sub-hint').style.display = 'none';
-        safeClass('exit-btn', 'add', 'visible');
+        safeClass(DOM_CACHE.mainHint, 'add', 'hidden'); // 隐藏主提示 (CSS需支持或直接display)
+        DOM_CACHE.mainHint.style.display = 'none';
+        DOM_CACHE.subHint.style.display = 'none';
+        safeClass(DOM_CACHE.exitBtn, 'add', 'visible');
 
         // 粒子爆炸效果
         explode(100);
@@ -804,13 +828,13 @@
         APP_STATE.mode = 'LOCKED';
         APP_STATE.exitCooldownUntil = Date.now() + 2000;
 
-        document.getElementById('main-hint').style.display = 'block';
-        document.getElementById('sub-hint').style.display = 'block';
-        safeClass('exit-btn', 'remove', 'visible');
-        safeClass('narrative-layer', 'remove', 'show-text');
+        DOM_CACHE.mainHint.style.display = 'block';
+        DOM_CACHE.subHint.style.display = 'block';
+        safeClass(DOM_CACHE.exitBtn, 'remove', 'visible');
+        safeClass(DOM_CACHE.narrativeLayer, 'remove', 'show-text');
 
         APP_STATE.unlockProgress = 0;
-        safeUpdateText('main-hint', CONTENT.hints.main);
+        safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
         clearTimeout(narrativeTimer);
         explode(50);
     }
@@ -825,9 +849,9 @@
 
     function startNarrative() {
         let idx = 0;
-        const nTitle = document.getElementById('n-title');
-        const nSub = document.getElementById('n-sub');
-        const layer = document.getElementById('narrative-layer');
+        const nTitle = DOM_CACHE.nTitle;
+        const nSub = DOM_CACHE.nSub;
+        const layer = DOM_CACHE.narrativeLayer;
 
         // 必须检查元素是否存在
         if (!nTitle || !nSub || !layer) return;
@@ -873,18 +897,18 @@
         // Loader logic
         if (!APP_STATE.isLoaded) {
             APP_STATE.isLoaded = true;
-            const loader = document.getElementById('start-screen');
+            const loader = DOM_CACHE.startScreen;
             loader.style.opacity = 0;
-            document.getElementById('ui-layer').style.opacity = 1;
+            DOM_CACHE.uiLayer.style.opacity = 1;
             setTimeout(() => loader.style.display = 'none', 1000);
         }
 
         const landmarks = results.multiHandLandmarks;
-        const sysStatus = document.getElementById('sys-status');
+        const sysStatus = DOM_CACHE.sysStatus;
 
         if (landmarks && landmarks.length > 0) {
             APP_STATE.handCount = landmarks.length;
-            safeUpdateText('sys-status', `LINKED (${APP_STATE.handCount})`);
+            safeUpdateText(sysStatus, `LINKED (${APP_STATE.handCount})`);
             if (sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
 
             // 坐标处理 (镜像)
@@ -922,20 +946,20 @@
                 }
                 const targetFrames = 20;
                 const pct = Math.min(100, Math.round(APP_STATE.namasteStableFrames / targetFrames * 100));
-                if (pct > 0) safeUpdateText('main-hint', `${CONTENT.hints.unlocking} ${pct}%`);
+                if (pct > 0) safeUpdateText(DOM_CACHE.mainHint, `${CONTENT.hints.unlocking} ${pct}%`);
                 if (APP_STATE.namasteStableFrames >= targetFrames) enterArchive();
-                if (!ok && APP_STATE.namasteStableFrames === 0) safeUpdateText('main-hint', CONTENT.hints.main);
+                if (!ok && APP_STATE.namasteStableFrames === 0) safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
             }
         } else {
             APP_STATE.handCount = 0;
-            safeUpdateText('sys-status', 'SEARCHING...');
+            safeUpdateText(sysStatus, 'SEARCHING...');
             if (sysStatus) sysStatus.style.color = 'inherit';
             APP_STATE.unlockProgress = 0;
-            safeUpdateText('main-hint', CONTENT.hints.main);
+            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
         }
     });
 
-    const videoElement = document.getElementById('input-video');
+    const videoElement = DOM_CACHE.inputVideo;
     const cameraUtils = new Camera(videoElement, {
         onFrame: async () => {
             await hands.send({image: videoElement});
