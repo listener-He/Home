@@ -630,7 +630,7 @@
     const CONTENT = DICTIONARY[ENV.lang];
 
     // 设置进入按钮的文本
-    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint);
+    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', '5'));
     safeUpdateText(DOM_CACHE.enterBtn, CONTENT.hints.enterBtn);
 
     // 摄像头权限状态管理
@@ -936,7 +936,6 @@
                     showInteractionModeButton();
                 }
             }, 1500); // 延迟显示，确保页面已完成过渡
-            explode(100)
         }
     }
 
@@ -1238,23 +1237,24 @@
     }, 800);
 
     // 资源加载完成后显示进入按钮
-    // 显示进入选项
-    DOM_CACHE.enterContainer.style.opacity = '1';
+    setTimeout(() => {
+        // 显示进入选项
+        DOM_CACHE.enterContainer.style.opacity = '1';
 
-    // 开始5秒倒计时
-    let countdown = 5;
+        // 开始5秒倒计时
+        let countdown = 5;
+        safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
 
-    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
-    CAMERA_STATE.countdownInterval = setInterval(() => {
-        countdown--;
-        if (countdown > 0) {
-            safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
-        } else {
-            clearInterval(CAMERA_STATE.countdownInterval);
-            enterAnimationMode(); // 确保调用进入动画模式
-
-        }
-    }, 980);
+        CAMERA_STATE.countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
+            } else {
+                clearInterval(CAMERA_STATE.countdownInterval);
+                enterAnimationMode(); // 确保调用进入动画模式
+            }
+        }, 1000);
+    }, 3000);
 
     // 进入按钮事件处理
     DOM_CACHE.enterBtn.addEventListener('click', () => {
