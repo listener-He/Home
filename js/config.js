@@ -43,9 +43,9 @@ const SiteConfig = {
 
   // 通用缓存键与TTL（毫秒）
   cacheKeys: {
-    github: { key: 'gh_data_v2', ttlMs: 36000000 },
-    blog: { key: 'blog_data_v2', ttlMs: 3600000 },
-    theme: { key: 'theme_v2', ttlMs: 3600000 }
+    github: { key: 'gh_data', ttlMs: 36000000 },
+    blog: { key: 'blog_data', ttlMs: 3600000 },
+    theme: { key: 'theme', ttlMs: 3600000 }
   },
 
   techStack: [

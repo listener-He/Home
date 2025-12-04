@@ -465,7 +465,7 @@
 <video id="input-video" style="display:none"></video>
 <div id="canvas-container"></div>
 <div id="aurora-layer"></div>
-
+<script src="js/config.js?version=20251125"></script>
 <script>
     /**
      * ============================================================================
@@ -530,7 +530,7 @@
      * ============================================================================
      */
     function getStoredTheme() {
-        const cacheKey = 'theme-v2';
+        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme';
         const cacheJson = localStorage.getItem(cacheKey);
         const saved = cacheJson ? JSON.parse(cacheJson) : null;
 
@@ -548,7 +548,7 @@
     }
 
     function getStoredLanguage() {
-        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'cn' : 'en');
+        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
     }
 
     const ENV = {
@@ -625,7 +625,7 @@
     // 应用主题
     document.documentElement.setAttribute('data-theme', ENV.theme);
     safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
-    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
+    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'ZH' ? '中文' : 'English');
 
     /**
      * ============================================================================

@@ -13,7 +13,7 @@ function getStoredLanguage() {
 
 // 公共方法：设置本地存储的主题设置
 function setStoredTheme(theme) {
-    const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+    const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme';
     localStorage.setItem(cacheKey, JSON.stringify({
         value: theme,  time: new Date().getTime()
     }));
