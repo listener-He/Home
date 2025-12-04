@@ -3,621 +3,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DEEP SPACE | INTERSTELLAR NARRATIVE</title>
+    <title>HONESTY | INTELLIGENT ARCHIVE</title>
     <style>
-        :root { --bg: #000000; --accent: #FFFFFF; }
-        body { margin: 0; overflow: hidden; background: var(--bg); font-family: 'Courier New', monospace; }
-
-        /* UI 层 */
-        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-
-        /* 顶部 HUD */
-        .hud-top {
-            position: absolute; top: 20px; left: 20px;
-            display: flex; flex-direction: column; gap: 5px;
-            color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        :root {
+            /* 默认变量 */
+            --bg-color: #000000;
+            --text-color: #FFFFFF;
+            --accent-color: #00FFFF;
+            --loader-bg: #000000;
         }
 
-        /* 状态指示器 */
-        .status-box {
-            border-left: 3px solid #FFF;
-            padding-left: 10px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+        /* 白天模式变量 */
+        [data-theme="day"] {
+            --bg-color: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* 清新银蓝 */
+            --text-color: #1a1a2e; /* 深蓝黑文字 */
+            --accent-color: #0055ff; /* 科技蓝 */
+            --loader-bg: #f5f7fa;
         }
 
-        /* 核心手势提示 */
-        .gesture-hint {
-            position: absolute; bottom: 30px; width: 100%; text-align: center;
-            color: #FFF; font-size: 14px; opacity: 0.7; letter-spacing: 4px;
-            animation: breathe 4s infinite ease-in-out;
+        /* 黑夜模式变量 */
+        [data-theme="night"] {
+            --bg-color: radial-gradient(circle at 50% 50%, #111122 0%, #050510 60%, #000000 100%);
+            --text-color: #FFFFFF;
+            --accent-color: #00FFFF;
+            --loader-bg: #000000;
         }
 
-        /* 加载页 */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 100;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; color: #FFF; transition: opacity 0.8s;
+        body {
+            margin: 0; overflow: hidden;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            transition: background 1s, color 1s;
+            user-select: none; cursor: default;
         }
-        .loader-bar { width: 200px; height: 2px; background: #333; margin-top: 20px; position: relative; overflow: hidden; }
-        .loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: #FFF; box-shadow: 0 0 15px #FFF; transition: width 0.2s; }
 
-        @keyframes breathe { 0%,100%{opacity:0.4} 50%{opacity:1} }
+        /* === UI 层 === */
+        #ui-layer {
+            position: fixed; inset: 0; pointer-events: none; z-index: 20;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px; opacity: 0; transition: opacity 1.5s ease;
+        }
 
-        /* 隐藏视频流 */
-        video { display: none; }
+        .header {
+            display: flex; justify-content: space-between;
+            font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6;
+            font-weight: 600;
+        }
+
+        .center-stage {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; width: 100%; pointer-events: auto;
+        }
+
+        .main-hint {
+            font-size: 20px; font-weight: 300; letter-spacing: 8px;
+            cursor: pointer; transition: all 0.3s;
+            padding: 20px; border: 1px solid transparent;
+        }
+        .main-hint:hover {
+            transform: scale(1.02);
+            letter-spacing: 10px;
+            color: var(--accent-color);
+        }
+
+        .sub-hint {
+            font-size: 10px; opacity: 0.6; margin-top: 10px; letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .exit-trigger {
+            margin-top: 40px; display: inline-block;
+            font-size: 10px; letter-spacing: 2px;
+            padding: 8px 16px; border: 1px solid rgba(128,128,128,0.3);
+            cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.5s;
+            pointer-events: none; background: rgba(128,128,128,0.1); backdrop-filter: blur(5px);
+            border-radius: 20px;
+        }
+        .exit-trigger.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .exit-trigger:hover { background: var(--accent-color); color: #FFF; border-color: var(--accent-color); }
+
+        /* === 叙事纯文本层 === */
+        #narrative-overlay {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; width: 90%; pointer-events: none; z-index: 5;
+        }
+        .n-title {
+            font-size: 60px; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px;
+            opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .n-sub {
+            font-size: 14px; font-weight: 400; letter-spacing: 6px; opacity: 0;
+            transform: translateY(20px); transition: all 0.8s 0.2s cubic-bezier(0.2, 1, 0.3, 1);
+            color: var(--text-color);
+        }
+        .show-text .n-title, .show-text .n-sub { opacity: 1; transform: translateY(0); }
+
+        /* === 智能AI加载页 === */
+        #ai-loader {
+            position: fixed; inset: 0; background: var(--loader-bg); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        /* 科技感加载动画 */
+        .tech-spinner {
+            width: 60px; height: 60px; border: 2px solid var(--accent-color);
+            border-top: 2px solid transparent; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 30px;
+        }
+        .loader-quote {
+            font-family: 'Helvetica Neue', sans-serif; font-size: 14px;
+            max-width: 500px; text-align: center; line-height: 1.8; min-height: 50px;
+            opacity: 0; transition: opacity 0.5s; font-weight: 300; letter-spacing: 1px;
+            color: var(--text-color);
+        }
+
+        @keyframes spin { 0% {transform: rotate(0deg)} 100% {transform: rotate(360deg)} }
+
     </style>
 
-    <!-- 核心库 (国内CDN) -->
+    <!-- 依赖 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- 后处理库 (Bloom) -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-
-    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div id="loader">
-    <div style="font-weight:bold; letter-spacing:5px;">NEURAL LINKING...</div>
-    <div class="loader-bar"><div class="loader-progress" id="load-bar"></div></div>
-    <div style="font-size:10px; margin-top:10px; opacity:0.6;">需授权摄像头以接入神经元网络</div>
+<!-- AI 加载 -->
+<div id="ai-loader">
+    <div class="tech-spinner"></div>
+    <div class="loader-quote" id="ai-quote"></div>
 </div>
 
+<!-- 叙事文本 -->
+<div id="narrative-overlay">
+    <div class="n-title" id="n-title"></div>
+    <div class="n-sub" id="n-sub"></div>
+</div>
+
+<!-- UI -->
 <div id="ui-layer">
-    <div class="hud-top">
-        <div class="status-box">
-            <div>SYS: <span id="fps">60</span> FPS</div>
-            <div>NET: <span id="hand-state">SEARCHING</span></div>
-            <div>MODE: <span id="mode-txt">IDLE_COSMOS</span></div>
-        </div>
+    <div class="header">
+        <span id="sys-status">SYSTEM IDLE</span>
+        <span id="theme-display">THEME: AUTO</span>
     </div>
-    <div class="gesture-hint" id="hint-txt">双手合十 · 解锁档案</div>
+
+    <div class="center-stage">
+        <div class="main-hint" id="main-hint" onclick="enterArchive()"></div>
+        <div class="sub-hint" id="sub-hint"></div>
+        <div class="exit-trigger" id="exit-btn" onclick="exitArchive()">[ 退出档案 / EXIT ]</div>
+    </div>
+
+    <div class="header" style="align-self: flex-end;">
+        <span id="lang-display">EN</span>
+    </div>
 </div>
 
-<video id="input-video"></video>
+<video id="input-video" style="display:none"></video>
 <div id="canvas-container"></div>
-
+<script src="js/config.js?version=20251125"></script>
 <script>
     /**
      * ============================================================================
-     * 1. 核心配置与状态机
+     * 1. 主题与语言引擎
+     * ============================================================================
+     */
+
+    // --- 主题逻辑 ---
+    function setStoredTheme(theme) {
+        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+        const cacheData = { value: theme, time: new Date().getTime() };
+        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    }
+
+    function getStoredTheme() {
+        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
+        const timeout = window.SiteConfig?.cacheKeys?.theme?.ttlMs || 360000;
+        const cacheJson = localStorage.getItem(cacheKey);
+        const saved = cacheJson ? JSON.parse(cacheJson) : null;
+        let theme = 'day'; // 默认
+
+        if (saved == null || new Date().getTime() - timeout > saved.time) {
+            const hour = new Date().getHours();
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const night = hour >= 18 || hour < 6 || prefersDark;
+            theme = night ? 'night' : 'day';
+            setStoredTheme(theme);
+        } else if (saved.value) {
+            theme = saved.value;
+        }
+        return theme;
+    }
+
+    function getStoredLanguage() {
+        return localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+    }
+
+    // --- 初始化环境 ---
+    const ENV = {
+        theme: getStoredTheme(),
+        lang: getStoredLanguage()
+    };
+
+    // 应用主题到 DOM
+    document.documentElement.setAttribute('data-theme', ENV.theme);
+    document.getElementById('theme-display').innerText = `THEME: ${ENV.theme.toUpperCase()}`;
+    document.getElementById('lang-display').innerText = ENV.lang.toUpperCase();
+
+    /**
+     * ============================================================================
+     * 2. 内容库
+     * ============================================================================
+     */
+    const DICTIONARY = {
+        zh: {
+            loading: ["逻辑是思维的脚手架。", "优雅不仅是外观，更是对复杂性的征服。", "万物互联，数据如水。", "深度思考是对抗熵增的唯一武器。", "代码即法律，设计即秩序。", "正在重构数字现实...", "正在接入神经元网络...", "INFJ: 洞察看不见的真实。"],
+            hints: {
+                main: "点击 或 双手合十 开启",
+                sub: "单手·磁流体牵引 | 双手·力场排斥",
+                unlocking: "识别中..."
+            },
+            slides: [
+                { t: "HE HOUHUI", s: "JAVA & AI 工程师" },
+                { t: "INFJ", s: "洞察者 · 理想主义" },
+                { t: "深度 > 广度", s: "在垂直领域构建壁垒" },
+                { t: "长期主义", s: "与时间做朋友" },
+                { t: "代码哲学", s: "系统是思想的容器" },
+                { t: "创造", s: "以技术赋予意义" }
+            ]
+        },
+        en: {
+            loading: ["Logic is the scaffolding of the mind.", "Elegance is the conquest of complexity.", "Everything connects, data flows like water.", "Deep thinking is the weapon against entropy.", "Code is Law, Design is Order.", "Reconstructing digital reality...", "Connecting neural network...", "INFJ: Seeing the unseen."],
+            hints: {
+                main: "CLICK OR NAMASTE",
+                sub: "1 Hand Drag · 2 Hands Repel",
+                unlocking: "IDENTIFYING..."
+            },
+            slides: [
+                { t: "HE HOUHUI", s: "JAVA & AI ENGINEER" },
+                { t: "INFJ", s: "THE ADVOCATE // 1% UNIVERSE" },
+                { t: "DEPTH > BREADTH", s: "BUILDING FORTRESSES" },
+                { t: "LONG-TERMISM", s: "FRIEND OF TIME" },
+                { t: "CODE PHILOSOPHY", s: "VESSEL OF THOUGHT" },
+                { t: "CREATE", s: "EMPOWERING MEANING" }
+            ]
+        }
+    };
+
+    const CONTENT = DICTIONARY[ENV.lang];
+
+    // 加载动画文字循环
+    let qIdx = 0;
+    const qEl = document.getElementById('ai-quote');
+    setInterval(() => {
+        qEl.style.opacity = 0;
+        setTimeout(() => {
+            qEl.innerText = CONTENT.loading[qIdx % CONTENT.loading.length];
+            qEl.style.opacity = 1;
+            qIdx++;
+        }, 500);
+    }, 3000);
+
+    document.getElementById('main-hint').innerText = CONTENT.hints.main;
+    document.getElementById('sub-hint').innerText = CONTENT.hints.sub;
+
+    /**
+     * ============================================================================
+     * 3. THREE.JS 渲染配置 (Day/Night 核心差异)
      * ============================================================================
      */
     const CONFIG = {
-        particleCount: 2000,   // 粒子总数，越多越细腻但越卡
-        baseSize: 3.0,         // 基础粒子大小
-        bloomStrength: 1.2,    // 辉光强度 (AAA级对比度关键)
-        bloomThreshold: 0.1,   // 辉光阈值
-        bloomRadius: 0.5,      // 辉光扩散半径
-        colors: {
-            primary: new THREE.Color(0xFFFFFF),
-            active: new THREE.Color(0xAAAAFF) // 手势激活时的微蓝偏色
-        }
+        particleCount: 22000,
+        camZ: 600,
+        // 关键：混合模式配置
+        blending: ENV.theme === 'night' ? THREE.AdditiveBlending : THREE.NormalBlending,
+        // 关键：颜色配置
+        colors: ENV.theme === 'night'
+            ? { base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF) } // Night: White/Cyan Glow
+            : { base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x3498db) }, // Day: Dark Grey/Blue Solid
+        bloomStrength: ENV.theme === 'night' ? 1.5 : 0.0 // Day Mode: 0 Bloom to ensure clarity
     };
 
-    const STATE = {
-        isUnlocked: false,     // 是否已解锁档案
-        handDetected: false,
-        gesture: 'NONE',       // 当前手势
-        narrativeIndex: 0,     // 叙事进度
-        targetScale: 1,        // 宇宙缩放目标
-        rotationSpeed: { x: 0, y: 0.05 }, // 自动旋转速度
-        interactionForce: new THREE.Vector3(0,0,0) // 手势产生的物理力场
-    };
-
-    const NARRATIVE_TEXTS = [
-        ["HONESTY", "提倡者"],
-        ["INFJ-A", "1% 的宇宙"],
-        ["DEPTH", "Over Breadth"],
-        ["CODE", "As Vessel"],
-        ["湖南", "Blooded"],
-        ["上海", "Hearted"]
-    ];
-
-    /**
-     * ============================================================================
-     * 2. 增强型手势识别引擎 (解决灵敏度问题)
-     * ============================================================================
-     */
-    class GestureEngine {
-        constructor() {
-            this.history = []; // 历史坐标，用于计算速度
-            this.maxHistory = 10;
-            this.lastGestureTime = 0;
-        }
-
-        update(landmarks) {
-            const now = Date.now();
-            // 平滑处理 (EMA)
-            const rawCenter = landmarks[9]; // 中指根部作为手掌中心
-
-            // 存入历史以计算速度
-            this.history.push({ x: rawCenter.x, y: rawCenter.y, z: rawCenter.z, time: now });
-            if (this.history.length > this.maxHistory) this.history.shift();
-
-            if (this.history.length < 5) return 'TRACKING';
-
-            // 计算平均速度向量
-            const start = this.history[0];
-            const end = this.history[this.history.length - 1];
-            const dt = (end.time - start.time) / 1000; // 秒
-            const vx = (end.x - start.x) / dt;
-            const vy = (end.y - start.y) / dt;
-
-            const speed = Math.sqrt(vx*vx + vy*vy);
-
-            // 阈值设定 (灵敏度调优)
-            const SWIPE_SPEED = 0.8;
-            const PINCH_DIST = 0.04;
-
-            // 1. 捏合检测 (Pinch) - 拇指(4)与食指(8)
-            const thumb = landmarks[4];
-            const index = landmarks[8];
-            const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
-
-            if (pinchDist < PINCH_DIST) return 'PINCH';
-
-            // 2. 挥动检测 (Swipe) - 基于速度
-            if (speed > SWIPE_SPEED) {
-                if (Math.abs(vx) > Math.abs(vy)) {
-                    return vx > 0 ? 'SWIPE_LEFT' : 'SWIPE_RIGHT'; // 镜像后，手向右移是 x 增大
-                } else {
-                    return vy > 0 ? 'SWIPE_DOWN' : 'SWIPE_UP'; // y 增大是向下
-                }
-            }
-
-            // 3. 静态手掌 (Open Hand)
-            return 'OPEN_PALM';
-        }
-    }
-
-    const gestureEngine = new GestureEngine();
-
-    /**
-     * ============================================================================
-     * 3. THREE.JS 渲染与粒子物理系统
-     * ============================================================================
-     */
-    const container = document.getElementById('canvas-container');
-
-    // 场景搭建
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.0015); // 深度雾
+    // Day mode fog must match background color to hide distant particles
+    scene.fog = new THREE.FogExp2(ENV.theme==='night'?0x000000:0xe0eafc, 0.0015);
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.z = 400;
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 4000);
+    camera.position.z = CONFIG.camZ;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+    const renderer = new THREE.WebGLRenderer({ powerPreference: "high-performance", antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 性能平衡
-    container.appendChild(renderer.domElement);
-
-    // 后处理 (Bloom)
-    const renderScene = new THREE.RenderPass(scene, camera);
-    const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-    bloomPass.threshold = CONFIG.bloomThreshold;
-    bloomPass.strength = CONFIG.bloomStrength;
-    bloomPass.radius = CONFIG.bloomRadius;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // Transparent for CSS bg
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     const composer = new THREE.EffectComposer(renderer);
-    composer.addPass(renderScene);
-    composer.addPass(bloomPass);
+    composer.addPass(new THREE.RenderPass(scene, camera));
 
-    // 粒子系统数据结构
-    const particlesGeometry = new THREE.BufferGeometry();
-    const posArray = new Float32Array(CONFIG.particleCount * 3);
-    const targetArray = new Float32Array(CONFIG.particleCount * 3); // 目标位置
-    const velocityArray = new Float32Array(CONFIG.particleCount * 3); // 物理速度
-    const sizeArray = new Float32Array(CONFIG.particleCount);
-
-    for(let i=0; i<CONFIG.particleCount; i++) {
-        // 初始随机分布
-        posArray[i*3] = (Math.random()-0.5) * 800;
-        posArray[i*3+1] = (Math.random()-0.5) * 800;
-        posArray[i*3+2] = (Math.random()-0.5) * 800;
-
-        // 初始目标：默认星云
-        targetArray[i*3] = posArray[i*3];
-        targetArray[i*3+1] = posArray[i*3+1];
-        targetArray[i*3+2] = posArray[i*3+2];
-
-        // 初始速度为0
-        velocityArray[i*3] = 0;
-        velocityArray[i*3+1] = 0;
-        velocityArray[i*3+2] = 0;
-
-        sizeArray[i] = Math.random() * CONFIG.baseSize;
+    if (CONFIG.bloomStrength > 0) {
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.strength = CONFIG.bloomStrength;
+        bloomPass.radius = 0.5;
+        bloomPass.threshold = 0.1;
+        composer.addPass(bloomPass);
     }
 
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+    // --- 粒子系统 ---
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(CONFIG.particleCount * 3);
+    const targets = new Float32Array(CONFIG.particleCount * 3);
+    const origin = new Float32Array(CONFIG.particleCount * 3);
+    const velocities = new Float32Array(CONFIG.particleCount * 3);
+    const sizes = new Float32Array(CONFIG.particleCount);
 
-    // 自定义着色器 (实现锐利边缘 + 深度衰减)
-    const particlesMaterial = new THREE.ShaderMaterial({
+    const simplex = new SimplexNoise();
+
+    for(let i=0; i<CONFIG.particleCount; i++) {
+        const i3 = i*3;
+        // 黄金螺旋分布
+        const y = 1 - (i / (CONFIG.particleCount - 1)) * 2;
+        const radius = Math.sqrt(1 - y * y);
+        const theta = i * 2.39996;
+        const r = 280;
+
+        const x = Math.cos(theta) * radius * r;
+        const z = Math.sin(theta) * radius * r;
+        const py = y * r;
+
+        positions[i3] = x; origin[i3] = x; targets[i3] = x;
+        positions[i3+1] = py; origin[i3+1] = py; targets[i3+1] = py;
+        positions[i3+2] = z; origin[i3+2] = z; targets[i3+2] = z;
+
+        // 白天模式粒子稍微大一点以保证可见度
+        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme==='day'?1.2:1.0);
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    // Shader 材质：支持颜色渐变插值
+    const material = new THREE.ShaderMaterial({
         uniforms: {
-            color: { value: new THREE.Color(0xffffff) },
-            pixelRatio: { value: window.devicePixelRatio }
+            scale: { value: window.innerHeight / 2 },
+            baseColor: { value: CONFIG.colors.base },
+            activeColor: { value: CONFIG.colors.active },
+            mixVal: { value: 0.0 } // 0 = base, 1 = active
         },
         vertexShader: `
                 attribute float size;
-                uniform float pixelRatio;
                 void main() {
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = size * pixelRatio * (300.0 / -mvPosition.z); // 距离越远越小
+                    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                    gl_PointSize = size * ( 500.0 / -mvPosition.z );
                     gl_Position = projectionMatrix * mvPosition;
                 }
             `,
         fragmentShader: `
-                uniform vec3 color;
+                uniform vec3 baseColor;
+                uniform vec3 activeColor;
+                uniform float mixVal;
                 void main() {
-                    // 绘制圆形
-                    vec2 coord = gl_PointCoord - vec2(0.5);
-                    float dist = length(coord);
-                    if (dist > 0.5) discard; // 锐利边缘，无羽化
+                    float r = length(gl_PointCoord - vec2(0.5));
+                    if (r > 0.5) discard;
 
-                    // 极简光照感
-                    float alpha = 1.0 - smoothstep(0.45, 0.5, dist);
-                    gl_FragColor = vec4(color, alpha);
+                    // 简单的光照伪装
+                    float alpha = 1.0;
+
+                    // 颜色混合
+                    vec3 finalColor = mix(baseColor, activeColor, mixVal);
+                    gl_FragColor = vec4(finalColor, alpha);
                 }
             `,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
+        blending: CONFIG.blending,
+        depthTest: false,
+        transparent: true
     });
 
-    const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+    const particleSystem = new THREE.Points(geometry, material);
+    scene.add(particleSystem);
 
-    // --- 核心修复：镜像翻转 ---
-    // 通过将容器 scale.x 设为 -1，修正左右镜像问题，且不影响文字阅读（因为文字生成时我们会反向处理）
-    const sceneContainer = new THREE.Group();
-    sceneContainer.scale.x = -1;
-    sceneContainer.add(particleSystem);
-    scene.add(sceneContainer);
-
-    // 光标 (手部追踪点)
-    const cursorGeo = new THREE.RingGeometry(5, 6, 32);
-    const cursorMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
-    const cursor = new THREE.Mesh(cursorGeo, cursorMat);
-    scene.add(cursor); // 光标不放在翻转容器里，直接对应屏幕坐标
+    // 手势光标 (仅 Night 模式发光，Day 模式为实心圈)
+    const cursorMat = new THREE.MeshBasicMaterial({
+        color: ENV.theme==='day' ? 0x0055ff : 0x00FF00,
+        side: THREE.DoubleSide,
+        transparent: true, opacity: 0.6
+    });
+    const cursorL = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
+    const cursorR = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
+    scene.add(cursorL); scene.add(cursorR);
 
     /**
      * ============================================================================
-     * 4. 形状生成器 (文字与几何体)
+     * 4. 物理引擎 (单手磁流体 / 双手斥力)
      * ============================================================================
      */
-    const canvasGen = document.createElement('canvas');
-    const ctxGen = canvasGen.getContext('2d');
-    canvasGen.width = 1024;
-    canvasGen.height = 512;
+    const STATE = {
+        mode: 'LOCKED',
+        handL: new THREE.Vector3(9999,9999,0),
+        handR: new THREE.Vector3(9999,9999,0),
+        handCount: 0,
+        unlockProgress: 0,
+        targetMix: 0 // 颜色插值目标
+    };
 
-    function generateTextTargets(text1, text2) {
-        ctxGen.clearRect(0, 0, 1024, 512);
-        ctxGen.fillStyle = '#FFF';
-        ctxGen.font = 'bold 120px "Courier New"';
-        ctxGen.textAlign = 'center';
-        ctxGen.textBaseline = 'middle';
-        ctxGen.fillText(text1, 512, 180);
-
-        ctxGen.font = '60px "Courier New"';
-        ctxGen.fillText(text2, 512, 320);
-
-        const data = ctxGen.getImageData(0,0,1024,512).data;
-        const points = [];
-        // 扫描像素
-        for(let y=0; y<512; y+=4) {
-            for(let x=0; x<1024; x+=4) {
-                const idx = (y*1024 + x)*4;
-                if(data[idx] > 128) { // 亮度阈值
-                    points.push({
-                        x: (x - 512) * 1.5, // 居中并缩放
-                        y: -(y - 256) * 1.5, // 翻转Y轴
-                        z: 0
-                    });
-                }
-            }
-        }
-        return points;
-    }
-
-    // 各种形态的目标点计算
-    function updateTargets(mode, time) {
-        const t = time * 0.5;
-
-        // 1. 叙事模式 (文字)
-        if (mode === 'NARRATIVE') {
-            const txtPoints = STATE.currentTextPoints || [];
-            for(let i=0; i<CONFIG.particleCount; i++) {
-                if(i < txtPoints.length) {
-                    targetArray[i*3] = txtPoints[i].x;
-                    targetArray[i*3+1] = txtPoints[i].y;
-                    targetArray[i*3+2] = txtPoints[i].z;
-                } else {
-                    // 多余粒子变成背景环绕
-                    const angle = i * 0.1 + t;
-                    const r = 600 + Math.sin(t + i)*50;
-                    targetArray[i*3] = Math.cos(angle) * r;
-                    targetArray[i*3+1] = Math.sin(angle) * r;
-                    targetArray[i*3+2] = (Math.random()-0.5)*200;
-                }
-            }
-            return;
-        }
-
-        // 2. 默认深空演化 (基于 Perlin Noise 思想的伪随机)
-        for(let i=0; i<CONFIG.particleCount; i++) {
-            const ix3 = i*3;
-
-            if (mode === 'IDLE_COSMOS') {
-                // 流场效果
-                const angle = Math.cos(posArray[ix3] * 0.002 + t) * Math.PI * 2;
-                const r = 300 + Math.sin(t*0.5 + i)*100;
-                // 不强制归位，而是给予流动方向
-                targetArray[ix3] = Math.cos(angle + i) * r;
-                targetArray[ix3+1] = Math.sin(angle * 0.5 + t) * r;
-                targetArray[ix3+2] = Math.sin(i) * 200;
-            }
-            else if (mode === 'DNA_SPIRAL') {
-                const angle = i * 0.05 + t;
-                const h = (i % 200) * 4 - 400;
-                const r = 100;
-                const strand = (i % 2 === 0) ? 0 : Math.PI;
-                targetArray[ix3] = Math.cos(angle + strand) * r;
-                targetArray[ix3+1] = h;
-                targetArray[ix3+2] = Math.sin(angle + strand) * r;
-            }
-            else if (mode === 'BLACK_HOLE') {
-                // 引力坍缩
-                const angle = i * 0.1 + t * 5;
-                const r = 50 * (i/CONFIG.particleCount); // 极小
-                targetArray[ix3] = Math.cos(angle) * r;
-                targetArray[ix3+1] = Math.sin(angle) * r;
-                targetArray[ix3+2] = 0;
-            }
-        }
-    }
-
-    /**
-     * ============================================================================
-     * 5. 动画与物理循环
-     * ============================================================================
-     */
     const clock = new THREE.Clock();
 
     function animate() {
-        const delta = clock.getDelta();
         const time = clock.getElapsedTime();
 
-        // 1. 更新目标点
-        updateTargets(STATE.mode, time);
+        // 颜色动态更新
+        material.uniforms.mixVal.value += (STATE.targetMix - material.uniforms.mixVal.value) * 0.1;
 
-        // 2. 物理模拟 (Velocity Verlet 简化版)
-        const positions = particleSystem.geometry.attributes.position.array;
+        // 1. 动态形状 (呼吸球)
+        if (STATE.mode === 'LOCKED') {
+            const ns = 0.002; const ts = time * 0.15;
+            for(let i=0; i<CONFIG.particleCount; i++) {
+                const i3 = i*3;
+                const ox = origin[i3]; const oy = origin[i3+1]; const oz = origin[i3+2];
+                const noise = simplex.noise3D(ox*ns + ts, oy*ns, oz*ns + ts);
 
-        // 物理参数
-        const springStrength = STATE.mode === 'NARRATIVE' ? 0.08 : 0.02; // 文字模式吸附力更强
-        const dampening = 0.92; // 阻尼
-        const noiseStrength = 0.5;
+                // 单手时的磁性变形
+                let offX=0, offY=0;
+                if(STATE.handCount===1) {
+                    offX = STATE.handL.x * 0.15;
+                    offY = STATE.handL.y * 0.15;
+                    STATE.targetMix = 0.5; // 变色
+                } else if (STATE.handCount===0) {
+                    STATE.targetMix = 0.0;
+                }
 
-        // 手势交互力
-        const interactX = STATE.interactionForce.x;
-        const interactY = STATE.interactionForce.y;
-
-        for(let i=0; i<CONFIG.particleCount; i++) {
-            const ix3 = i*3;
-
-            // 计算引力: Target - Current
-            const dx = targetArray[ix3] - positions[ix3];
-            const dy = targetArray[ix3+1] - positions[ix3+1];
-            const dz = targetArray[ix3+2] - positions[ix3+2];
-
-            // 加速度 += 引力
-            velocityArray[ix3] += dx * springStrength;
-            velocityArray[ix3+1] += dy * springStrength;
-            velocityArray[ix3+2] += dz * springStrength;
-
-            // 加上 卷曲噪声 (Curl Noise 模拟) - 让运动不那么机械
-            velocityArray[ix3] += Math.sin(positions[ix3+1]*0.01 + time)*noiseStrength;
-            velocityArray[ix3+1] += Math.cos(positions[ix3]*0.01 + time)*noiseStrength;
-
-            // 加上 手势交互力 (爆炸/风场)
-            if (Math.abs(interactX) > 0.1 || Math.abs(interactY) > 0.1) {
-                velocityArray[ix3] += interactX * Math.random() * 5;
-                velocityArray[ix3+1] += interactY * Math.random() * 5;
+                const scale = 1 + noise * 0.3;
+                targets[i3] = ox * scale + offX;
+                targets[i3+1] = oy * scale + offY;
+                targets[i3+2] = oz * scale;
             }
-
-            // 速度阻尼
-            velocityArray[ix3] *= dampening;
-            velocityArray[ix3+1] *= dampening;
-            velocityArray[ix3+2] *= dampening;
-
-            // 更新位置
-            positions[ix3] += velocityArray[ix3];
-            positions[ix3+1] += velocityArray[ix3+1];
-            positions[ix3+2] += velocityArray[ix3+2];
+        } else {
+            STATE.targetMix = 1.0; // 叙事模式全亮
         }
 
-        // 衰减交互力
-        STATE.interactionForce.multiplyScalar(0.9);
+        // 2. 物理迭代
+        for(let i=0; i<CONFIG.particleCount; i++) {
+            const i3 = i*3;
+            const px = positions[i3]; const py = positions[i3+1]; const pz = positions[i3+2];
 
-        particleSystem.geometry.attributes.position.needsUpdate = true;
+            // 归位力
+            const stiff = STATE.mode === 'LOCKED' ? 0.03 : 0.05;
+            velocities[i3] += (targets[i3] - px) * stiff;
+            velocities[i3+1] += (targets[i3+1] - py) * stiff;
+            velocities[i3+2] += (targets[i3+2] - pz) * stiff;
 
-        // 3. 场景整体旋转 (由手势或自动控制)
-        sceneContainer.rotation.y += STATE.rotationSpeed.y * delta;
-        sceneContainer.rotation.x += STATE.rotationSpeed.x * delta;
+            // --- 交互物理 ---
+            if (STATE.handCount === 1) {
+                // 单手：磁流体黑洞 (丝滑跟随)
+                const hx = STATE.handL.x; const hy = STATE.handL.y;
+                const dx = hx - px; const dy = hy - py;
+                const distSq = dx*dx + dy*dy;
 
-        // 阻尼回复正常转速
-        STATE.rotationSpeed.y = THREE.MathUtils.lerp(STATE.rotationSpeed.y, 0.05, 0.05);
-        STATE.rotationSpeed.x = THREE.MathUtils.lerp(STATE.rotationSpeed.x, 0, 0.05);
+                if (distSq < 120000) {
+                    const f = (120000 - distSq) / 120000;
+                    // 吸引 + 旋转
+                    velocities[i3] += dx * f * 0.06;
+                    velocities[i3+1] += dy * f * 0.06;
+                    velocities[i3+2] += 5 * f; // 立体扰动
+                }
+            } else if (STATE.handCount === 2) {
+                // 双手：斥力场
+                [STATE.handL, STATE.handR].forEach(h => {
+                    const dx = px - h.x; const dy = py - h.y;
+                    const distSq = dx*dx + dy*dy;
+                    if (distSq < 70000) {
+                        const f = (70000 - distSq) / 70000;
+                        velocities[i3] -= dx * f * 0.3; // 强力推开
+                        velocities[i3+1] -= dy * f * 0.3;
+                        velocities[i3+2] += 10 * f;
+                    }
+                });
+            }
 
-        // 4. 渲染
+            // 阻尼
+            velocities[i3] *= 0.90;
+            velocities[i3+1] *= 0.90;
+            velocities[i3+2] *= 0.90;
+
+            positions[i3] += velocities[i3];
+            positions[i3+1] += velocities[i3+1];
+            positions[i3+2] += velocities[i3+2];
+        }
+
+        geometry.attributes.position.needsUpdate = true;
+
+        // 自转
+        if(STATE.handCount===0) particleSystem.rotation.y += 0.002;
+
+        // 光标
+        cursorL.position.set(STATE.handL.x, STATE.handL.y, 0);
+        cursorR.position.set(STATE.handR.x, STATE.handR.y, 0);
+        cursorL.visible = (STATE.handCount >= 1);
+        cursorR.visible = (STATE.handCount === 2);
+
         composer.render();
-
-        document.getElementById('fps').innerText = Math.round(1/delta);
         requestAnimationFrame(animate);
     }
 
     /**
      * ============================================================================
-     * 6. 逻辑控制与手势响应
+     * 5. 逻辑控制 (叙事/进入/退出)
      * ============================================================================
      */
+    let narrativeTimer = null;
 
-    // 切换到下一段叙事
-    function nextNarrative() {
-        if (STATE.narrativeIndex >= NARRATIVE_TEXTS.length) {
-            STATE.narrativeIndex = 0; // 循环或结束
+    window.enterArchive = function() {
+        if (STATE.mode === 'UNLOCKED') return;
+        STATE.mode = 'UNLOCKED';
+
+        // UI Update
+        document.getElementById('main-hint').style.display = 'none';
+        document.getElementById('sub-hint').style.display = 'none';
+        document.getElementById('exit-btn').classList.add('visible');
+
+        // 粒子散开形成背景环
+        for(let i=0; i<CONFIG.particleCount; i++) {
+            const a = i * 0.1;
+            const r = 900 + Math.random()*200;
+            targets[i*3] = Math.cos(a)*r;
+            targets[i*3+1] = (Math.random()-0.5)*300;
+            targets[i*3+2] = Math.sin(a)*r;
         }
-        const txt = NARRATIVE_TEXTS[STATE.narrativeIndex];
-        STATE.currentTextPoints = generateTextTargets(txt[0], txt[1]);
-        STATE.mode = 'NARRATIVE';
-        document.getElementById('mode-txt').innerText = `ARCHIVE_${STATE.narrativeIndex}`;
-        STATE.narrativeIndex++;
 
-        // 爆炸特效：给所有粒子一个随机向外的初速度
-        for(let i=0; i<CONFIG.particleCount*3; i++) {
-            velocityArray[i] += (Math.random()-0.5) * 50;
+        startNarrative();
+    }
+
+    window.exitArchive = function() {
+        STATE.mode = 'LOCKED';
+
+        // UI Reset
+        document.getElementById('main-hint').style.display = 'block';
+        document.getElementById('sub-hint').style.display = 'block';
+        document.getElementById('exit-btn').classList.remove('visible');
+        document.getElementById('narrative-overlay').classList.remove('show-text');
+
+        clearTimeout(narrativeTimer);
+        explode(50);
+    }
+
+    function explode(f) {
+        for(let i=0; i<CONFIG.particleCount; i++) {
+            velocities[i*3] += (Math.random()-0.5)*f;
+            velocities[i*3+1] += (Math.random()-0.5)*f;
+            velocities[i*3+2] += (Math.random()-0.5)*f;
         }
     }
 
-    // 处理手势动作
-    function handleGestureAction(gesture) {
-        const hint = document.getElementById('hint-txt');
+    function startNarrative() {
+        let idx = 0;
+        const nTitle = document.getElementById('n-title');
+        const nSub = document.getElementById('n-sub');
+        const overlay = document.getElementById('narrative-overlay');
 
-        if (gesture === 'NAMASTE') {
-            if (!STATE.isUnlocked) {
-                STATE.isUnlocked = true;
-                STATE.mode = 'BLACK_HOLE'; // 先坍缩
-                hint.innerText = "ACCESS GRANTED // 正在载入";
-                setTimeout(() => nextNarrative(), 1500); // 1.5秒后展示文字
-            }
-        }
-        else if (STATE.isUnlocked) {
-            // 已解锁状态下的交互
-            if (gesture === 'SWIPE_LEFT') {
-                nextNarrative();
-                hint.innerText = "NEXT ENTRY >>";
-                STATE.interactionForce.x = 20; // 物理推力
-            }
-            else if (gesture === 'SWIPE_RIGHT') {
-                STATE.interactionForce.x = -20;
-            }
-            else if (gesture === 'SWIPE_UP') {
-                STATE.rotationSpeed.x = 0.5;
-                hint.innerText = "PITCH UP";
-            }
-            else if (gesture === 'PINCH') {
-                STATE.mode = 'DNA_SPIRAL';
-                hint.innerText = "DNA RECONSTRUCTION";
-                // 3秒后恢复
-                clearTimeout(STATE.resetTimer);
-                STATE.resetTimer = setTimeout(() => {
-                    STATE.mode = 'NARRATIVE';
-                }, 3000);
-            }
-        } else {
-            // 未解锁时的交互
-            if (gesture === 'SWIPE_LEFT' || gesture === 'SWIPE_RIGHT') {
-                STATE.rotationSpeed.y = gesture === 'SWIPE_LEFT' ? 1.0 : -1.0;
-            }
-        }
+        const next = () => {
+            if (STATE.mode !== 'UNLOCKED') return;
+
+            const slide = CONTENT.slides[idx % CONTENT.slides.length];
+            nTitle.innerText = slide.t;
+            nSub.innerText = slide.s;
+            overlay.classList.add('show-text');
+
+            // 3秒后文字消失，粒子稍微聚拢一下产生呼吸感
+            narrativeTimer = setTimeout(() => {
+                overlay.classList.remove('show-text');
+                // Particle Pulse
+                explode(10);
+                narrativeTimer = setTimeout(next, 1000);
+            }, 3000);
+
+            idx++;
+        };
+        next();
     }
 
     /**
      * ============================================================================
-     * 7. MEDIAPIPE 集成
+     * 6. MediaPipe 手势
      * ============================================================================
      */
-    const videoElement = document.getElementById('input-video');
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+    hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.7 });
 
-    hands.setOptions({
-        maxNumHands: 2,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.6, // 降低阈值提高检出率
-        minTrackingConfidence: 0.6
-    });
+    hands.onResults(results => {
+        const loader = document.getElementById('ai-loader');
+        if (loader.style.opacity !== '0') {
+            document.querySelector('.loader-progress').innerText = "NEURAL LINK ESTABLISHED";
+            setTimeout(() => {
+                loader.style.opacity = 0;
+                document.getElementById('ui-layer').style.opacity = 1;
+                setTimeout(() => loader.style.display = 'none', 1000);
+            }, 1000);
+        }
 
-    hands.onResults((results) => {
         const landmarks = results.multiHandLandmarks;
-        const handStateEl = document.getElementById('hand-state');
-
-        // 隐藏加载条
-        document.getElementById('loader').style.opacity = 0;
-        setTimeout(()=> document.getElementById('loader').style.display='none', 800);
-
         if (landmarks && landmarks.length > 0) {
-            STATE.handDetected = true;
-            handStateEl.innerText = "LINKED";
-            handStateEl.style.color = "#0F0";
+            STATE.handCount = landmarks.length;
+            document.getElementById('sys-status').innerText = `CONNECTED (${STATE.handCount})`;
 
-            // 更新光标位置 (取第一只手)
-            const hand = landmarks[0];
-            const palm = hand[9];
-            // 映射屏幕坐标到 3D 坐标平面
-            const vec = new THREE.Vector3(
-                (palm.x * 2 - 1) * 300, // 这里的 X 不需要翻转，因为我们已经在场景容器翻转了
-                -(palm.y * 2 - 1) * 200,
-                0
-            );
-            cursor.position.copy(vec);
-            cursor.visible = true;
+            // 坐标处理 (1.0 - x 实现镜像)
+            const process = (lm) => {
+                return {
+                    x: ( (1.0 - lm.x) * 2 - 1 ) * 800,
+                    y: -(lm.y * 2 - 1 - 0.2) * 600
+                };
+            };
 
-            // 双手合十检测
-            if (landmarks.length === 2) {
-                const h1 = landmarks[0];
-                const h2 = landmarks[1];
-                const dist = Math.hypot(h1[9].x - h2[9].x, h1[9].y - h2[9].y);
-                if (dist < 0.15) { // 阈值
-                    handleGestureAction('NAMASTE');
-                    return;
+            const p1 = process(landmarks[0][9]);
+            STATE.handL.x += (p1.x - STATE.handL.x) * 0.2;
+            STATE.handL.y += (p1.y - STATE.handL.y) * 0.2;
+
+            if (landmarks.length > 1) {
+                const p2 = process(landmarks[1][9]);
+                STATE.handR.x += (p2.x - STATE.handR.x) * 0.2;
+                STATE.handR.y += (p2.y - STATE.handR.y) * 0.2;
+            }
+
+            // Unlock Logic
+            if (landmarks.length === 2 && STATE.mode === 'LOCKED') {
+                const w1=landmarks[0][0]; const w2=landmarks[1][0];
+                const t1=landmarks[0][12]; const t2=landmarks[1][12]; // 中指
+                if (Math.hypot(w1.x-w2.x, w1.y-w2.y) < 0.2 && Math.hypot(t1.x-t2.x, t1.y-t2.y) < 0.15) {
+                    STATE.unlockProgress++;
+                    document.getElementById('main-hint').innerText = `${CONTENT.hints.unlocking} ${STATE.unlockProgress}%`;
+                    if (STATE.unlockProgress > 50) enterArchive();
+                } else {
+                    STATE.unlockProgress = 0;
+                    document.getElementById('main-hint').innerText = CONTENT.hints.main;
                 }
             }
-
-            // 单手手势检测
-            const gesture = gestureEngine.update(hand);
-            if (gesture !== STATE.gesture && gesture !== 'TRACKING') {
-                STATE.gesture = gesture;
-                console.log("Gesture Detected:", gesture);
-                handleGestureAction(gesture);
-
-                // 视觉反馈
-                bloomPass.strength = 3.0; // 瞬间高亮
-                setTimeout(() => bloomPass.strength = CONFIG.bloomStrength, 300);
-            }
-
         } else {
-            STATE.handDetected = false;
-            handStateEl.innerText = "SEARCHING...";
-            handStateEl.style.color = "inherit";
-            cursor.visible = false;
+            STATE.handCount = 0;
+            document.getElementById('sys-status').innerText = "SCANNING...";
         }
     });
 
+    const videoElement = document.getElementById('input-video');
     const cameraUtils = new Camera(videoElement, {
         onFrame: async () => { await hands.send({image: videoElement}); },
         width: 640, height: 480
     });
-
-    // 启动系统
-    document.getElementById('load-bar').style.width = '100%';
     cameraUtils.start();
-    animate();
 
-    // 窗口自适应
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = window.innerWidth/window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         composer.setSize(window.innerWidth, window.innerHeight);
+        material.uniforms.scale.value = window.innerHeight/2;
     });
+
+    animate();
 
 </script>
 </body>
