@@ -589,7 +589,7 @@
                 main: "双手合十 · 解锁档案",
                 sub: "单手·引力牵引｜双手·力场排斥",
                 unlocking: "正在识别...",
-                countdownHint: "5秒后自动进入",
+                countdownHint: "{second}秒后自动进入",
                 enterBtn: "立即进入",
                 interactionModeBtn: "交互模式",
                 cameraAccessInfo: "点击启用交互模式"
@@ -611,7 +611,7 @@
                 main: "Click or Namaste",
                 sub: "One Hand Drag · Two Hands Repel",
                 unlocking: "Identifying...",
-                countdownHint: "Auto enter in 5 seconds",
+                countdownHint: "Auto enter in {second} seconds",
                 enterBtn: "Enter Now",
                 interactionModeBtn: "Interaction Mode",
                 cameraAccessInfo: "Click to enable camera interaction"
@@ -936,6 +936,7 @@
                     showInteractionModeButton();
                 }
             }, 1500); // 延迟显示，确保页面已完成过渡
+            explode(100)
         }
     }
 
@@ -1242,14 +1243,16 @@
 
     // 开始5秒倒计时
     let countdown = 5;
-    safeUpdateText(DOM_CACHE.countdownHint, `${countdown}${ENV.lang === 'zh' ? '秒后自动进入' : ' seconds to auto-enter'}`);
+
+    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
     CAMERA_STATE.countdownInterval = setInterval(() => {
         countdown--;
         if (countdown > 0) {
-            safeUpdateText(DOM_CACHE.countdownHint, `${countdown}${ENV.lang === 'zh' ? '秒后自动进入' : ' seconds to auto-enter'}`);
+            safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
         } else {
             clearInterval(CAMERA_STATE.countdownInterval);
             enterAnimationMode(); // 确保调用进入动画模式
+
         }
     }, 1000);
 
