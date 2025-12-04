@@ -11,34 +11,86 @@
             --text-color: #FFFFFF;
             --accent-color: #00FFFF;
             --loader-bg: #000000;
+            --loader-text: #FFFFFF;
         }
 
-        /* 白天模式变量 */
+        /* === 白天模式 (高对比度/清雅) === */
         [data-theme="day"] {
-            --bg-color: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* 清新银蓝 */
-            --text-color: #1a1a2e; /* 深蓝黑文字 */
-            --accent-color: #0055ff; /* 科技蓝 */
-            --loader-bg: #f5f7fa;
+            --bg-color: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            --text-color: #1a1a2e; /* 极深蓝黑，保证可见度 */
+            --accent-color: #0044cc;
+            --loader-bg: #f0f2f5;
+            --loader-text: #2c3e50;
         }
 
-        /* 黑夜模式变量 */
+        /* === 黑夜模式 (霓虹/深空) === */
         [data-theme="night"] {
-            --bg-color: radial-gradient(circle at 50% 50%, #111122 0%, #050510 60%, #000000 100%);
+            --bg-color: radial-gradient(circle at 50% 50%, #0f1729 0%, #000000 100%);
             --text-color: #FFFFFF;
             --accent-color: #00FFFF;
             --loader-bg: #000000;
+            --loader-text: #FFFFFF;
         }
 
         body {
             margin: 0; overflow: hidden;
             background: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             transition: background 1s, color 1s;
             user-select: none; cursor: default;
         }
 
-        /* === UI 层 === */
+        /* === 1. 智能加载层 === */
+        #start-screen {
+            position: fixed; inset: 0; background: var(--loader-bg); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .logo-text {
+            font-family: 'Times New Roman', serif; font-size: 32px; letter-spacing: 8px;
+            color: var(--loader-text); margin-bottom: 20px; animation: breathe 3s infinite;
+        }
+
+        .loader-ring {
+            width: 50px; height: 50px; border: 2px solid rgba(128,128,128,0.2);
+            border-top-color: var(--accent-color); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+
+        .status-text {
+            font-size: 14px; letter-spacing: 2px; color: var(--loader-text);
+            opacity: 0.8; height: 20px;
+        }
+
+        .perm-hint {
+            margin-top: 30px; padding: 10px 20px; border: 1px solid var(--accent-color);
+            border-radius: 20px; font-size: 12px; color: var(--loader-text);
+            opacity: 0; transform: translateY(10px); transition: all 1s;
+        }
+        .perm-hint.show { opacity: 1; transform: translateY(0); }
+
+        /* === 2. 叙事文本层 (DOM覆盖) === */
+        #narrative-layer {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; width: 90%; pointer-events: none; z-index: 5;
+        }
+        .n-title {
+            font-size: 8vw; font-weight: 900; letter-spacing: -2px; margin-bottom: 10px;
+            opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .n-sub {
+            font-size: 18px; font-weight: 400; letter-spacing: 6px; opacity: 0;
+            transform: translateY(20px); transition: all 0.8s 0.2s cubic-bezier(0.2, 1, 0.3, 1);
+            color: var(--text-color);
+        }
+        /* 激活状态类名 */
+        .show-text .n-title, .show-text .n-sub { opacity: 1; transform: translateY(0); }
+
+        /* === 3. UI HUD === */
         #ui-layer {
             position: fixed; inset: 0; pointer-events: none; z-index: 20;
             display: flex; flex-direction: column; justify-content: space-between;
@@ -47,8 +99,8 @@
 
         .header {
             display: flex; justify-content: space-between;
-            font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6;
-            font-weight: 600;
+            font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--text-color); opacity: 0.7; font-weight: 600;
         }
 
         .center-stage {
@@ -57,75 +109,32 @@
         }
 
         .main-hint {
-            font-size: 20px; font-weight: 300; letter-spacing: 8px;
-            cursor: pointer; transition: all 0.3s;
-            padding: 20px; border: 1px solid transparent;
+            font-size: 20px; font-weight: 300; letter-spacing: 8px; cursor: pointer;
+            padding: 20px; transition: all 0.3s;
         }
-        .main-hint:hover {
-            transform: scale(1.02);
-            letter-spacing: 10px;
-            color: var(--accent-color);
-        }
+        .main-hint:hover { letter-spacing: 10px; color: var(--accent-color); }
 
         .sub-hint {
-            font-size: 10px; opacity: 0.6; margin-top: 10px; letter-spacing: 3px;
+            font-size: 10px; opacity: 0.6; margin-top: 15px; letter-spacing: 3px;
             font-family: 'Courier New', monospace;
         }
 
-        .exit-trigger {
+        .exit-btn {
             margin-top: 40px; display: inline-block;
             font-size: 10px; letter-spacing: 2px;
-            padding: 8px 16px; border: 1px solid rgba(128,128,128,0.3);
-            cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.5s;
-            pointer-events: none; background: rgba(128,128,128,0.1); backdrop-filter: blur(5px);
-            border-radius: 20px;
+            padding: 10px 24px; border: 1px solid var(--text-color);
+            border-radius: 30px; cursor: pointer; opacity: 0;
+            transform: translateY(20px); transition: all 0.5s; pointer-events: none;
         }
-        .exit-trigger.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .exit-trigger:hover { background: var(--accent-color); color: #FFF; border-color: var(--accent-color); }
+        .exit-btn.visible { opacity: 0.8; transform: translateY(0); pointer-events: auto; }
+        .exit-btn:hover { background: var(--text-color); color: var(--bg-color); opacity: 1; }
 
-        /* === 叙事纯文本层 === */
-        #narrative-overlay {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; width: 90%; pointer-events: none; z-index: 5;
-        }
-        .n-title {
-            font-size: 60px; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px;
-            opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
-            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .n-sub {
-            font-size: 14px; font-weight: 400; letter-spacing: 6px; opacity: 0;
-            transform: translateY(20px); transition: all 0.8s 0.2s cubic-bezier(0.2, 1, 0.3, 1);
-            color: var(--text-color);
-        }
-        .show-text .n-title, .show-text .n-sub { opacity: 1; transform: translateY(0); }
-
-        /* === 智能AI加载页 === */
-        #ai-loader {
-            position: fixed; inset: 0; background: var(--loader-bg); z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 1s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-
-        /* 科技感加载动画 */
-        .tech-spinner {
-            width: 60px; height: 60px; border: 2px solid var(--accent-color);
-            border-top: 2px solid transparent; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 30px;
-        }
-        .loader-quote {
-            font-family: 'Helvetica Neue', sans-serif; font-size: 14px;
-            max-width: 500px; text-align: center; line-height: 1.8; min-height: 50px;
-            opacity: 0; transition: opacity 0.5s; font-weight: 300; letter-spacing: 1px;
-            color: var(--text-color);
-        }
-
-        @keyframes spin { 0% {transform: rotate(0deg)} 100% {transform: rotate(360deg)} }
+        @keyframes breathe { 0%,100%{opacity:0.6} 50%{opacity:1} }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
     </style>
 
-    <!-- 依赖 -->
+    <!-- 依赖库 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
@@ -140,29 +149,31 @@
 </head>
 <body>
 
-<!-- AI 加载 -->
-<div id="ai-loader">
-    <div class="tech-spinner"></div>
-    <div class="loader-quote" id="ai-quote"></div>
+<!-- 1. 智能加载层 -->
+<div id="start-screen">
+    <div class="logo-text">HONESTY</div>
+    <div class="loader-ring"></div>
+    <div class="status-text" id="loader-msg">Initializing System...</div>
+    <div class="perm-hint" id="perm-guide">⚠ 请允许摄像头权限以开启手势交互</div>
 </div>
 
-<!-- 叙事文本 -->
-<div id="narrative-overlay">
+<!-- 2. 叙事文本层 (DOM) -->
+<div id="narrative-layer">
     <div class="n-title" id="n-title"></div>
     <div class="n-sub" id="n-sub"></div>
 </div>
 
-<!-- UI -->
+<!-- 3. UI HUD -->
 <div id="ui-layer">
     <div class="header">
-        <span id="sys-status">SYSTEM IDLE</span>
+        <span id="sys-status">NEURAL LINK: STANDBY</span>
         <span id="theme-display">THEME: AUTO</span>
     </div>
 
     <div class="center-stage">
         <div class="main-hint" id="main-hint" onclick="enterArchive()"></div>
         <div class="sub-hint" id="sub-hint"></div>
-        <div class="exit-trigger" id="exit-btn" onclick="exitArchive()">[ 退出档案 / EXIT ]</div>
+        <div class="exit-btn" id="exit-btn" onclick="exitArchive()">[ EXIT ARCHIVE ]</div>
     </div>
 
     <div class="header" style="align-self: flex-end;">
@@ -172,132 +183,160 @@
 
 <video id="input-video" style="display:none"></video>
 <div id="canvas-container"></div>
-<script src="js/config.js?version=20251125"></script>
+
 <script>
     /**
      * ============================================================================
-     * 1. 主题与语言引擎
+     * 1. 安全工具与状态
      * ============================================================================
      */
+    const APP_STATE = {
+        isLoaded: false,
+        mode: 'LOCKED', // LOCKED, UNLOCKED
+        handCount: 0,
+        handL: new THREE.Vector3(9999,9999,0),
+        handR: new THREE.Vector3(9999,9999,0),
+        unlockProgress: 0
+    };
 
-    // --- 主题逻辑 ---
-    function setStoredTheme(theme) {
-        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
-        const cacheData = { value: theme, time: new Date().getTime() };
-        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    // 安全DOM操作，防止报错
+    function safeUpdateText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
     }
 
+    function safeClass(id, method, className) {
+        const el = document.getElementById(id);
+        if (el) el.classList[method](className);
+    }
+
+    /**
+     * ============================================================================
+     * 2. 环境引擎 (主题 & 语言)
+     * ============================================================================
+     */
     function getStoredTheme() {
-        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme-v2';
-        const timeout = window.SiteConfig?.cacheKeys?.theme?.ttlMs || 360000;
+        const cacheKey = 'theme-v2';
         const cacheJson = localStorage.getItem(cacheKey);
         const saved = cacheJson ? JSON.parse(cacheJson) : null;
-        let theme = 'day'; // 默认
 
-        if (saved == null || new Date().getTime() - timeout > saved.time) {
-            const hour = new Date().getHours();
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const night = hour >= 18 || hour < 6 || prefersDark;
-            theme = night ? 'night' : 'day';
-            setStoredTheme(theme);
-        } else if (saved.value) {
+        let theme = 'day';
+        const hour = new Date().getHours();
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // 缓存过期(1小时)或无缓存时重新判断
+        if (!saved || (Date.now() - (saved.time || 0) > 3600000)) {
+            if (hour >= 18 || hour < 6 || prefersDark) theme = 'night';
+        } else {
             theme = saved.value;
         }
         return theme;
     }
 
     function getStoredLanguage() {
-        return localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
     }
 
-    // --- 初始化环境 ---
     const ENV = {
         theme: getStoredTheme(),
         lang: getStoredLanguage()
     };
 
-    // 应用主题到 DOM
+    // 应用主题
     document.documentElement.setAttribute('data-theme', ENV.theme);
-    document.getElementById('theme-display').innerText = `THEME: ${ENV.theme.toUpperCase()}`;
-    document.getElementById('lang-display').innerText = ENV.lang.toUpperCase();
+    safeUpdateText('theme-display', `THEME: ${ENV.theme.toUpperCase()}`);
+    safeUpdateText('lang-display', ENV.lang.toUpperCase());
 
     /**
      * ============================================================================
-     * 2. 内容库
+     * 3. 内容字典
      * ============================================================================
      */
     const DICTIONARY = {
         zh: {
-            loading: ["逻辑是思维的脚手架。", "优雅不仅是外观，更是对复杂性的征服。", "万物互联，数据如水。", "深度思考是对抗熵增的唯一武器。", "代码即法律，设计即秩序。", "正在重构数字现实...", "正在接入神经元网络...", "INFJ: 洞察看不见的真实。"],
+            load: [
+                "正在构建数字灵魂...",
+                "接入神经元网络...",
+                "校准引力波场...",
+                "等待视觉信号...",
+                "系统准备就绪."
+            ],
             hints: {
                 main: "点击 或 双手合十 开启",
-                sub: "单手·磁流体牵引 | 双手·力场排斥",
-                unlocking: "识别中..."
+                sub: "单手·流体牵引 | 双手·力场排斥",
+                unlocking: "正在识别..."
             },
             slides: [
-                { t: "HE HOUHUI", s: "JAVA & AI 工程师" },
-                { t: "INFJ", s: "洞察者 · 理想主义" },
+                { t: "HE HOUHUI", s: "JAVA & AI 架构师" },
+                { t: "INFJ", s: "1% 的提倡者 // 理想主义" },
                 { t: "深度 > 广度", s: "在垂直领域构建壁垒" },
-                { t: "长期主义", s: "与时间做朋友" },
-                { t: "代码哲学", s: "系统是思想的容器" },
-                { t: "创造", s: "以技术赋予意义" }
+                { t: "长期主义", s: "做时间的朋友" },
+                { t: "代码哲学", s: "代码是逻辑的载体" },
+                { t: "创造", s: "赋予技术以意义" }
             ]
         },
         en: {
-            loading: ["Logic is the scaffolding of the mind.", "Elegance is the conquest of complexity.", "Everything connects, data flows like water.", "Deep thinking is the weapon against entropy.", "Code is Law, Design is Order.", "Reconstructing digital reality...", "Connecting neural network...", "INFJ: Seeing the unseen."],
+            load: [
+                "Constructing Digital Soul...",
+                "Connecting Neural Network...",
+                "Calibrating Gravity Field...",
+                "Waiting for Visual Sensor...",
+                "System Ready."
+            ],
             hints: {
                 main: "CLICK OR NAMASTE",
                 sub: "1 Hand Drag · 2 Hands Repel",
                 unlocking: "IDENTIFYING..."
             },
             slides: [
-                { t: "HE HOUHUI", s: "JAVA & AI ENGINEER" },
+                { t: "HE HOUHUI", s: "JAVA & AI ARCHITECT" },
                 { t: "INFJ", s: "THE ADVOCATE // 1% UNIVERSE" },
                 { t: "DEPTH > BREADTH", s: "BUILDING FORTRESSES" },
                 { t: "LONG-TERMISM", s: "FRIEND OF TIME" },
-                { t: "CODE PHILOSOPHY", s: "VESSEL OF THOUGHT" },
-                { t: "CREATE", s: "EMPOWERING MEANING" }
+                { t: "CODE PHILOSOPHY", s: "VESSEL OF LOGIC" },
+                { t: "CREATE", s: "EMPOWER MEANING" }
             ]
         }
     };
 
     const CONTENT = DICTIONARY[ENV.lang];
 
-    // 加载动画文字循环
-    let qIdx = 0;
-    const qEl = document.getElementById('ai-quote');
-    setInterval(() => {
-        qEl.style.opacity = 0;
-        setTimeout(() => {
-            qEl.innerText = CONTENT.loading[qIdx % CONTENT.loading.length];
-            qEl.style.opacity = 1;
-            qIdx++;
-        }, 500);
-    }, 3000);
+    // 循环播放加载文案
+    let loadIdx = 0;
+    const loadTimer = setInterval(() => {
+        if (APP_STATE.isLoaded) { clearInterval(loadTimer); return; }
+        safeUpdateText('loader-msg', CONTENT.load[loadIdx % CONTENT.load.length]);
+        loadIdx++;
+    }, 2000);
 
-    document.getElementById('main-hint').innerText = CONTENT.hints.main;
-    document.getElementById('sub-hint').innerText = CONTENT.hints.sub;
+    // 权限超时提示
+    setTimeout(() => {
+        if (!APP_STATE.isLoaded) safeClass('perm-hint', 'add', 'show');
+    }, 5000);
+
+    safeUpdateText('main-hint', CONTENT.hints.main);
+    safeUpdateText('sub-hint', CONTENT.hints.sub);
 
     /**
      * ============================================================================
-     * 3. THREE.JS 渲染配置 (Day/Night 核心差异)
+     * 4. THREE.JS 渲染引擎
      * ============================================================================
      */
     const CONFIG = {
         particleCount: 22000,
         camZ: 600,
-        // 关键：混合模式配置
-        blending: ENV.theme === 'night' ? THREE.AdditiveBlending : THREE.NormalBlending,
-        // 关键：颜色配置
-        colors: ENV.theme === 'night'
-            ? { base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF) } // Night: White/Cyan Glow
-            : { base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x3498db) }, // Day: Dark Grey/Blue Solid
-        bloomStrength: ENV.theme === 'night' ? 1.5 : 0.0 // Day Mode: 0 Bloom to ensure clarity
+        // 白天用实心(Normal)，黑夜用发光(Additive)
+        blending: ENV.theme === 'day' ? THREE.NormalBlending : THREE.AdditiveBlending,
+        colors: ENV.theme === 'day'
+            ? { base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x0055ff) } // 白天：深蓝灰 -> 亮蓝
+            : { base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF) }, // 黑夜：白 -> 青
+        bloom: ENV.theme === 'day' ? 0.0 : 1.5 // 白天无辉光，确保清晰
     };
 
     const scene = new THREE.Scene();
-    // Day mode fog must match background color to hide distant particles
-    scene.fog = new THREE.FogExp2(ENV.theme==='night'?0x000000:0xe0eafc, 0.0015);
+    // 雾效与背景色同步
+    const fogColor = ENV.theme === 'day' ? 0xe0eafc : 0x000000;
+    scene.fog = new THREE.FogExp2(fogColor, 0.0015);
 
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 4000);
     camera.position.z = CONFIG.camZ;
@@ -305,15 +344,15 @@
     const renderer = new THREE.WebGLRenderer({ powerPreference: "high-performance", antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); // Transparent for CSS bg
+    renderer.setClearColor(0x000000, 0);
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     const composer = new THREE.EffectComposer(renderer);
     composer.addPass(new THREE.RenderPass(scene, camera));
 
-    if (CONFIG.bloomStrength > 0) {
+    if (CONFIG.bloom > 0) {
         const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-        bloomPass.strength = CONFIG.bloomStrength;
+        bloomPass.strength = CONFIG.bloom;
         bloomPass.radius = 0.5;
         bloomPass.threshold = 0.1;
         composer.addPass(bloomPass);
@@ -331,7 +370,7 @@
 
     for(let i=0; i<CONFIG.particleCount; i++) {
         const i3 = i*3;
-        // 黄金螺旋分布
+        // 黄金螺旋球
         const y = 1 - (i / (CONFIG.particleCount - 1)) * 2;
         const radius = Math.sqrt(1 - y * y);
         const theta = i * 2.39996;
@@ -345,20 +384,19 @@
         positions[i3+1] = py; origin[i3+1] = py; targets[i3+1] = py;
         positions[i3+2] = z; origin[i3+2] = z; targets[i3+2] = z;
 
-        // 白天模式粒子稍微大一点以保证可见度
-        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme==='day'?1.2:1.0);
+        // 白天粒子略大，增强可见度
+        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme==='day'?1.3:1.0);
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-    // Shader 材质：支持颜色渐变插值
     const material = new THREE.ShaderMaterial({
         uniforms: {
             scale: { value: window.innerHeight / 2 },
             baseColor: { value: CONFIG.colors.base },
             activeColor: { value: CONFIG.colors.active },
-            mixVal: { value: 0.0 } // 0 = base, 1 = active
+            mixVal: { value: 0.0 }
         },
         vertexShader: `
                 attribute float size;
@@ -375,13 +413,8 @@
                 void main() {
                     float r = length(gl_PointCoord - vec2(0.5));
                     if (r > 0.5) discard;
-
-                    // 简单的光照伪装
-                    float alpha = 1.0;
-
-                    // 颜色混合
                     vec3 finalColor = mix(baseColor, activeColor, mixVal);
-                    gl_FragColor = vec4(finalColor, alpha);
+                    gl_FragColor = vec4(finalColor, 1.0);
                 }
             `,
         blending: CONFIG.blending,
@@ -392,11 +425,10 @@
     const particleSystem = new THREE.Points(geometry, material);
     scene.add(particleSystem);
 
-    // 手势光标 (仅 Night 模式发光，Day 模式为实心圈)
+    // 手势光标
     const cursorMat = new THREE.MeshBasicMaterial({
-        color: ENV.theme==='day' ? 0x0055ff : 0x00FF00,
-        side: THREE.DoubleSide,
-        transparent: true, opacity: 0.6
+        color: ENV.theme==='day' ? 0x0044cc : 0x00FF00,
+        side: THREE.DoubleSide, transparent: true, opacity: 0.6
     });
     const cursorL = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
     const cursorR = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
@@ -404,42 +436,32 @@
 
     /**
      * ============================================================================
-     * 4. 物理引擎 (单手磁流体 / 双手斥力)
+     * 5. 物理引擎循环
      * ============================================================================
      */
-    const STATE = {
-        mode: 'LOCKED',
-        handL: new THREE.Vector3(9999,9999,0),
-        handR: new THREE.Vector3(9999,9999,0),
-        handCount: 0,
-        unlockProgress: 0,
-        targetMix: 0 // 颜色插值目标
-    };
-
     const clock = new THREE.Clock();
+    let targetMix = 0;
 
     function animate() {
         const time = clock.getElapsedTime();
 
-        // 颜色动态更新
-        material.uniforms.mixVal.value += (STATE.targetMix - material.uniforms.mixVal.value) * 0.1;
+        // 颜色插值
+        material.uniforms.mixVal.value += (targetMix - material.uniforms.mixVal.value) * 0.1;
 
-        // 1. 动态形状 (呼吸球)
-        if (STATE.mode === 'LOCKED') {
+        // 1. 形状更新 (锁定模式：呼吸球)
+        if (APP_STATE.mode === 'LOCKED') {
+            targetMix = APP_STATE.handCount > 0 ? 0.6 : 0.0;
             const ns = 0.002; const ts = time * 0.15;
+
             for(let i=0; i<CONFIG.particleCount; i++) {
                 const i3 = i*3;
                 const ox = origin[i3]; const oy = origin[i3+1]; const oz = origin[i3+2];
                 const noise = simplex.noise3D(ox*ns + ts, oy*ns, oz*ns + ts);
 
-                // 单手时的磁性变形
                 let offX=0, offY=0;
-                if(STATE.handCount===1) {
-                    offX = STATE.handL.x * 0.15;
-                    offY = STATE.handL.y * 0.15;
-                    STATE.targetMix = 0.5; // 变色
-                } else if (STATE.handCount===0) {
-                    STATE.targetMix = 0.0;
+                if(APP_STATE.handCount===1) {
+                    offX = APP_STATE.handL.x * 0.15;
+                    offY = APP_STATE.handL.y * 0.15;
                 }
 
                 const scale = 1 + noise * 0.3;
@@ -448,7 +470,7 @@
                 targets[i3+2] = oz * scale;
             }
         } else {
-            STATE.targetMix = 1.0; // 叙事模式全亮
+            targetMix = 1.0;
         }
 
         // 2. 物理迭代
@@ -457,40 +479,40 @@
             const px = positions[i3]; const py = positions[i3+1]; const pz = positions[i3+2];
 
             // 归位力
-            const stiff = STATE.mode === 'LOCKED' ? 0.03 : 0.05;
+            const stiff = APP_STATE.mode === 'LOCKED' ? 0.03 : 0.05;
             velocities[i3] += (targets[i3] - px) * stiff;
             velocities[i3+1] += (targets[i3+1] - py) * stiff;
             velocities[i3+2] += (targets[i3+2] - pz) * stiff;
 
             // --- 交互物理 ---
-            if (STATE.handCount === 1) {
-                // 单手：磁流体黑洞 (丝滑跟随)
-                const hx = STATE.handL.x; const hy = STATE.handL.y;
-                const dx = hx - px; const dy = hy - py;
+            if (APP_STATE.handCount === 1) {
+                // 单手黑洞 (增强吸附感)
+                const hx = APP_STATE.handL.x;
+                const hy = APP_STATE.handL.y;
+                const dx = hx - px;
+                const dy = hy - py;
                 const distSq = dx*dx + dy*dy;
 
-                if (distSq < 120000) {
-                    const f = (120000 - distSq) / 120000;
-                    // 吸引 + 旋转
-                    velocities[i3] += dx * f * 0.06;
-                    velocities[i3+1] += dy * f * 0.06;
-                    velocities[i3+2] += 5 * f; // 立体扰动
+                if (distSq < 150000) {
+                    const f = (150000 - distSq) / 150000;
+                    velocities[i3] += dx * f * 0.05;
+                    velocities[i3+1] += dy * f * 0.05;
+                    velocities[i3+2] += Math.sin(time*10 + distSq*0.0001) * 8 * f; // 波纹效果
                 }
-            } else if (STATE.handCount === 2) {
-                // 双手：斥力场
-                [STATE.handL, STATE.handR].forEach(h => {
+            } else if (APP_STATE.handCount === 2) {
+                // 双手斥力
+                [APP_STATE.handL, APP_STATE.handR].forEach(h => {
                     const dx = px - h.x; const dy = py - h.y;
                     const distSq = dx*dx + dy*dy;
-                    if (distSq < 70000) {
-                        const f = (70000 - distSq) / 70000;
-                        velocities[i3] -= dx * f * 0.3; // 强力推开
+                    if (distSq < 80000) {
+                        const f = (80000 - distSq) / 80000;
+                        velocities[i3] -= dx * f * 0.3;
                         velocities[i3+1] -= dy * f * 0.3;
-                        velocities[i3+2] += 10 * f;
+                        velocities[i3+2] += 15 * f;
                     }
                 });
             }
 
-            // 阻尼
             velocities[i3] *= 0.90;
             velocities[i3+1] *= 0.90;
             velocities[i3+2] *= 0.90;
@@ -501,15 +523,12 @@
         }
 
         geometry.attributes.position.needsUpdate = true;
+        if(APP_STATE.handCount===0) particleSystem.rotation.y += 0.002;
 
-        // 自转
-        if(STATE.handCount===0) particleSystem.rotation.y += 0.002;
-
-        // 光标
-        cursorL.position.set(STATE.handL.x, STATE.handL.y, 0);
-        cursorR.position.set(STATE.handR.x, STATE.handR.y, 0);
-        cursorL.visible = (STATE.handCount >= 1);
-        cursorR.visible = (STATE.handCount === 2);
+        cursorL.position.set(APP_STATE.handL.x, APP_STATE.handL.y, 0);
+        cursorR.position.set(APP_STATE.handR.x, APP_STATE.handR.y, 0);
+        cursorL.visible = (APP_STATE.handCount >= 1);
+        cursorR.visible = (APP_STATE.handCount === 2);
 
         composer.render();
         requestAnimationFrame(animate);
@@ -517,40 +536,34 @@
 
     /**
      * ============================================================================
-     * 5. 逻辑控制 (叙事/进入/退出)
+     * 6. 逻辑控制 (叙事/退出) - 修复空指针问题
      * ============================================================================
      */
     let narrativeTimer = null;
 
     window.enterArchive = function() {
-        if (STATE.mode === 'UNLOCKED') return;
-        STATE.mode = 'UNLOCKED';
+        if (APP_STATE.mode === 'UNLOCKED') return;
+        APP_STATE.mode = 'UNLOCKED';
 
-        // UI Update
+        // UI
+        safeClass('main-hint', 'add', 'hidden'); // 隐藏主提示 (CSS需支持或直接display)
         document.getElementById('main-hint').style.display = 'none';
         document.getElementById('sub-hint').style.display = 'none';
-        document.getElementById('exit-btn').classList.add('visible');
+        safeClass('exit-btn', 'add', 'visible');
 
-        // 粒子散开形成背景环
-        for(let i=0; i<CONFIG.particleCount; i++) {
-            const a = i * 0.1;
-            const r = 900 + Math.random()*200;
-            targets[i*3] = Math.cos(a)*r;
-            targets[i*3+1] = (Math.random()-0.5)*300;
-            targets[i*3+2] = Math.sin(a)*r;
-        }
+        // 粒子爆炸效果
+        explode(100);
 
         startNarrative();
     }
 
     window.exitArchive = function() {
-        STATE.mode = 'LOCKED';
+        APP_STATE.mode = 'LOCKED';
 
-        // UI Reset
         document.getElementById('main-hint').style.display = 'block';
         document.getElementById('sub-hint').style.display = 'block';
-        document.getElementById('exit-btn').classList.remove('visible');
-        document.getElementById('narrative-overlay').classList.remove('show-text');
+        safeClass('exit-btn', 'remove', 'visible');
+        safeClass('narrative-layer', 'remove', 'show-text');
 
         clearTimeout(narrativeTimer);
         explode(50);
@@ -568,20 +581,31 @@
         let idx = 0;
         const nTitle = document.getElementById('n-title');
         const nSub = document.getElementById('n-sub');
-        const overlay = document.getElementById('narrative-overlay');
+        const layer = document.getElementById('narrative-layer');
+
+        // 必须检查元素是否存在
+        if (!nTitle || !nSub || !layer) return;
 
         const next = () => {
-            if (STATE.mode !== 'UNLOCKED') return;
+            if (APP_STATE.mode !== 'UNLOCKED') return;
 
             const slide = CONTENT.slides[idx % CONTENT.slides.length];
+
             nTitle.innerText = slide.t;
             nSub.innerText = slide.s;
-            overlay.classList.add('show-text');
+            layer.classList.add('show-text');
 
-            // 3秒后文字消失，粒子稍微聚拢一下产生呼吸感
+            // 粒子散开做背景
+            for(let i=0; i<CONFIG.particleCount; i++) {
+                const a = i * 0.1;
+                const r = 900 + Math.random()*200;
+                targets[i*3] = Math.cos(a)*r;
+                targets[i*3+1] = (Math.random()-0.5)*300;
+                targets[i*3+2] = Math.sin(a)*r;
+            }
+
             narrativeTimer = setTimeout(() => {
-                overlay.classList.remove('show-text');
-                // Particle Pulse
+                layer.classList.remove('show-text');
                 explode(10);
                 narrativeTimer = setTimeout(next, 1000);
             }, 3000);
@@ -593,62 +617,63 @@
 
     /**
      * ============================================================================
-     * 6. MediaPipe 手势
+     * 7. MediaPipe 手势
      * ============================================================================
      */
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
     hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.7 });
 
     hands.onResults(results => {
-        const loader = document.getElementById('ai-loader');
-        if (loader.style.opacity !== '0') {
-            document.querySelector('.loader-progress').innerText = "NEURAL LINK ESTABLISHED";
-            setTimeout(() => {
-                loader.style.opacity = 0;
-                document.getElementById('ui-layer').style.opacity = 1;
-                setTimeout(() => loader.style.display = 'none', 1000);
-            }, 1000);
+        // Loader logic
+        if (!APP_STATE.isLoaded) {
+            APP_STATE.isLoaded = true;
+            const loader = document.getElementById('start-screen');
+            loader.style.opacity = 0;
+            document.getElementById('ui-layer').style.opacity = 1;
+            setTimeout(() => loader.style.display = 'none', 1000);
         }
 
         const landmarks = results.multiHandLandmarks;
-        if (landmarks && landmarks.length > 0) {
-            STATE.handCount = landmarks.length;
-            document.getElementById('sys-status').innerText = `CONNECTED (${STATE.handCount})`;
+        const sysStatus = document.getElementById('sys-status');
 
-            // 坐标处理 (1.0 - x 实现镜像)
-            const process = (lm) => {
-                return {
-                    x: ( (1.0 - lm.x) * 2 - 1 ) * 800,
-                    y: -(lm.y * 2 - 1 - 0.2) * 600
-                };
-            };
+        if (landmarks && landmarks.length > 0) {
+            APP_STATE.handCount = landmarks.length;
+            safeUpdateText('sys-status', `LINKED (${APP_STATE.handCount})`);
+            if(sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
+
+            // 坐标处理 (镜像)
+            const process = (lm) => ({
+                x: ( (1.0 - lm.x) * 2 - 1 ) * 800,
+                y: -(lm.y * 2 - 1 - 0.2) * 600
+            });
 
             const p1 = process(landmarks[0][9]);
-            STATE.handL.x += (p1.x - STATE.handL.x) * 0.2;
-            STATE.handL.y += (p1.y - STATE.handL.y) * 0.2;
+            APP_STATE.handL.x += (p1.x - APP_STATE.handL.x) * 0.25;
+            APP_STATE.handL.y += (p1.y - APP_STATE.handL.y) * 0.25;
 
             if (landmarks.length > 1) {
                 const p2 = process(landmarks[1][9]);
-                STATE.handR.x += (p2.x - STATE.handR.x) * 0.2;
-                STATE.handR.y += (p2.y - STATE.handR.y) * 0.2;
+                APP_STATE.handR.x += (p2.x - APP_STATE.handR.x) * 0.25;
+                APP_STATE.handR.y += (p2.y - APP_STATE.handR.y) * 0.25;
             }
 
-            // Unlock Logic
-            if (landmarks.length === 2 && STATE.mode === 'LOCKED') {
+            // 合十检测
+            if (landmarks.length === 2 && APP_STATE.mode === 'LOCKED') {
                 const w1=landmarks[0][0]; const w2=landmarks[1][0];
-                const t1=landmarks[0][12]; const t2=landmarks[1][12]; // 中指
-                if (Math.hypot(w1.x-w2.x, w1.y-w2.y) < 0.2 && Math.hypot(t1.x-t2.x, t1.y-t2.y) < 0.15) {
-                    STATE.unlockProgress++;
-                    document.getElementById('main-hint').innerText = `${CONTENT.hints.unlocking} ${STATE.unlockProgress}%`;
-                    if (STATE.unlockProgress > 50) enterArchive();
+                const t1=landmarks[0][12]; const t2=landmarks[1][12];
+                if (Math.hypot(w1.x-w2.x, w1.y-w2.y)<0.25 && Math.hypot(t1.x-t2.x, t1.y-t2.y)<0.2) {
+                    APP_STATE.unlockProgress++;
+                    safeUpdateText('main-hint', `${CONTENT.hints.unlocking} ${APP_STATE.unlockProgress}%`);
+                    if(APP_STATE.unlockProgress > 50) enterArchive();
                 } else {
-                    STATE.unlockProgress = 0;
-                    document.getElementById('main-hint').innerText = CONTENT.hints.main;
+                    APP_STATE.unlockProgress = 0;
+                    safeUpdateText('main-hint', CONTENT.hints.main);
                 }
             }
         } else {
-            STATE.handCount = 0;
-            document.getElementById('sys-status').innerText = "SCANNING...";
+            APP_STATE.handCount = 0;
+            safeUpdateText('sys-status', 'SEARCHING...');
+            if(sysStatus) sysStatus.style.color = 'inherit';
         }
     });
 
