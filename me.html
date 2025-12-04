@@ -22,7 +22,7 @@
             --loader-bg: #f0f2f5;
             --loader-text: #2c3e50;
             --title-gradient: linear-gradient(120deg, #1a1a2e 0%, #2b56ff 50%, #1947ff 100%);
-            --veil: radial-gradient(closest-side, rgba(255,255,255,0.0), rgba(255,255,255,0.0) 70%);
+            --veil: radial-gradient(closest-side, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.0) 70%);
         }
 
         /* === 黑夜模式 (霓虹/深空) === */
@@ -33,137 +33,306 @@
             --loader-bg: #000000;
             --loader-text: #FFFFFF;
             --title-gradient: linear-gradient(120deg, #ffffff 0%, #7dfbff 35%, #ff7af3 70%, #ffd36e 100%);
-            --veil: radial-gradient(closest-side, rgba(0,0,0,0.55), rgba(0,0,0,0.0) 72%);
+            --veil: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.0) 72%);
         }
 
         body {
-            margin: 0; overflow: hidden;
+            margin: 0;
+            overflow: hidden;
             background: var(--bg-color);
             color: var(--text-color);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             transition: background 1s, color 1s;
-            user-select: none; cursor: default;
+            user-select: none;
+            cursor: default;
         }
 
         /* === 1. 智能加载层 === */
         #start-screen {
-            position: fixed; inset: 0; background: var(--loader-bg); z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            background: var(--loader-bg);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         .logo-text {
-            font-family: 'Times New Roman', serif; font-size: 32px; letter-spacing: 8px;
-            color: var(--loader-text); margin-bottom: 20px; animation: breathe 3s infinite;
+            font-family: 'Times New Roman', serif;
+            font-size: 32px;
+            letter-spacing: 8px;
+            color: var(--loader-text);
+            margin-bottom: 20px;
+            animation: breathe 3s infinite;
         }
 
         .loader-ring {
-            width: 50px; height: 50px; border: 2px solid rgba(128,128,128,0.2);
-            border-top-color: var(--accent-color); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid rgba(128, 128, 128, 0.2);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
         .status-text {
-            font-size: 14px; letter-spacing: 2px; color: var(--loader-text);
-            opacity: 0.8; height: 20px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--loader-text);
+            opacity: 0.8;
+            height: 20px;
         }
 
         .perm-hint {
-            margin-top: 30px; padding: 10px 20px; border: 1px solid var(--accent-color);
-            border-radius: 20px; font-size: 12px; color: var(--loader-text);
-            opacity: 0; transform: translateY(10px); transition: all 1s;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--loader-text);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 1s;
         }
-        .perm-hint.show { opacity: 1; transform: translateY(0); }
+
+        .perm-hint.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* === 2. 叙事文本层 (DOM覆盖) === */
         #narrative-layer {
-            position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; width: 72%; max-width: 1000px; pointer-events: none; z-index: 5;
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 72%;
+            max-width: 1000px;
+            pointer-events: none;
+            z-index: 5;
             padding: 16px 24px;
         }
+
         #narrative-layer::before {
             content: '';
-            position: absolute; inset: -4% 10% 0 10%;
+            position: absolute;
+            inset: -4% 10% 0 10%;
             transform: translateZ(0);
             background: var(--veil);
             filter: blur(20px) saturate(1.1);
             pointer-events: none;
             z-index: -1;
         }
+
         .n-title {
-            font-size: clamp(42px, 8vw, 128px); font-weight: 800; letter-spacing: 0; margin-bottom: 14px;
-            opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            font-size: clamp(42px, 8vw, 128px);
+            font-weight: 800;
+            letter-spacing: 0;
+            margin-bottom: 14px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
             background: var(--title-gradient);
-            background-size: 200% 200%; animation: gradientShift 9s ease-in-out infinite;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 40px rgba(0,0,0,0.35);
+            background-size: 200% 200%;
+            animation: gradientShift 9s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
         }
-        [data-theme="day"] .n-title { -webkit-text-stroke: 0.6px rgba(255,255,255,0.10); }
-        [data-theme="night"] .n-title { -webkit-text-stroke: 0.6px rgba(0,0,0,0.20); }
+
+        [data-theme="day"] .n-title {
+            -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.10);
+        }
+
+        [data-theme="night"] .n-title {
+            -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.20);
+        }
+
         .n-sub {
-            font-size: 20px; font-weight: 500; letter-spacing: 6px; opacity: 0;
-            transform: translateY(20px); transition: all 0.8s 0.2s cubic-bezier(0.2, 1, 0.3, 1);
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 6px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s 0.2s cubic-bezier(0.2, 1, 0.3, 1);
             color: var(--text-color);
-            text-shadow: 0 6px 24px rgba(0,0,0,0.25);
+            text-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
         }
+
         /* 激活状态类名 */
-        .show-text .n-title, .show-text .n-sub { opacity: 1; transform: translateY(0); }
+        .show-text .n-title, .show-text .n-sub {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* === 3. UI HUD === */
         #ui-layer {
-            position: fixed; inset: 0; pointer-events: none; z-index: 20;
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 40px; opacity: 0; transition: opacity 1.5s ease;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 1.5s ease;
         }
 
         .header {
-            display: flex; justify-content: space-between;
-            font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-            color: var(--text-color); opacity: 0.7; font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-weight: 600;
         }
 
         .center-stage {
-            position: absolute; top: 78%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; width: 100%; pointer-events: auto;
+            position: absolute;
+            top: 78%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            pointer-events: auto;
         }
 
         .main-hint {
-            font-size: 20px; font-weight: 300; letter-spacing: 8px; cursor: pointer;
-            padding: 20px; transition: all 0.3s;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            cursor: pointer;
+            padding: 20px;
+            transition: all 0.3s;
         }
-        .main-hint:hover { letter-spacing: 10px; color: var(--accent-color); }
+
+        .main-hint:hover {
+            letter-spacing: 10px;
+            color: var(--accent-color);
+        }
 
         .sub-hint {
-            font-size: 10px; opacity: 0.6; margin-top: 15px; letter-spacing: 3px;
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 15px;
+            letter-spacing: 3px;
             font-family: 'Courier New', monospace;
         }
 
         .exit-btn {
-            margin-top: 40px; display: inline-block;
-            font-size: 10px; letter-spacing: 2px;
-            padding: 10px 24px; border: 1px solid var(--text-color);
-            border-radius: 30px; cursor: pointer; opacity: 0;
-            transform: translateY(20px); transition: all 0.5s; pointer-events: none;
+            margin-top: 40px;
+            display: inline-block;
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding: 10px 24px;
+            border: 1px solid var(--text-color);
+            border-radius: 30px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+            pointer-events: none;
         }
-        .exit-btn.visible { opacity: 0.8; transform: translateY(0); pointer-events: auto; }
-        .exit-btn:hover { background: var(--text-color); color: var(--bg-color); opacity: 1; }
 
-        @keyframes breathe { 0%,100%{opacity:0.6} 50%{opacity:1} }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .exit-btn.visible {
+            opacity: 0.8;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .exit-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+            opacity: 1;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                opacity: 0.6
+            }
+            50% {
+                opacity: 1
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        #canvas-container { position: fixed; inset: 0; z-index: 1; }
-        #aurora-layer { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
-        #aurora-layer::before, #aurora-layer::after { content: ''; position: absolute; inset: -20% -10%; filter: blur(60px); opacity: 0.25; }
-        @keyframes auroraDrift { 0% { transform: translate3d(-4%, -2%, 0) scale(1); } 50% { transform: translate3d(4%, 2%, 0) scale(1.05); } 100% { transform: translate3d(-4%, 0, 0) scale(1); } }
-        [data-theme="day"] #aurora-layer::before { background: radial-gradient(60% 40% at 25% 30%, rgba(255,180,200,0.35), transparent 60%); animation: auroraDrift 22s ease-in-out infinite; }
-        [data-theme="day"] #aurora-layer::after { background: radial-gradient(60% 40% at 70% 60%, rgba(110,195,255,0.35), transparent 60%); animation: auroraDrift 28s ease-in-out infinite reverse; }
-        [data-theme="night"] #aurora-layer::before { background: radial-gradient(70% 45% at 20% 30%, rgba(0,255,255,0.28), transparent 62%); animation: auroraDrift 24s ease-in-out infinite; }
-        [data-theme="night"] #aurora-layer::after { background: radial-gradient(70% 45% at 75% 65%, rgba(255,122,243,0.24), transparent 62%); animation: auroraDrift 32s ease-in-out infinite reverse; }
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #aurora-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #aurora-layer::before, #aurora-layer::after {
+            content: '';
+            position: absolute;
+            inset: -20% -10%;
+            filter: blur(60px);
+            opacity: 0.25;
+        }
+
+        @keyframes auroraDrift {
+            0% {
+                transform: translate3d(-4%, -2%, 0) scale(1);
+            }
+            50% {
+                transform: translate3d(4%, 2%, 0) scale(1.05);
+            }
+            100% {
+                transform: translate3d(-4%, 0, 0) scale(1);
+            }
+        }
+
+        [data-theme="day"] #aurora-layer::before {
+            background: radial-gradient(60% 40% at 25% 30%, rgba(255, 180, 200, 0.35), transparent 60%);
+            animation: auroraDrift 22s ease-in-out infinite;
+        }
+
+        [data-theme="day"] #aurora-layer::after {
+            background: radial-gradient(60% 40% at 70% 60%, rgba(110, 195, 255, 0.35), transparent 60%);
+            animation: auroraDrift 28s ease-in-out infinite reverse;
+        }
+
+        [data-theme="night"] #aurora-layer::before {
+            background: radial-gradient(70% 45% at 20% 30%, rgba(0, 255, 255, 0.28), transparent 62%);
+            animation: auroraDrift 24s ease-in-out infinite;
+        }
+
+        [data-theme="night"] #aurora-layer::after {
+            background: radial-gradient(70% 45% at 75% 65%, rgba(255, 122, 243, 0.24), transparent 62%);
+            animation: auroraDrift 32s ease-in-out infinite reverse;
+        }
 
     </style>
 
@@ -177,16 +346,17 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
 <!-- 1. 智能加载层 -->
 <div id="start-screen">
-    <div class="logo-text">HONESTY</div>
+    <div class="logo-text">Honesty</div>
     <div class="loader-ring"></div>
-    <div class="status-text" id="loader-msg">Initializing System...</div>
+    <div class="status-text" id="loader-msg">正在唤醒灵感...</div>
     <div class="perm-hint" id="perm-guide">⚠ 请允许摄像头权限以开启手势交互</div>
 </div>
 
@@ -206,11 +376,11 @@
     <div class="center-stage">
         <div class="main-hint" id="main-hint" onclick="enterArchive()"></div>
         <div class="sub-hint" id="sub-hint"></div>
-        <div class="exit-btn" id="exit-btn" onclick="exitArchive()">[ EXIT ARCHIVE ]</div>
+        <div class="exit-btn" id="exit-btn" onclick="exitArchive()">[ 退出动画 ]</div>
     </div>
 
     <div class="header" style="align-self: flex-end;">
-        <span id="lang-display">EN</span>
+        <span id="lang-display">中文</span>
     </div>
 </div>
 
@@ -228,11 +398,12 @@
         isLoaded: false,
         mode: 'LOCKED', // LOCKED, UNLOCKED
         handCount: 0,
-        handL: new THREE.Vector3(9999,9999,0),
-        handR: new THREE.Vector3(9999,9999,0),
+        handL: new THREE.Vector3(9999, 9999, 0),
+        handR: new THREE.Vector3(9999, 9999, 0),
         unlockProgress: 0,
         exitCooldownUntil: 0
     };
+
     APP_STATE.namasteStableFrames = 0;
 
     // 安全DOM操作，防止报错
@@ -270,7 +441,7 @@
     }
 
     function getStoredLanguage() {
-        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'cn' : 'en');
     }
 
     const ENV = {
@@ -280,8 +451,8 @@
 
     // 应用主题
     document.documentElement.setAttribute('data-theme', ENV.theme);
-    safeUpdateText('theme-display', `THEME: ${ENV.theme.toUpperCase()}`);
-    safeUpdateText('lang-display', ENV.lang.toUpperCase());
+    safeUpdateText('theme-display', `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
+    safeUpdateText('lang-display', ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
 
     /**
      * ============================================================================
@@ -291,11 +462,7 @@
     const DICTIONARY = {
         zh: {
             load: [
-                "正在唤醒灵感...",
-                "接入神经元网络...",
-                "校准引力波场...",
-                "等待视觉信号...",
-                "系统准备就绪."
+                "系统正在学会做梦...", "唤醒沉睡的灵感...", "接入神经元网络...", "解析意识微光...", "在0与1间种诗...", "等待灵感穿越视界...", "系统准备就绪."
             ],
             hints: {
                 main: "双手合十 · 解锁档案",
@@ -303,21 +470,17 @@
                 unlocking: "正在识别..."
             },
             slides: [
-                { t: "诚", s: "以诚为始，以敬为归" },
-                { t: "深度", s: "深入一处，洞见万物" },
-                { t: "长期主义", s: "与时间为友，向内修行" },
-                { t: "代码诗性", s: "在逻辑中安放灵魂" },
-                { t: "创造", s: "让技术拥有意义" },
-                { t: "INFJ", s: "提倡者 // 温柔坚定" }
+                {t: "初心", s: "在这喧嚣世界中，依然相信纯粹的力量"},
+                {t: "思考", s: "喜欢在安静的夜晚与自己对话"},
+                {t: "成长", s: "每一步脚印都刻着时光的温度"},
+                {t: "梦想", s: "用代码编织心中的理想国"},
+                {t: "独处", s: "享受一个人的深度时光"},
+                {t: "人格", s: "INFJ —— 在人群之外，静静观察世界"}
             ]
         },
         en: {
             load: [
-                "Summoning Lucid Dream...",
-                "Linking Neurons...",
-                "Tuning Gravity Field...",
-                "Awaiting Vision...",
-                "System Ready."
+                "The system is learning to dream...", "Awakening dormant inspiration...", "Connecting to neural networks...", "Decoding the glow of consciousness...", "Planting poetry between 0s and 1s...", "Waiting for inspiration to cross the horizon...", "System ready."
             ],
             hints: {
                 main: "Click or Namaste",
@@ -325,12 +488,12 @@
                 unlocking: "Identifying..."
             },
             slides: [
-                { t: "Honesty", s: "Begin with truth, return with grace" },
-                { t: "Depth Over Breadth", s: "One well, a thousand rivers" },
-                { t: "Long-Termism", s: "Friend of Time, seeker within" },
-                { t: "Code Philosophy", s: "A vessel for the soul of logic" },
-                { t: "Creation", s: "Where technique meets meaning" },
-                { t: "INFJ", s: "The Advocate // Gentle Resolve" }
+                {t: "Honesty", s: "In a noisy world, still believe in the power of simplicity"},
+                {t: "Contemplation", s: "Enjoy late night conversations with myself"},
+                {t: "Growth", s: "Every step carries the warmth of time"},
+                {t: "Dreams", s: "Weaving an ideal realm with code"},
+                {t: "Solitude", s: "Cherishing deep moments of alone time"},
+                {t: "Personality", s: "INFJ // Observing the world from the sidelines"}
             ]
         }
     };
@@ -339,11 +502,15 @@
 
     // 循环播放加载文案
     let loadIdx = 0;
+    const maxIdx = CONTENT.load.length - 1;
     const loadTimer = setInterval(() => {
-        if (APP_STATE.isLoaded) { clearInterval(loadTimer); return; }
-        safeUpdateText('loader-msg', CONTENT.load[loadIdx % CONTENT.load.length]);
+        if (APP_STATE.isLoaded) {
+            clearInterval(loadTimer);
+            return;
+        }
+        safeUpdateText('loader-msg', CONTENT.load[loadIdx > maxIdx ? maxIdx : loadIdx]);
         loadIdx++;
-    }, 2000);
+    }, 600);
 
     // 权限超时提示
     setTimeout(() => {
@@ -364,8 +531,8 @@
         // 白天用实心(Normal)，黑夜用发光(Additive)
         blending: ENV.theme === 'day' ? THREE.NormalBlending : THREE.AdditiveBlending,
         colors: ENV.theme === 'day'
-            ? { base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x0055ff) } // 白天：深蓝灰 -> 亮蓝
-            : { base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF) }, // 黑夜：白 -> 青
+            ? {base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x0055ff)} // 白天：深蓝灰 -> 亮蓝
+            : {base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF)}, // 黑夜：白 -> 青
         bloom: ENV.theme === 'day' ? 0.0 : 1.5 // 白天无辉光，确保清晰
     };
 
@@ -377,7 +544,7 @@
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 4000);
     camera.position.z = CONFIG.camZ;
 
-    const renderer = new THREE.WebGLRenderer({ powerPreference: "high-performance", antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({powerPreference: "high-performance", antialias: true, alpha: true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
@@ -405,8 +572,8 @@
 
     const simplex = new SimplexNoise();
 
-    for(let i=0; i<CONFIG.particleCount; i++) {
-        const i3 = i*3;
+    for (let i = 0; i < CONFIG.particleCount; i++) {
+        const i3 = i * 3;
         // 黄金螺旋球
         const y = 1 - (i / (CONFIG.particleCount - 1)) * 2;
         const radius = Math.sqrt(1 - y * y);
@@ -417,12 +584,18 @@
         const z = Math.sin(theta) * radius * r;
         const py = y * r;
 
-        positions[i3] = x; origin[i3] = x; targets[i3] = x;
-        positions[i3+1] = py; origin[i3+1] = py; targets[i3+1] = py;
-        positions[i3+2] = z; origin[i3+2] = z; targets[i3+2] = z;
+        positions[i3] = x;
+        origin[i3] = x;
+        targets[i3] = x;
+        positions[i3 + 1] = py;
+        origin[i3 + 1] = py;
+        targets[i3 + 1] = py;
+        positions[i3 + 2] = z;
+        origin[i3 + 2] = z;
+        targets[i3 + 2] = z;
 
         // 白天粒子略大，增强可见度
-        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme==='day'?1.3:1.0);
+        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme === 'day' ? 1.3 : 1.0);
         seeds[i] = Math.random();
     }
 
@@ -430,19 +603,19 @@
     geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
     geometry.setAttribute('seed', new THREE.BufferAttribute(seeds, 1));
 
-    const paletteA = ENV.theme==='day' ? new THREE.Color(0x6ec3ff) : new THREE.Color(0x00ffff);
-    const paletteB = ENV.theme==='day' ? new THREE.Color(0xffb4c8) : new THREE.Color(0xff7af3);
+    const paletteA = ENV.theme === 'day' ? new THREE.Color(0x6ec3ff) : new THREE.Color(0x00ffff);
+    const paletteB = ENV.theme === 'day' ? new THREE.Color(0xffb4c8) : new THREE.Color(0xff7af3);
 
     const material = new THREE.ShaderMaterial({
         uniforms: {
-            scale: { value: window.innerHeight / 2 },
-            baseColor: { value: CONFIG.colors.base },
-            activeColor: { value: CONFIG.colors.active },
-            mixVal: { value: 0.0 },
-            time: { value: 0.0 },
-            paletteA: { value: paletteA },
-            paletteB: { value: paletteB },
-            nebulaIntensity: { value: 0.0 }
+            scale: {value: window.innerHeight / 2},
+            baseColor: {value: CONFIG.colors.base},
+            activeColor: {value: CONFIG.colors.active},
+            mixVal: {value: 0.0},
+            time: {value: 0.0},
+            paletteA: {value: paletteA},
+            paletteB: {value: paletteB},
+            nebulaIntensity: {value: 0.0}
         },
         vertexShader: `
                 attribute float size;
@@ -484,12 +657,13 @@
 
     // 手势光标
     const cursorMat = new THREE.MeshBasicMaterial({
-        color: ENV.theme==='day' ? 0x0044cc : 0x00FF00,
+        color: ENV.theme === 'day' ? 0x0044cc : 0x00FF00,
         side: THREE.DoubleSide, transparent: true, opacity: 0.6
     });
-    const cursorL = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
-    const cursorR = new THREE.Mesh(new THREE.RingGeometry(8,10,32), cursorMat);
-    scene.add(cursorL); scene.add(cursorR);
+    const cursorL = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
+    const cursorR = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
+    scene.add(cursorL);
+    scene.add(cursorR);
 
     /**
      * ============================================================================
@@ -514,38 +688,43 @@
         // 1. 形状更新 (锁定模式：呼吸球)
         if (APP_STATE.mode === 'LOCKED') {
             targetMix = APP_STATE.handCount > 0 ? 0.6 : 0.0;
-            const ns = 0.002; const ts = time * 0.15;
+            const ns = 0.002;
+            const ts = time * 0.15;
 
-            for(let i=0; i<CONFIG.particleCount; i++) {
-                const i3 = i*3;
-                const ox = origin[i3]; const oy = origin[i3+1]; const oz = origin[i3+2];
-                const noise = simplex.noise3D(ox*ns + ts, oy*ns, oz*ns + ts);
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+                const ox = origin[i3];
+                const oy = origin[i3 + 1];
+                const oz = origin[i3 + 2];
+                const noise = simplex.noise3D(ox * ns + ts, oy * ns, oz * ns + ts);
 
-                let offX=0, offY=0;
-                if(APP_STATE.handCount===1) {
+                let offX = 0, offY = 0;
+                if (APP_STATE.handCount === 1) {
                     offX = APP_STATE.handL.x * 0.15;
                     offY = APP_STATE.handL.y * 0.15;
                 }
 
                 const scale = 1 + noise * 0.3;
                 targets[i3] = ox * scale + offX;
-                targets[i3+1] = oy * scale + offY;
-                targets[i3+2] = oz * scale;
+                targets[i3 + 1] = oy * scale + offY;
+                targets[i3 + 2] = oz * scale;
             }
         } else {
             targetMix = 1.0;
         }
 
         // 2. 物理迭代
-        for(let i=0; i<CONFIG.particleCount; i++) {
-            const i3 = i*3;
-            const px = positions[i3]; const py = positions[i3+1]; const pz = positions[i3+2];
+        for (let i = 0; i < CONFIG.particleCount; i++) {
+            const i3 = i * 3;
+            const px = positions[i3];
+            const py = positions[i3 + 1];
+            const pz = positions[i3 + 2];
 
             // 归位力
             const stiff = APP_STATE.mode === 'LOCKED' ? 0.03 : 0.05;
             velocities[i3] += (targets[i3] - px) * stiff;
-            velocities[i3+1] += (targets[i3+1] - py) * stiff;
-            velocities[i3+2] += (targets[i3+2] - pz) * stiff;
+            velocities[i3 + 1] += (targets[i3 + 1] - py) * stiff;
+            velocities[i3 + 2] += (targets[i3 + 2] - pz) * stiff;
 
             // --- 交互物理 ---
             if (APP_STATE.handCount === 1) {
@@ -554,39 +733,40 @@
                 const hy = APP_STATE.handL.y;
                 const dx = hx - px;
                 const dy = hy - py;
-                const distSq = dx*dx + dy*dy;
+                const distSq = dx * dx + dy * dy;
 
                 if (distSq < 150000) {
                     const f = (150000 - distSq) / 150000;
                     velocities[i3] += dx * f * 0.05;
-                    velocities[i3+1] += dy * f * 0.05;
-                    velocities[i3+2] += Math.sin(time*10 + distSq*0.0001) * 8 * f; // 波纹效果
+                    velocities[i3 + 1] += dy * f * 0.05;
+                    velocities[i3 + 2] += Math.sin(time * 10 + distSq * 0.0001) * 8 * f; // 波纹效果
                 }
             } else if (APP_STATE.handCount === 2) {
                 // 双手斥力
                 [APP_STATE.handL, APP_STATE.handR].forEach(h => {
-                    const dx = px - h.x; const dy = py - h.y;
-                    const distSq = dx*dx + dy*dy;
+                    const dx = px - h.x;
+                    const dy = py - h.y;
+                    const distSq = dx * dx + dy * dy;
                     if (distSq < 80000) {
                         const f = (80000 - distSq) / 80000;
                         velocities[i3] -= dx * f * 0.3;
-                        velocities[i3+1] -= dy * f * 0.3;
-                        velocities[i3+2] += 15 * f;
+                        velocities[i3 + 1] -= dy * f * 0.3;
+                        velocities[i3 + 2] += 15 * f;
                     }
                 });
             }
 
             velocities[i3] *= 0.90;
-            velocities[i3+1] *= 0.90;
-            velocities[i3+2] *= 0.90;
+            velocities[i3 + 1] *= 0.90;
+            velocities[i3 + 2] *= 0.90;
 
             positions[i3] += velocities[i3];
-            positions[i3+1] += velocities[i3+1];
-            positions[i3+2] += velocities[i3+2];
+            positions[i3 + 1] += velocities[i3 + 1];
+            positions[i3 + 2] += velocities[i3 + 2];
         }
 
         geometry.attributes.position.needsUpdate = true;
-        if(APP_STATE.handCount===0) particleSystem.rotation.y += 0.002;
+        if (APP_STATE.handCount === 0) particleSystem.rotation.y += 0.002;
 
         cursorL.position.set(APP_STATE.handL.x, APP_STATE.handL.y, 0);
         cursorR.position.set(APP_STATE.handR.x, APP_STATE.handR.y, 0);
@@ -604,7 +784,7 @@
      */
     let narrativeTimer = null;
 
-    window.enterArchive = function() {
+    window.enterArchive = function () {
         if (APP_STATE.mode === 'UNLOCKED') return;
         APP_STATE.mode = 'UNLOCKED';
 
@@ -620,7 +800,7 @@
         startNarrative();
     }
 
-    window.exitArchive = function() {
+    window.exitArchive = function () {
         APP_STATE.mode = 'LOCKED';
         APP_STATE.exitCooldownUntil = Date.now() + 2000;
 
@@ -636,10 +816,10 @@
     }
 
     function explode(f) {
-        for(let i=0; i<CONFIG.particleCount; i++) {
-            velocities[i*3] += (Math.random()-0.5)*f;
-            velocities[i*3+1] += (Math.random()-0.5)*f;
-            velocities[i*3+2] += (Math.random()-0.5)*f;
+        for (let i = 0; i < CONFIG.particleCount; i++) {
+            velocities[i * 3] += (Math.random() - 0.5) * f;
+            velocities[i * 3 + 1] += (Math.random() - 0.5) * f;
+            velocities[i * 3 + 2] += (Math.random() - 0.5) * f;
         }
     }
 
@@ -662,12 +842,12 @@
             layer.classList.add('show-text');
 
             // 粒子散开做背景
-            for(let i=0; i<CONFIG.particleCount; i++) {
+            for (let i = 0; i < CONFIG.particleCount; i++) {
                 const a = i * 0.1;
-                const r = 900 + Math.random()*200;
-                targets[i*3] = Math.cos(a)*r;
-                targets[i*3+1] = (Math.random()-0.5)*300;
-                targets[i*3+2] = Math.sin(a)*r;
+                const r = 900 + Math.random() * 200;
+                targets[i * 3] = Math.cos(a) * r;
+                targets[i * 3 + 1] = (Math.random() - 0.5) * 300;
+                targets[i * 3 + 2] = Math.sin(a) * r;
             }
 
             narrativeTimer = setTimeout(() => {
@@ -687,7 +867,7 @@
      * ============================================================================
      */
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-    hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.85, minTrackingConfidence: 0.85 });
+    hands.setOptions({maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.85, minTrackingConfidence: 0.85});
 
     hands.onResults(results => {
         // Loader logic
@@ -705,11 +885,11 @@
         if (landmarks && landmarks.length > 0) {
             APP_STATE.handCount = landmarks.length;
             safeUpdateText('sys-status', `LINKED (${APP_STATE.handCount})`);
-            if(sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
+            if (sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
 
             // 坐标处理 (镜像)
             const process = (lm) => ({
-                x: ( (1.0 - lm.x) * 2 - 1 ) * 800,
+                x: ((1.0 - lm.x) * 2 - 1) * 800,
                 y: -(lm.y * 2 - 1 - 0.2) * 600
             });
 
@@ -734,7 +914,7 @@
                 const okW = dW < 0.28;
                 const okI = dI < 0.20;
                 const okM = dM < 0.20;
-                const ok = ((okW?1:0) + (okI?1:0) + (okM?1:0)) >= 2;
+                const ok = ((okW ? 1 : 0) + (okI ? 1 : 0) + (okM ? 1 : 0)) >= 2;
                 if (ok) {
                     APP_STATE.namasteStableFrames++;
                 } else {
@@ -749,7 +929,7 @@
         } else {
             APP_STATE.handCount = 0;
             safeUpdateText('sys-status', 'SEARCHING...');
-            if(sysStatus) sysStatus.style.color = 'inherit';
+            if (sysStatus) sysStatus.style.color = 'inherit';
             APP_STATE.unlockProgress = 0;
             safeUpdateText('main-hint', CONTENT.hints.main);
         }
@@ -757,17 +937,19 @@
 
     const videoElement = document.getElementById('input-video');
     const cameraUtils = new Camera(videoElement, {
-        onFrame: async () => { await hands.send({image: videoElement}); },
+        onFrame: async () => {
+            await hands.send({image: videoElement});
+        },
         width: 640, height: 480
     });
     cameraUtils.start();
 
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth/window.innerHeight;
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         composer.setSize(window.innerWidth, window.innerHeight);
-        material.uniforms.scale.value = window.innerHeight/2;
+        material.uniforms.scale.value = window.innerHeight / 2;
     });
 
     animate();
