@@ -912,18 +912,30 @@
 
     // 进入动画模式
     function enterAnimationMode() {
-        if (APP_STATE.isLoaded) return;
+        // 不再检查APP_STATE.isLoaded状态，确保函数总是执行
         APP_STATE.isLoaded = true;
 
         // 隐藏加载屏幕
         const loader = DOM_CACHE.startScreen;
         loader.style.opacity = 0;
         DOM_CACHE.uiLayer.style.opacity = 1;
-        setTimeout(() => loader.style.display = 'none', 1000);
+        setTimeout(() => {
+            if (loader && loader.parentNode) {
+                loader.style.display = 'none';
+            }
+        }, 1000);
 
-        // 显示交互模式按钮（如果摄像头未启用）
-        if (!CAMERA_STATE.enabled) {
-            showInteractionModeButton();
+        // 如果摄像头已启用，更新UI以反映交互模式
+        if (CAMERA_STATE.enabled) {
+            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+        } else {
+            // 显示交互模式按钮（如果摄像头未启用）
+            setTimeout(() => {
+                if (!CAMERA_STATE.enabled && !DOM_CACHE.interactionModeBtn) {
+                    showInteractionModeButton();
+                }
+            }, 1500); // 延迟显示，确保页面已完成过渡
         }
     }
 
@@ -1163,9 +1175,46 @@
         width: 640, height: 480
     });
 
-    // 页面加载完成后不自动启动摄像头
+    // 检查摄像头权限状态（非阻塞方式）
+    function checkCameraPermissionAndEnable() {
+        // 使用setTimeout确保不阻塞主流程
+        setTimeout(async () => {
+            try {
+                // 检查是否支持 permissions API
+                if (navigator.permissions) {
+                    const permission = await navigator.permissions.query({name: 'camera'});
+                    if (permission.state === 'granted') {
+                        // 如果已授权，则启用摄像头
+                        try {
+                            await cameraUtils.start();
+                            CAMERA_STATE.enabled = true;
+                            CAMERA_STATE.permissionDenied = false;
+                            console.log("Camera auto-enabled due to existing permission");
+                        } catch (err) {
+                            console.log("Failed to auto-start camera:", err);
+                            CAMERA_STATE.enabled = false;
+                            CAMERA_STATE.permissionDenied = true;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.log("Unable to check camera permission:", err);
+            }
+        }, 0); // 尽快执行，但仍是异步的
+    }
+
+    // 页面加载完成后检查摄像头权限状态
     window.addEventListener('load', () => {
-        console.log("Page loaded, camera not initialized");
+        console.log("Page loaded, checking camera permission status");
+        checkCameraPermissionAndEnable();
+
+        // 无论摄像头权限如何，3.5秒后确保页面加载状态完成
+        setTimeout(() => {
+            if (!APP_STATE.isLoaded) {
+                APP_STATE.isLoaded = true;
+                console.log("Forced page load completion");
+            }
+        }, 3500);
     });
 
     window.addEventListener('resize', () => {
@@ -1188,26 +1237,21 @@
     }, 800);
 
     // 资源加载完成后显示进入按钮
-    setTimeout(() => {
-        if (!APP_STATE.isLoaded) {
-            // 显示进入选项
-            DOM_CACHE.enterContainer.style.opacity = '1';
+    // 显示进入选项
+    DOM_CACHE.enterContainer.style.opacity = '1';
 
-            // 开始5秒倒计时
-            let countdown = 5;
-            safeUpdateText(DOM_CACHE.countdownHint, `${countdown}秒后自动进入`);
-
-            CAMERA_STATE.countdownInterval = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    safeUpdateText(DOM_CACHE.countdownHint, `${countdown}秒后自动进入`);
-                } else {
-                    clearInterval(CAMERA_STATE.countdownInterval);
-                    enterAnimationMode();
-                }
-            }, 1000);
+    // 开始5秒倒计时
+    let countdown = 5;
+    safeUpdateText(DOM_CACHE.countdownHint, `${countdown}${ENV.lang === 'zh' ? '秒后自动进入' : ' seconds to auto-enter'}`);
+    CAMERA_STATE.countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            safeUpdateText(DOM_CACHE.countdownHint, `${countdown}${ENV.lang === 'zh' ? '秒后自动进入' : ' seconds to auto-enter'}`);
+        } else {
+            clearInterval(CAMERA_STATE.countdownInterval);
+            enterAnimationMode(); // 确保调用进入动画模式
         }
-    }, 3000);
+    }, 1000);
 
     // 进入按钮事件处理
     DOM_CACHE.enterBtn.addEventListener('click', () => {
@@ -1216,11 +1260,7 @@
     });
 
     safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-    if (CAMERA_STATE.enabled) {
-        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
-    } else {
-        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
-    }
+    safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
     animate();
 
 </script>
