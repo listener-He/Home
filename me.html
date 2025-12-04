@@ -104,13 +104,79 @@
             transform: translateY(0);
         }
 
-        .direct-enter-container {
+        /* 进入按钮样式 */
+        .enter-container {
             text-align: center;
         }
 
-        .direct-enter-btn:hover {
+        .enter-btn:hover {
             background: var(--accent-color);
             color: var(--loader-bg);
+        }
+
+        /* 交互模式按钮 */
+        .interaction-mode-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            padding: 12px 24px;
+            background: var(--accent-color);
+            color: var(--loader-bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+            z-index: 30;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .interaction-mode-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .interaction-mode-btn:hover {
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 255, 0);
+            }
+        }
+
+        /* 黑夜模式下的特殊样式 */
+        [data-theme="night"] .interaction-mode-btn {
+            background: var(--accent-color);
+            color: #000;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
+        }
+
+        [data-theme="night"] .interaction-mode-btn:hover {
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.6);
+        }
+
+        /* 白天模式下的特殊样式 */
+        [data-theme="day"] .interaction-mode-btn {
+            background: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(53, 103, 255, 0.4);
+        }
+
+        [data-theme="day"] .interaction-mode-btn:hover {
+            box-shadow: 0 6px 16px rgba(53, 103, 255, 0.6);
         }
 
         /* === 2. 叙事文本层 (DOM覆盖) === */
@@ -366,10 +432,9 @@
     <div class="logo-text">Honesty</div>
     <div class="loader-ring"></div>
     <div class="status-text" id="loader-msg">正在唤醒灵感...</div>
-    <div class="perm-hint" id="perm-guide">⚠ 请允许摄像头权限以开启手势交互</div>
-    <div class="direct-enter-container" id="direct-enter-container" style="margin-top: 20px; opacity: 0; transition: opacity 1s;">
-        <div class="direct-enter-hint" id="direct-enter-hint" style="font-size: 14px; margin-bottom: 15px;">3秒后自动进入</div>
-        <button class="direct-enter-btn" id="direct-enter-btn" style="padding: 10px 20px; background: transparent; border: 1px solid var(--accent-color); color: var(--loader-text); border-radius: 20px; cursor: pointer; font-size: 12px;">立即进入</button>
+    <div class="enter-container" id="enter-container" style="margin-top: 30px; text-align: center; opacity: 0; transition: opacity 1s;">
+        <div class="countdown-hint" id="countdown-hint" style="font-size: 14px; margin-bottom: 15px; color: var(--loader-text);">5秒后自动进入</div>
+        <button class="enter-btn" id="enter-btn" style="padding: 12px 24px; background: transparent; border: 1px solid var(--accent-color); color: var(--loader-text); border-radius: 30px; cursor: pointer; font-size: 14px; letter-spacing: 2px;">立即进入</button>
     </div>
 </div>
 
@@ -388,7 +453,7 @@
 
     <div class="center-stage">
         <div class="main-hint" id="main-hint" onclick="enterArchive()"></div>
-        <div class="sub-hint" id="sub-hint"></div>
+        <div class="sub-hint" id="sub-hint" onclick="requestCameraAccess()"></div>
         <div class="exit-btn" id="exit-btn" onclick="exitArchive()">[ 退出动画 ]</div>
     </div>
 
@@ -424,10 +489,9 @@
         // 加载屏幕相关元素
         startScreen: document.getElementById('start-screen'),
         loaderMsg: document.getElementById('loader-msg'),
-        permHint: document.getElementById('perm-guide'),
-        directEnterContainer: document.getElementById('direct-enter-container'),
-        directEnterHint: document.getElementById('direct-enter-hint'),
-        directEnterBtn: document.getElementById('direct-enter-btn'),
+        enterContainer: document.getElementById('enter-container'),
+        countdownHint: document.getElementById('countdown-hint'),
+        enterBtn: document.getElementById('enter-btn'),
 
         // 叙事层相关元素
         narrativeLayer: document.getElementById('narrative-layer'),
@@ -442,6 +506,9 @@
         mainHint: document.getElementById('main-hint'),
         subHint: document.getElementById('sub-hint'),
         exitBtn: document.getElementById('exit-btn'),
+
+        // 交互模式按钮
+        interactionModeBtn: null,
 
         // 其他元素
         canvasContainer: document.getElementById('canvas-container'),
@@ -489,19 +556,6 @@
         lang: getStoredLanguage()
     };
 
-    // 摄像头权限状态管理
-    const CAMERA_STATE = {
-        enabled: false,          // 摄像头是否已启用
-        permissionDenied: false,  // 用户是否拒绝了权限
-        autoEnterTimeout: null,   // 自动进入计时器
-        retryTimeout: null       // 重试计时器
-    };
-
-    // 应用主题
-    document.documentElement.setAttribute('data-theme', ENV.theme);
-    safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
-    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
-
     /**
      * ============================================================================
      * 3. 内容字典
@@ -516,11 +570,10 @@
                 main: "双手合十 · 解锁档案",
                 sub: "单手·引力牵引｜双手·力场排斥",
                 unlocking: "正在识别...",
-                directEnterHint: "5秒后自动进入",
-                directEnterBtn: "立即进入",
-                cameraDisabledMainHint: "点击进入档案馆",
-                cameraDisabledSubHint: "[ 再次申请摄像头权限 ]",
-                cameraRetryTimeout: "摄像头授权超时，5秒后取消"
+                countdownHint: "5秒后自动进入",
+                enterBtn: "立即进入",
+                interactionModeBtn: "交互模式",
+                cameraAccessInfo: "点击启用交互模式"
             },
             slides: [
                 {t: "初心", s: "在这喧嚣世界中，依然相信纯粹的力量"},
@@ -539,11 +592,10 @@
                 main: "Click or Namaste",
                 sub: "One Hand Drag · Two Hands Repel",
                 unlocking: "Identifying...",
-                directEnterHint: "Auto enter in 5 seconds",
-                directEnterBtn: "Enter Now",
-                cameraDisabledMainHint: "Click to Enter Archive",
-                cameraDisabledSubHint: "[ Request Camera Access Again ]",
-                cameraRetryTimeout: "Camera authorization timeout, canceling in 5 seconds"
+                countdownHint: "Auto enter in 5 seconds",
+                enterBtn: "Enter Now",
+                interactionModeBtn: "Interaction Mode",
+                cameraAccessInfo: "Click to enable camera interaction"
             },
             slides: [
                 {t: "Honesty", s: "In a noisy world, still believe in the power of simplicity"},
@@ -558,45 +610,22 @@
 
     const CONTENT = DICTIONARY[ENV.lang];
 
-    // 设置直接进入按钮的文本
-    safeUpdateText(DOM_CACHE.directEnterBtn, CONTENT.hints.directEnterBtn);
-    safeUpdateText(DOM_CACHE.directEnterHint, CONTENT.hints.directEnterHint);
+    // 设置进入按钮的文本
+    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint);
+    safeUpdateText(DOM_CACHE.enterBtn, CONTENT.hints.enterBtn);
 
-    // 直接进入按钮事件处理
-    DOM_CACHE.directEnterBtn.addEventListener('click', () => {
-        clearTimeout(CAMERA_STATE.autoEnterTimeout);
-        enterWithoutCamera();
-    });
+    // 摄像头权限状态管理
+    const CAMERA_STATE = {
+        enabled: false,          // 摄像头是否已启用
+        permissionDenied: false,  // 用户是否拒绝了权限
+        autoEnterTimeout: null,   // 自动进入计时器
+        countdownInterval: null   // 倒计时计时器
+    };
 
-    // 循环播放加载文案
-    let loadIdx = 0;
-    const maxIdx = CONTENT.load.length - 1;
-    const loadTimer = setInterval(() => {
-        if (APP_STATE.isLoaded) {
-            clearInterval(loadTimer);
-            return;
-        }
-        safeUpdateText(DOM_CACHE.loaderMsg, CONTENT.load[loadIdx > maxIdx ? maxIdx : loadIdx]);
-        loadIdx++;
-    }, 600);
-
-    // 权限超时提示和自动进入功能
-    setTimeout(() => {
-        if (!APP_STATE.isLoaded) {
-            safeClass(DOM_CACHE.permHint, 'add', 'show');
-            
-            // 显示直接进入选项
-            DOM_CACHE.directEnterContainer.style.opacity = '1';
-            
-            // 3秒后自动进入动画模式
-            CAMERA_STATE.autoEnterTimeout = setTimeout(() => {
-                enterWithoutCamera();
-            }, 3000);
-        }
-    }, 5000);
-
-    safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-    safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+    // 应用主题
+    document.documentElement.setAttribute('data-theme', ENV.theme);
+    safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
+    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'CN' ? '中文' : 'English');
 
     /**
      * ============================================================================
@@ -857,16 +886,15 @@
 
     /**
      * ============================================================================
-     * 6. 逻辑控制 (叙事/退出) - 修复空指针问题
+     * 6. 逻辑控制 (动画/退出)
      * ============================================================================
      */
     let narrativeTimer = null;
 
-    // 无摄像头进入动画模式（不是叙事模式）
-    function enterWithoutCamera() {
+    // 进入动画模式
+    function enterAnimationMode() {
         if (APP_STATE.isLoaded) return;
         APP_STATE.isLoaded = true;
-        CAMERA_STATE.enabled = false;
 
         // 隐藏加载屏幕
         const loader = DOM_CACHE.startScreen;
@@ -874,27 +902,75 @@
         DOM_CACHE.uiLayer.style.opacity = 1;
         setTimeout(() => loader.style.display = 'none', 1000);
 
-        // 更新UI提示
-        safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.cameraDisabledMainHint);
-        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraDisabledSubHint);
-        
-        // 清除加载文案定时器
-        clearInterval(loadTimer);
+        // 显示交互模式按钮（如果摄像头未启用）
+        if (!CAMERA_STATE.enabled) {
+            showInteractionModeButton();
+        }
+    }
+
+    // 显示交互模式按钮
+    function showInteractionModeButton() {
+        // 创建交互模式按钮
+        const btn = document.createElement('button');
+        btn.className = 'interaction-mode-btn';
+        btn.id = 'interaction-mode-btn';
+        btn.textContent = CONTENT.hints.interactionModeBtn;
+        document.body.appendChild(btn);
+
+        // 缓存按钮引用
+        DOM_CACHE.interactionModeBtn = btn;
+
+        // 显示按钮
+        setTimeout(() => {
+            btn.classList.add('visible');
+        }, 100);
+
+        // 添加点击事件
+        btn.addEventListener('click', () => {
+            requestCameraAccess();
+        });
+    }
+
+    // 请求摄像头权限
+    function requestCameraAccess() {
+        if (CAMERA_STATE.enabled) {
+            return;
+        }
+        // 隐藏交互模式按钮
+        if (DOM_CACHE.interactionModeBtn) {
+            DOM_CACHE.interactionModeBtn.classList.remove('visible');
+        }
+
+        // 更新提示文本
+        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
+
+        // 尝试启动摄像头
+        cameraUtils.start().then(() => {
+            // 成功启动，更新状态
+            CAMERA_STATE.enabled = true;
+            CAMERA_STATE.permissionDenied = false;
+            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+            setTimeout(() => {
+                if (DOM_CACHE.interactionModeBtn && DOM_CACHE.interactionModeBtn.parentNode) {
+                    DOM_CACHE.interactionModeBtn.parentNode.removeChild(DOM_CACHE.interactionModeBtn);
+                    DOM_CACHE.interactionModeBtn = null;
+                }
+            }, 500);
+        }).catch(err => {
+            // 权限被拒绝
+            console.log("Camera access error:", err);
+            CAMERA_STATE.permissionDenied = true;
+            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
+            DOM_CACHE.interactionModeBtn.classList.add('visible');
+        });
     }
 
     window.enterArchive = function () {
         if (APP_STATE.mode === 'UNLOCKED') return;
         APP_STATE.mode = 'UNLOCKED';
-        CAMERA_STATE.enabled = true;
-
-        // 隐藏加载屏幕
-        const loader = DOM_CACHE.startScreen;
-        loader.style.opacity = 0;
-        DOM_CACHE.uiLayer.style.opacity = 1;
-        setTimeout(() => loader.style.display = 'none', 1000);
 
         // UI
-        safeClass(DOM_CACHE.mainHint, 'add', 'hidden'); // 隐藏主提示 (CSS需支持或直接display)
+        safeClass(DOM_CACHE.mainHint, 'add', 'hidden');
         DOM_CACHE.mainHint.style.display = 'none';
         DOM_CACHE.subHint.style.display = 'none';
         safeClass(DOM_CACHE.exitBtn, 'add', 'visible');
@@ -909,18 +985,15 @@
         APP_STATE.mode = 'LOCKED';
         APP_STATE.exitCooldownUntil = Date.now() + 2000;
 
-        // 根据摄像头状态更新UI
+        DOM_CACHE.mainHint.style.display = 'block';
+        DOM_CACHE.subHint.style.display = 'block';
+        safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
         if (CAMERA_STATE.enabled) {
-            DOM_CACHE.mainHint.style.display = 'block';
-            DOM_CACHE.subHint.style.display = 'block';
-            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
             safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
         } else {
-            DOM_CACHE.mainHint.style.display = 'block';
-            DOM_CACHE.subHint.style.display = 'block';
-            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.cameraDisabledMainHint);
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraDisabledSubHint);
+            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
         }
+
 
         safeClass(DOM_CACHE.exitBtn, 'remove', 'visible');
         safeClass(DOM_CACHE.narrativeLayer, 'remove', 'show-text');
@@ -928,6 +1001,11 @@
         APP_STATE.unlockProgress = 0;
         clearTimeout(narrativeTimer);
         explode(50);
+
+        // 退出后重新显示交互模式按钮（如果之前已启用摄像头）
+        if (CAMERA_STATE.enabled) {
+            showInteractionModeButton();
+        }
     }
 
     function explode(f) {
@@ -989,9 +1067,6 @@
         if (!APP_STATE.isLoaded) {
             APP_STATE.isLoaded = true;
             CAMERA_STATE.enabled = true;
-
-            // 清除自动进入定时器
-            clearTimeout(CAMERA_STATE.autoEnterTimeout);
         }
 
         // 只有在摄像头启用时才处理手势
@@ -1053,44 +1128,24 @@
         }
     });
 
-    DOM_CACHE.subHint.addEventListener('click', () => {
-        // 只有在无摄像头模式下才允许重新申请权限
-        if (!CAMERA_STATE.enabled && APP_STATE.isLoaded) {
-            requestCameraAccess();
-        }
-    });
-
-    // 请求摄像头权限
-    function requestCameraAccess() {
-        // 更新提示文本
-        safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.cameraRetryTimeout);
-
-        // 尝试启动摄像头
-        cameraUtils.start().then(() => {
-            // 成功启动，隐藏提示
-            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-        }).catch(err => {
-            console.log("Camera access error:", err);
-        });
-
-        // 5秒后取消
-        CAMERA_STATE.retryTimeout = setTimeout(() => {
-            cameraUtils.stop();
-            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.cameraDisabledMainHint);
-        }, 5000);
-    }
-
     const videoElement = DOM_CACHE.inputVideo;
     const cameraUtils = new Camera(videoElement, {
         onFrame: async () => {
-            await hands.send({image: videoElement});
+            try {
+                await hands.send({image: videoElement});
+            } catch (err) {
+                // 捕获并隐藏技术性错误信息
+                if (err.name !== 'NotAllowedError' && err.message.indexOf('Permission dismissed') === -1) {
+                    console.log("Camera processing error:", err);
+                }
+            }
         },
         width: 640, height: 480
     });
 
-    // 初始启动摄像头
-    cameraUtils.start().catch(err => {
-        console.log("Initial camera access denied:", err);
+    // 页面加载完成后不自动启动摄像头
+    window.addEventListener('load', () => {
+        console.log("Page loaded, camera not initialized");
     });
 
     window.addEventListener('resize', () => {
@@ -1101,6 +1156,52 @@
         material.uniforms.scale.value = window.innerHeight / 2;
     });
 
+    // 循环播放加载文案
+    let loadIdx = 0;
+    const maxIdx = CONTENT.load.length - 1;
+    const loadTimer = setInterval(() => {
+        if (APP_STATE.isLoaded) {
+            clearInterval(loadTimer);
+            return;
+        }
+        safeUpdateText(DOM_CACHE.loaderMsg, CONTENT.load[loadIdx > maxIdx ? maxIdx : loadIdx]);
+        loadIdx++;
+    }, 600);
+
+    // 资源加载完成后显示进入按钮
+    setTimeout(() => {
+        if (!APP_STATE.isLoaded) {
+            // 显示进入选项
+            DOM_CACHE.enterContainer.style.opacity = '1';
+
+            // 开始5秒倒计时
+            let countdown = 5;
+            safeUpdateText(DOM_CACHE.countdownHint, `${countdown}秒后自动进入`);
+
+            CAMERA_STATE.countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    safeUpdateText(DOM_CACHE.countdownHint, `${countdown}秒后自动进入`);
+                } else {
+                    clearInterval(CAMERA_STATE.countdownInterval);
+                    enterAnimationMode();
+                }
+            }, 1000);
+        }
+    }, 3000);
+
+    // 进入按钮事件处理
+    DOM_CACHE.enterBtn.addEventListener('click', () => {
+        clearInterval(CAMERA_STATE.countdownInterval);
+        enterAnimationMode();
+    });
+
+    safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+    if (CAMERA_STATE.enabled) {
+        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+    } else {
+        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
+    }
     animate();
 
 </script>
