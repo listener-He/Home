@@ -348,6 +348,8 @@
             opacity: 1;
         }
 
+        /* 已移除动画切换按钮样式，避免同时加载多个动画资源 */
+
         @keyframes breathe {
             0%, 100% {
                 opacity: 0.6
@@ -437,6 +439,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <!-- 添加动画类库 -->
+    <script src="js/ParticleSystem.js"></script>
+
 </head>
 <body>
 
@@ -486,781 +491,631 @@
 <div id="aurora-layer"></div>
 <script src="js/config.js?version=20251125"></script>
 <script>
-    /**
-     * ============================================================================
-     * 1. 安全工具与状态
-     * ============================================================================
-     */
-    const APP_STATE = {
-        isLoaded: false,
-        mode: 'LOCKED', // LOCKED, UNLOCKED
-        handCount: 0,
-        handL: new THREE.Vector3(9999, 9999, 0),
-        handR: new THREE.Vector3(9999, 9999, 0),
-        unlockProgress: 0,
-        exitCooldownUntil: 0
-    };
+        /**
+         * ============================================================================
+         * 1. 安全工具与状态
+         * ============================================================================
+         */
+        const APP_STATE = {
+            isLoaded: false,
+            mode: 'LOCKED', // LOCKED, UNLOCKED
+            handCount: 0,
+            handL: new THREE.Vector3(9999, 9999, 0),
+            handR: new THREE.Vector3(9999, 9999, 0),
+            unlockProgress: 0,
+            exitCooldownUntil: 0
+        };
 
-    APP_STATE.namasteStableFrames = 0;
+        APP_STATE.namasteStableFrames = 0;
 
-    // 缓存频繁访问的DOM元素以提高性能
-    const DOM_CACHE = {
-        // 加载屏幕相关元素
-        startScreen: document.getElementById('start-screen'),
-        loaderMsg: document.getElementById('loader-msg'),
-        enterContainer: document.getElementById('enter-container'),
-        countdownHint: document.getElementById('countdown-hint'),
-        enterBtn: document.getElementById('enter-btn'),
+        // 缓存频繁访问的DOM元素以提高性能
+        const DOM_CACHE = {
+            // 加载屏幕相关元素
+            startScreen: document.getElementById('start-screen'),
+            loaderMsg: document.getElementById('loader-msg'),
+            enterContainer: document.getElementById('enter-container'),
+            countdownHint: document.getElementById('countdown-hint'),
+            enterBtn: document.getElementById('enter-btn'),
 
-        // 叙事层相关元素
-        narrativeLayer: document.getElementById('narrative-layer'),
-        nTitle: document.getElementById('n-title'),
-        nSub: document.getElementById('n-sub'),
+            // 叙事层相关元素
+            narrativeLayer: document.getElementById('narrative-layer'),
+            nTitle: document.getElementById('n-title'),
+            nSub: document.getElementById('n-sub'),
 
-        // UI层相关元素
-        uiLayer: document.getElementById('ui-layer'),
-        sysStatus: document.getElementById('sys-status'),
-        themeDisplay: document.getElementById('theme-display'),
-        langDisplay: document.getElementById('lang-display'),
-        mainHint: document.getElementById('main-hint'),
-        subHint: document.getElementById('sub-hint'),
-        exitBtn: document.getElementById('exit-btn'),
+            // UI层相关元素
+            uiLayer: document.getElementById('ui-layer'),
+            sysStatus: document.getElementById('sys-status'),
+            themeDisplay: document.getElementById('theme-display'),
+            langDisplay: document.getElementById('lang-display'),
+            mainHint: document.getElementById('main-hint'),
+            subHint: document.getElementById('sub-hint'),
+            exitBtn: document.getElementById('exit-btn'),
 
-        // 交互模式按钮
-        interactionModeBtn: null,
+            // 交互模式按钮
+            interactionModeBtn: null,
 
-        // 其他元素
-        canvasContainer: document.getElementById('canvas-container'),
-        inputVideo: document.getElementById('input-video')
-    };
+            // 其他元素
+            canvasContainer: document.getElementById('canvas-container'),
+            inputVideo: document.getElementById('input-video')
+        };
 
-    // 安全DOM操作，防止报错
-    function safeUpdateText(element, text) {
-        if (element) element.innerText = text;
-    }
-
-    function safeClass(element, method, className) {
-        if (element) element.classList[method](className);
-    }
-
-    /**
-     * ============================================================================
-     * 2. 环境引擎 (主题 & 语言)
-     * ============================================================================
-     */
-    function getStoredTheme() {
-        const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme';
-        const cacheJson = localStorage.getItem(cacheKey);
-        const saved = cacheJson ? JSON.parse(cacheJson) : null;
-
-        let theme = 'day';
-        const hour = new Date().getHours();
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        // 缓存过期(1小时)或无缓存时重新判断
-        if (!saved || (Date.now() - (saved.time || 0) > 3600000)) {
-            if (hour >= 18 || hour < 6 || prefersDark) theme = 'night';
-        } else {
-            theme = saved.value;
+        // 安全DOM操作，防止报错
+        function safeUpdateText(element, text) {
+            if (element) element.innerText = text;
         }
-        return theme;
-    }
 
-    function getStoredLanguage() {
-        return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
-    }
+        function safeClass(element, method, className) {
+            if (element) element.classList[method](className);
+        }
 
-    const ENV = {
-        theme: getStoredTheme(),
-        lang: getStoredLanguage()
-    };
+        /**
+         * ============================================================================
+         * 2. 环境引擎 (主题 & 语言)
+         * ============================================================================
+         */
+        function getStoredTheme() {
+            const cacheKey = window.SiteConfig?.cacheKeys?.theme?.key || 'theme';
+            const cacheJson = localStorage.getItem(cacheKey);
+            const saved = cacheJson ? JSON.parse(cacheJson) : null;
 
-    /**
-     * ============================================================================
-     * 3. 内容字典
-     * ============================================================================
-     */
-    const DICTIONARY = {
-        zh: {
-            load: [
-                "系统正在学会做梦...", "唤醒沉睡的灵感...", "接入神经元网络...", "解析意识微光...", "在0与1间种诗...", "等待灵感穿越视界...", "系统准备就绪."
-            ],
-            hints: {
-                main: "双手合十 · 解锁档案",
-                sub: "单手·引力牵引｜双手·力场排斥",
-                unlocking: "正在识别...",
-                countdownHint: "{second}秒后自动进入",
-                enterBtn: "立即进入",
-                interactionModeBtn: "交互模式",
-                cameraAccessInfo: "点击启用交互模式"
+            let theme = 'day';
+            const hour = new Date().getHours();
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            // 缓存过期(1小时)或无缓存时重新判断
+            if (!saved || (Date.now() - (saved.time || 0) > 3600000)) {
+                if (hour >= 18 || hour < 6 || prefersDark) theme = 'night';
+            } else {
+                theme = saved.value;
+            }
+            return theme;
+        }
+
+        function getStoredLanguage() {
+            return localStorage.getItem('lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+        }
+
+        const ENV = {
+            theme: getStoredTheme(),
+            lang: getStoredLanguage()
+        };
+
+        /**
+         * ============================================================================
+         * 3. 内容字典
+         * ============================================================================
+         */
+        const DICTIONARY = {
+            zh: {
+                load: [
+                    "系统正在学会做梦...", "唤醒沉睡的灵感...", "接入神经元网络...", "解析意识微光...", "在0与1间种诗...", "等待灵感穿越视界...", "系统准备就绪."
+                ],
+                hints: {
+                    main: "双手合十 · 解锁档案",
+                    sub: "单手·引力牵引｜双手·力场排斥",
+                    unlocking: "正在识别...",
+                    countdownHint: "{second}秒后自动进入",
+                    enterBtn: "立即进入",
+                    interactionModeBtn: "交互模式",
+                    cameraAccessInfo: "点击启用交互模式"
+                },
+                slides: [
+                    {t: "初心", s: "在这喧嚣世界中，依然相信纯粹的力量"},
+                    {t: "思考", s: "喜欢在安静的夜晚与自己对话"},
+                    {t: "成长", s: "每一步脚印都刻着时光的温度"},
+                    {t: "梦想", s: "用代码编织心中的理想国"},
+                    {t: "独处", s: "享受一个人的深度时光"},
+                    {t: "人格", s: "INFJ —— 在人群之外，静静观察世界"}
+                ]
             },
-            slides: [
-                {t: "初心", s: "在这喧嚣世界中，依然相信纯粹的力量"},
-                {t: "思考", s: "喜欢在安静的夜晚与自己对话"},
-                {t: "成长", s: "每一步脚印都刻着时光的温度"},
-                {t: "梦想", s: "用代码编织心中的理想国"},
-                {t: "独处", s: "享受一个人的深度时光"},
-                {t: "人格", s: "INFJ —— 在人群之外，静静观察世界"}
-            ]
-        },
-        en: {
-            load: [
-                "The system is learning to dream...", "Awakening dormant inspiration...", "Connecting to neural networks...", "Decoding the glow of consciousness...", "Planting poetry between 0s and 1s...", "Waiting for inspiration to cross the horizon...", "System ready."
-            ],
-            hints: {
-                main: "Click or Namaste",
-                sub: "One Hand Drag · Two Hands Repel",
-                unlocking: "Identifying...",
-                countdownHint: "Auto enter in {second} seconds",
-                enterBtn: "Enter Now",
-                interactionModeBtn: "Interaction Mode",
-                cameraAccessInfo: "Click to enable camera interaction"
-            },
-            slides: [
-                {t: "Honesty", s: "In a noisy world, still believe in the power of simplicity"},
-                {t: "Contemplation", s: "Enjoy late night conversations with myself"},
-                {t: "Growth", s: "Every step carries the warmth of time"},
-                {t: "Dreams", s: "Weaving an ideal realm with code"},
-                {t: "Solitude", s: "Cherishing deep moments of alone time"},
-                {t: "Personality", s: "INFJ // Observing the world from the sidelines"}
-            ]
-        }
-    };
-
-    const CONTENT = DICTIONARY[ENV.lang];
-
-    // 设置进入按钮的文本
-    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', '5'));
-    safeUpdateText(DOM_CACHE.enterBtn, CONTENT.hints.enterBtn);
-
-    // 摄像头权限状态管理
-    const CAMERA_STATE = {
-        enabled: false,          // 摄像头是否已启用
-        permissionDenied: false,  // 用户是否拒绝了权限
-        autoEnterTimeout: null,   // 自动进入计时器
-        countdownInterval: null   // 倒计时计时器
-    };
-
-    // 应用主题
-    document.documentElement.setAttribute('data-theme', ENV.theme);
-    safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
-    safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'ZH' ? '中文' : 'English');
-
-    /**
-     * ============================================================================
-     * 4. THREE.JS 渲染引擎
-     * ============================================================================
-     */
-    const CONFIG = {
-        particleCount: 22000,
-        camZ: 600,
-        // 白天用实心(Normal)，黑夜用发光(Additive)
-        blending: ENV.theme === 'day' ? THREE.NormalBlending : THREE.AdditiveBlending,
-        colors: ENV.theme === 'day'
-            ? {base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x0055ff)} // 白天：深蓝灰 -> 亮蓝
-            : {base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF)}, // 黑夜：白 -> 青
-        bloom: ENV.theme === 'day' ? 0.0 : 1.5 // 白天无辉光，确保清晰
-    };
-
-    const scene = new THREE.Scene();
-    // 雾效与背景色同步
-    const fogColor = ENV.theme === 'day' ? 0xe0eafc : 0x000000;
-    scene.fog = new THREE.FogExp2(fogColor, 0.0015);
-
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 4000);
-    camera.position.z = CONFIG.camZ;
-
-    const renderer = new THREE.WebGLRenderer({powerPreference: "high-performance", antialias: true, alpha: true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
-    DOM_CACHE.canvasContainer.appendChild(renderer.domElement);
-
-    const composer = new THREE.EffectComposer(renderer);
-    composer.addPass(new THREE.RenderPass(scene, camera));
-
-    if (CONFIG.bloom > 0) {
-        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-        bloomPass.strength = CONFIG.bloom;
-        bloomPass.radius = 0.5;
-        bloomPass.threshold = 0.1;
-        composer.addPass(bloomPass);
-    }
-
-    // --- 粒子系统 ---
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(CONFIG.particleCount * 3);
-    const targets = new Float32Array(CONFIG.particleCount * 3);
-    const origin = new Float32Array(CONFIG.particleCount * 3);
-    const velocities = new Float32Array(CONFIG.particleCount * 3);
-    const sizes = new Float32Array(CONFIG.particleCount);
-    const seeds = new Float32Array(CONFIG.particleCount);
-
-    const simplex = new SimplexNoise();
-
-    for (let i = 0; i < CONFIG.particleCount; i++) {
-        const i3 = i * 3;
-        // 黄金螺旋球
-        const y = 1 - (i / (CONFIG.particleCount - 1)) * 2;
-        const radius = Math.sqrt(1 - y * y);
-        const theta = i * 2.39996;
-        const r = 280;
-
-        const x = Math.cos(theta) * radius * r;
-        const z = Math.sin(theta) * radius * r;
-        const py = y * r;
-
-        positions[i3] = x;
-        origin[i3] = x;
-        targets[i3] = x;
-        positions[i3 + 1] = py;
-        origin[i3 + 1] = py;
-        targets[i3 + 1] = py;
-        positions[i3 + 2] = z;
-        origin[i3 + 2] = z;
-        targets[i3 + 2] = z;
-
-        // 白天粒子略大，增强可见度
-        sizes[i] = (Math.random() * 2.5 + 0.5) * (ENV.theme === 'day' ? 1.3 : 1.0);
-        seeds[i] = Math.random();
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-    geometry.setAttribute('seed', new THREE.BufferAttribute(seeds, 1));
-
-    const paletteA = ENV.theme === 'day' ? new THREE.Color(0x6ec3ff) : new THREE.Color(0x00ffff);
-    const paletteB = ENV.theme === 'day' ? new THREE.Color(0xffb4c8) : new THREE.Color(0xff7af3);
-
-    const material = new THREE.ShaderMaterial({
-        uniforms: {
-            scale: {value: window.innerHeight / 2},
-            baseColor: {value: CONFIG.colors.base},
-            activeColor: {value: CONFIG.colors.active},
-            mixVal: {value: 0.0},
-            time: {value: 0.0},
-            paletteA: {value: paletteA},
-            paletteB: {value: paletteB},
-            nebulaIntensity: {value: 0.0}
-        },
-        vertexShader: `
-                attribute float size;
-                attribute float seed;
-                varying float vSeed;
-                void main() {
-                    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                    gl_PointSize = size * ( 500.0 / -mvPosition.z );
-                    gl_Position = projectionMatrix * mvPosition;
-                    vSeed = seed;
-                }
-            `,
-        fragmentShader: `
-                uniform vec3 baseColor;
-                uniform vec3 activeColor;
-                uniform vec3 paletteA;
-                uniform vec3 paletteB;
-                uniform float mixVal;
-                uniform float time;
-                uniform float nebulaIntensity;
-                varying float vSeed;
-                void main() {
-                    float r = length(gl_PointCoord - vec2(0.5));
-                    if (r > 0.5) discard;
-                    vec3 baseMix = mix(baseColor, activeColor, mixVal);
-                    float drift = 0.5 + 0.5 * sin(time * 0.15 + vSeed * 6.28318);
-                    vec3 nebula = mix(paletteA, paletteB, drift);
-                    vec3 finalColor = mix(baseMix, nebula, nebulaIntensity);
-                    gl_FragColor = vec4(finalColor, 1.0);
-                }
-            `,
-        blending: CONFIG.blending,
-        depthTest: false,
-        transparent: true
-    });
-
-    const particleSystem = new THREE.Points(geometry, material);
-    scene.add(particleSystem);
-
-    // 手势光标
-    const cursorMat = new THREE.MeshBasicMaterial({
-        color: ENV.theme === 'day' ? 0x0044cc : 0x00FF00,
-        side: THREE.DoubleSide, transparent: true, opacity: 0.6
-    });
-    const cursorL = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
-    const cursorR = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
-    scene.add(cursorL);
-    scene.add(cursorR);
-
-    /**
-     * ============================================================================
-     * 5. 物理引擎循环
-     * ============================================================================
-     */
-    const clock = new THREE.Clock();
-    let targetMix = 0;
-
-    function animate() {
-        const time = clock.getElapsedTime();
-
-        // 颜色插值
-        material.uniforms.mixVal.value += (targetMix - material.uniforms.mixVal.value) * 0.1;
-        material.uniforms.time.value = time;
-        if (ENV.theme === 'night') {
-            material.uniforms.nebulaIntensity.value = APP_STATE.mode === 'UNLOCKED' ? 0.55 : 0.35;
-        } else {
-            material.uniforms.nebulaIntensity.value = APP_STATE.mode === 'UNLOCKED' ? 0.22 : 0.12;
-        }
-
-        // 1. 形状更新 (锁定模式：呼吸球)
-        if (APP_STATE.mode === 'LOCKED') {
-            targetMix = APP_STATE.handCount > 0 ? 0.6 : 0.0;
-            const ns = 0.002;
-            const ts = time * 0.15;
-
-            for (let i = 0; i < CONFIG.particleCount; i++) {
-                const i3 = i * 3;
-                const ox = origin[i3];
-                const oy = origin[i3 + 1];
-                const oz = origin[i3 + 2];
-                const noise = simplex.noise3D(ox * ns + ts, oy * ns, oz * ns + ts);
-
-                let offX = 0, offY = 0;
-                if (APP_STATE.handCount === 1) {
-                    offX = APP_STATE.handL.x * 0.15;
-                    offY = APP_STATE.handL.y * 0.15;
-                }
-
-                const scale = 1 + noise * 0.3;
-                targets[i3] = ox * scale + offX;
-                targets[i3 + 1] = oy * scale + offY;
-                targets[i3 + 2] = oz * scale;
+            en: {
+                load: [
+                    "The system is learning to dream...", "Awakening dormant inspiration...", "Connecting to neural networks...", "Decoding the glow of consciousness...", "Planting poetry between 0s and 1s...", "Waiting for inspiration to cross the horizon...", "System ready."
+                ],
+                hints: {
+                    main: "Click or Namaste",
+                    sub: "One Hand Drag · Two Hands Repel",
+                    unlocking: "Identifying...",
+                    countdownHint: "Auto enter in {second} seconds",
+                    enterBtn: "Enter Now",
+                    interactionModeBtn: "Interaction Mode",
+                    cameraAccessInfo: "Click to enable camera interaction"
+                },
+                slides: [
+                    {t: "Honesty", s: "In a noisy world, still believe in the power of simplicity"},
+                    {t: "Contemplation", s: "Enjoy late night conversations with myself"},
+                    {t: "Growth", s: "Every step carries the warmth of time"},
+                    {t: "Dreams", s: "Weaving an ideal realm with code"},
+                    {t: "Solitude", s: "Cherishing deep moments of alone time"},
+                    {t: "Personality", s: "INFJ // Observing the world from the sidelines"}
+                ]
             }
-        } else {
-            targetMix = 1.0;
+        };
+
+        const CONTENT = DICTIONARY[ENV.lang];
+
+        // 设置进入按钮的文本
+        safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', '5'));
+        safeUpdateText(DOM_CACHE.enterBtn, CONTENT.hints.enterBtn);
+
+        // 摄像头权限状态管理
+        const CAMERA_STATE = {
+            enabled: false,          // 摄像头是否已启用
+            permissionDenied: false,  // 用户是否拒绝了权限
+            autoEnterTimeout: null,   // 自动进入计时器
+            countdownInterval: null   // 倒计时计时器
+        };
+
+        // 应用主题
+        document.documentElement.setAttribute('data-theme', ENV.theme);
+        safeUpdateText(DOM_CACHE.themeDisplay, `THEME: ${ENV.lang.toUpperCase() === 'en' ? ENV.theme.toUpperCase() : ENV.theme === 'day' ? '白天' : '黑夜'}`);
+        safeUpdateText(DOM_CACHE.langDisplay, ENV.lang.toUpperCase() === 'ZH' ? '中文' : 'English');
+
+        /**
+         * ============================================================================
+         * 4. THREE.JS 渲染引擎
+         * ============================================================================
+         */
+        const CONFIG = {
+            particleCount: 22000,
+            camZ: 600,
+            // 白天用实心(Normal)，黑夜用发光(Additive)
+            blending: ENV.theme === 'day' ? THREE.NormalBlending : THREE.AdditiveBlending,
+            colors: ENV.theme === 'day'
+                ? {base: new THREE.Color(0x2c3e50), active: new THREE.Color(0x0055ff)} // 白天：深蓝灰 -> 亮蓝
+                : {base: new THREE.Color(0xFFFFFF), active: new THREE.Color(0x00FFFF)}, // 黑夜：白 -> 青
+            bloom: ENV.theme === 'day' ? 0.0 : 1.5 // 白天无辉光，确保清晰
+        };
+
+        const scene = new THREE.Scene();
+        // 雾效与背景色同步
+        const fogColor = ENV.theme === 'day' ? 0xe0eafc : 0x000000;
+        scene.fog = new THREE.FogExp2(fogColor, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 4000);
+        camera.position.z = CONFIG.camZ;
+
+        const renderer = new THREE.WebGLRenderer({powerPreference: "high-performance", antialias: true, alpha: true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x000000, 0);
+        DOM_CACHE.canvasContainer.appendChild(renderer.domElement);
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(new THREE.RenderPass(scene, camera));
+
+        if (CONFIG.bloom > 0) {
+            const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            bloomPass.strength = CONFIG.bloom;
+            bloomPass.radius = 0.5;
+            bloomPass.threshold = 0.1;
+            composer.addPass(bloomPass);
         }
 
-        // 2. 物理迭代
-        for (let i = 0; i < CONFIG.particleCount; i++) {
-            const i3 = i * 3;
-            const px = positions[i3];
-            const py = positions[i3 + 1];
-            const pz = positions[i3 + 2];
-
-            // 归位力
-            const stiff = APP_STATE.mode === 'LOCKED' ? 0.03 : 0.05;
-            velocities[i3] += (targets[i3] - px) * stiff;
-            velocities[i3 + 1] += (targets[i3 + 1] - py) * stiff;
-            velocities[i3 + 2] += (targets[i3 + 2] - pz) * stiff;
-
-            // --- 交互物理 ---
-            if (APP_STATE.handCount === 1) {
-                // 单手黑洞 (增强吸附感)
-                const hx = APP_STATE.handL.x;
-                const hy = APP_STATE.handL.y;
-                const dx = hx - px;
-                const dy = hy - py;
-                const distSq = dx * dx + dy * dy;
-
-                if (distSq < 150000) {
-                    const f = (150000 - distSq) / 150000;
-                    velocities[i3] += dx * f * 0.05;
-                    velocities[i3 + 1] += dy * f * 0.05;
-                    velocities[i3 + 2] += Math.sin(time * 10 + distSq * 0.0001) * 8 * f; // 波纹效果
+        // 初始化粒子系统
+        const particleSystem = new ParticleSystem({
+            particleCount: CONFIG.particleCount,
+            theme: ENV.theme,
+            callbacks: {
+                onInit: (system) => {
+                    scene.add(system);
+                },
+                onUpdate: (system) => {
+                    // 粒子系统更新后的回调
+                },
+                onAddObject: (object) => {
+                    scene.add(object);
+                },
+                onRemoveObject: (object) => {
+                    scene.remove(object);
                 }
-            } else if (APP_STATE.handCount === 2) {
-                // 双手斥力
-                [APP_STATE.handL, APP_STATE.handR].forEach(h => {
-                    const dx = px - h.x;
-                    const dy = py - h.y;
-                    const distSq = dx * dx + dy * dy;
-                    if (distSq < 80000) {
-                        const f = (80000 - distSq) / 80000;
-                        velocities[i3] -= dx * f * 0.3;
-                        velocities[i3 + 1] -= dy * f * 0.3;
-                        velocities[i3 + 2] += 15 * f;
-                    }
-                });
+            }
+        });
+
+        // 根据条件动态加载动画
+        function loadAnimation(animationType) {
+            // 移除当前所有动画
+            while (particleSystem.animations.length > 0) {
+                particleSystem.removeAnimation(particleSystem.animations[0]);
             }
 
-            velocities[i3] *= 0.90;
-            velocities[i3 + 1] *= 0.90;
-            velocities[i3 + 2] *= 0.90;
-
-            positions[i3] += velocities[i3];
-            positions[i3 + 1] += velocities[i3 + 1];
-            positions[i3 + 2] += velocities[i3 + 2];
+            // 根据类型动态加载动画
+            switch (animationType) {
+                case 'saturn':
+                    // 土星动画作为默认动画
+                    const saturnAnimation = new SaturnAnimation(particleSystem);
+                    particleSystem.addAnimation(saturnAnimation);
+                    break;
+                case 'particles':
+                default:
+                    // 基本粒子动画不需要额外对象
+                    break;
+            }
         }
 
-        geometry.attributes.position.needsUpdate = true;
-        if (APP_STATE.handCount === 0) particleSystem.rotation.y += 0.002;
+        // 手势光标
+        const cursorMat = new THREE.MeshBasicMaterial({
+            color: ENV.theme === 'day' ? 0x0044cc : 0x00FF00,
+            side: THREE.DoubleSide, transparent: true, opacity: 0.6
+        });
+        const cursorL = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
+        const cursorR = new THREE.Mesh(new THREE.RingGeometry(8, 10, 32), cursorMat);
+        scene.add(cursorL);
+        scene.add(cursorR);
 
-        cursorL.position.set(APP_STATE.handL.x, APP_STATE.handL.y, 0);
-        cursorR.position.set(APP_STATE.handR.x, APP_STATE.handR.y, 0);
-        cursorL.visible = (APP_STATE.handCount >= 1);
-        cursorR.visible = (APP_STATE.handCount === 2);
+        /**
+         * ============================================================================
+         * 5. 物理引擎循环
+         * ============================================================================
+         */
+        const clock = new THREE.Clock();
+        let targetMix = 0;
 
-        composer.render();
-        requestAnimationFrame(animate);
-    }
+        function animate() {
+            const time = clock.getElapsedTime();
+            const delta = Math.min(clock.getDelta(), 0.1);
 
-    /**
-     * ============================================================================
-     * 6. 逻辑控制 (动画/退出)
-     * ============================================================================
-     */
-    let narrativeTimer = null;
+            // 更新粒子系统
+            const targetMix = particleSystem.update(time, APP_STATE.mode, APP_STATE.handCount, APP_STATE.handL, APP_STATE.handR);
 
-    // 进入动画模式
-    function enterAnimationMode() {
-        // 不再检查APP_STATE.isLoaded状态，确保函数总是执行
-        APP_STATE.isLoaded = true;
+            cursorL.position.set(APP_STATE.handL.x, APP_STATE.handL.y, 0);
+            cursorR.position.set(APP_STATE.handR.x, APP_STATE.handR.y, 0);
+            cursorL.visible = (APP_STATE.handCount >= 1);
+            cursorR.visible = (APP_STATE.handCount === 2);
 
-        // 隐藏加载屏幕
-        const loader = DOM_CACHE.startScreen;
-        loader.style.opacity = 0;
-        DOM_CACHE.uiLayer.style.opacity = 1;
-        setTimeout(() => {
-            if (loader && loader.parentNode) {
-                loader.style.display = 'none';
-            }
-        }, 1000);
+            composer.render();
+            requestAnimationFrame(animate);
+        }
 
-        // 如果摄像头已启用，更新UI以反映交互模式
-        if (CAMERA_STATE.enabled) {
-            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
-        } else {
-            // 显示交互模式按钮（如果摄像头未启用）
+        /**
+         * ============================================================================
+         * 6. 逻辑控制 (动画/退出)
+         * ============================================================================
+         */
+        let narrativeTimer = null;
+
+        // 进入动画模式
+        function enterAnimationMode() {
+            APP_STATE.isLoaded = true;
+
+            // 隐藏加载屏幕
+            const loader = DOM_CACHE.startScreen;
+            loader.style.opacity = 0;
+            DOM_CACHE.uiLayer.style.opacity = 1;
+            setTimeout(() => {
+                if (loader && loader.parentNode) {
+                    loader.style.display = 'none';
+                }
+            }, 1000);
+
+            // 默认使用土星动画
             setTimeout(() => {
                 if (!CAMERA_STATE.enabled && !DOM_CACHE.interactionModeBtn) {
-                    showInteractionModeButton();
+                    loadAnimation('saturn');
                 }
-            }, 1500); // 延迟显示，确保页面已完成过渡
-        }
-    }
+            }, 1500);
 
-    // 显示交互模式按钮
-    function showInteractionModeButton() {
-        // 创建交互模式按钮
-        const btn = document.createElement('button');
-        btn.className = 'interaction-mode-btn';
-        btn.id = 'interaction-mode-btn';
-        btn.textContent = CONTENT.hints.interactionModeBtn;
-        document.body.appendChild(btn);
-
-        // 缓存按钮引用
-        DOM_CACHE.interactionModeBtn = btn;
-
-        // 显示按钮
-        setTimeout(() => {
-            btn.classList.add('visible');
-        }, 100);
-
-        // 添加点击事件
-        btn.addEventListener('click', () => {
-            requestCameraAccess();
-        });
-    }
-
-    // 请求摄像头权限
-    function requestCameraAccess() {
-        if (CAMERA_STATE.enabled) {
-            return;
-        }
-        // 隐藏交互模式按钮
-        if (DOM_CACHE.interactionModeBtn) {
-            DOM_CACHE.interactionModeBtn.classList.remove('visible');
-        }
-
-        // 更新提示文本
-        safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
-
-        // 尝试启动摄像头
-        cameraUtils.start().then(() => {
-            // 成功启动，更新状态
-            CAMERA_STATE.enabled = true;
-            CAMERA_STATE.permissionDenied = false;
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
-            setTimeout(() => {
-                if (DOM_CACHE.interactionModeBtn && DOM_CACHE.interactionModeBtn.parentNode) {
-                    DOM_CACHE.interactionModeBtn.parentNode.removeChild(DOM_CACHE.interactionModeBtn);
-                    DOM_CACHE.interactionModeBtn = null;
-                }
-            }, 500);
-        }).catch(err => {
-            // 权限被拒绝
-            console.log("Camera access error:", err);
-            CAMERA_STATE.permissionDenied = true;
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
-            DOM_CACHE.interactionModeBtn.classList.add('visible');
-        });
-    }
-
-    window.enterArchive = function () {
-        if (APP_STATE.mode === 'UNLOCKED') return;
-        APP_STATE.mode = 'UNLOCKED';
-
-        // UI
-        safeClass(DOM_CACHE.mainHint, 'add', 'hidden');
-        DOM_CACHE.mainHint.style.display = 'none';
-        DOM_CACHE.subHint.style.display = 'none';
-        safeClass(DOM_CACHE.exitBtn, 'add', 'visible');
-
-        // 粒子爆炸效果
-        explode(300);
-
-        startNarrative();
-    }
-
-    window.exitArchive = function () {
-        APP_STATE.mode = 'LOCKED';
-        APP_STATE.exitCooldownUntil = Date.now() + 2000;
-        APP_STATE.namasteStableFrames = 0; // 清空手势识别进度
-
-        DOM_CACHE.mainHint.style.display = 'block';
-        DOM_CACHE.subHint.style.display = 'block';
-        safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-        if (CAMERA_STATE.enabled) {
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
-        } else {
-            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
-        }
-
-
-        safeClass(DOM_CACHE.exitBtn, 'remove', 'visible');
-        safeClass(DOM_CACHE.narrativeLayer, 'remove', 'show-text');
-
-        APP_STATE.unlockProgress = 0;
-        clearTimeout(narrativeTimer);
-        explode(50);
-
-        // 退出后重新显示交互模式按钮（如果之前已启用摄像头）
-        if (CAMERA_STATE.enabled) {
-            showInteractionModeButton();
-        }
-    }
-
-    function explode(f) {
-        for (let i = 0; i < CONFIG.particleCount; i++) {
-            velocities[i * 3] += (Math.random() - 0.5) * f;
-            velocities[i * 3 + 1] += (Math.random() - 0.5) * f;
-            velocities[i * 3 + 2] += (Math.random() - 0.5) * f;
-        }
-    }
-
-    function startNarrative() {
-        let idx = 0;
-        const nTitle = DOM_CACHE.nTitle;
-        const nSub = DOM_CACHE.nSub;
-        const layer = DOM_CACHE.narrativeLayer;
-
-        // 必须检查元素是否存在
-        if (!nTitle || !nSub || !layer) return;
-
-        const next = () => {
-            if (APP_STATE.mode !== 'UNLOCKED') return;
-
-            const slide = CONTENT.slides[idx % CONTENT.slides.length];
-
-            nTitle.innerText = slide.t;
-            nSub.innerText = slide.s;
-            layer.classList.add('show-text');
-
-            // 粒子散开做背景
-            for (let i = 0; i < CONFIG.particleCount; i++) {
-                const a = i * 0.1;
-                const r = 900 + Math.random() * 200;
-                targets[i * 3] = Math.cos(a) * r;
-                targets[i * 3 + 1] = (Math.random() - 0.5) * 300;
-                targets[i * 3 + 2] = Math.sin(a) * r;
-            }
-
-            narrativeTimer = setTimeout(() => {
-                layer.classList.remove('show-text');
-                explode(10);
-                narrativeTimer = setTimeout(next, 1000);
-            }, 3000);
-
-            idx++;
-        };
-        next();
-    }
-
-    /**
-     * ============================================================================
-     * 7. MediaPipe 手势
-     * ============================================================================
-     */
-    const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-    hands.setOptions({maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.85, minTrackingConfidence: 0.85});
-
-    hands.onResults(results => {
-        // Loader logic
-        if (!APP_STATE.isLoaded) {
-            APP_STATE.isLoaded = true;
-            CAMERA_STATE.enabled = true;
-        }
-
-        // 只有在摄像头启用时才处理手势
-        if (CAMERA_STATE.enabled) {
-            const landmarks = results.multiHandLandmarks;
-            const sysStatus = DOM_CACHE.sysStatus;
-
-            if (landmarks && landmarks.length > 0) {
-                APP_STATE.handCount = landmarks.length;
-                safeUpdateText(sysStatus, `LINKED (${APP_STATE.handCount})`);
-                if (sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
-
-                // 坐标处理 (镜像)
-                const process = (lm) => ({
-                    x: ((1.0 - lm.x) * 2 - 1) * 800,
-                    y: -(lm.y * 2 - 1 - 0.2) * 600
-                });
-
-                const p1 = process(landmarks[0][9]);
-                APP_STATE.handL.x += (p1.x - APP_STATE.handL.x) * 0.25;
-                APP_STATE.handL.y += (p1.y - APP_STATE.handL.y) * 0.25;
-
-                if (landmarks.length > 1) {
-                    const p2 = process(landmarks[1][9]);
-                    APP_STATE.handR.x += (p2.x - APP_STATE.handR.x) * 0.25;
-                    APP_STATE.handR.y += (p2.y - APP_STATE.handR.y) * 0.25;
-                }
-
-                // 合十检测
-                if (landmarks.length === 2 && APP_STATE.mode === 'LOCKED' && Date.now() > APP_STATE.exitCooldownUntil) {
-                    const w1 = landmarks[0][0], w2 = landmarks[1][0];
-                    const i1 = landmarks[0][8], i2 = landmarks[1][8];
-                    const m1 = landmarks[0][12], m2 = landmarks[1][12];
-                    const dW = Math.hypot(w1.x - w2.x, w1.y - w2.y);
-                    const dI = Math.hypot(i1.x - i2.x, i1.y - i2.y);
-                    const dM = Math.hypot(m1.x - m2.x, m1.y - m2.y);
-                    const okW = dW < 0.28;
-                    const okI = dI < 0.20;
-                    const okM = dM < 0.20;
-                    const ok = ((okW ? 1 : 0) + (okI ? 1 : 0) + (okM ? 1 : 0)) >= 2;
-                    if (ok) {
-                        APP_STATE.namasteStableFrames++;
-                    } else {
-                        APP_STATE.namasteStableFrames = Math.max(0, APP_STATE.namasteStableFrames - 1);
-                    }
-                    const targetFrames = 20;
-                    const pct = Math.min(100, Math.round(APP_STATE.namasteStableFrames / targetFrames * 100));
-                    if (pct > 0) safeUpdateText(DOM_CACHE.mainHint, `${CONTENT.hints.unlocking} ${pct}%`);
-                    if (APP_STATE.namasteStableFrames >= targetFrames) enterArchive();
-                    if (!ok && APP_STATE.namasteStableFrames === 0) safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
-                }
-            } else {
-                APP_STATE.handCount = 0;
-                safeUpdateText(sysStatus, 'SEARCHING...');
-                if (sysStatus) sysStatus.style.color = 'inherit';
-                APP_STATE.unlockProgress = 0;
+            // 如果摄像头已启用，更新UI以反映交互模式
+            if (CAMERA_STATE.enabled) {
                 safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+                safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+            } else {
+                // 显示交互模式按钮（如果摄像头未启用）
+                setTimeout(() => {
+                    if (!CAMERA_STATE.enabled && !DOM_CACHE.interactionModeBtn) {
+                        showInteractionModeButton();
+                    }
+                }, 1500);
             }
         }
-    });
 
-    const videoElement = DOM_CACHE.inputVideo;
-    const cameraUtils = new Camera(videoElement, {
-        onFrame: async () => {
-            try {
-                await hands.send({image: videoElement});
-            } catch (err) {
-                // 捕获并隐藏技术性错误信息
-                if (err.name !== 'NotAllowedError' && err.message.indexOf('Permission dismissed') === -1) {
-                    console.log("Camera processing error:", err);
-                }
+        // 显示交互模式按钮
+        function showInteractionModeButton() {
+            // 创建交互模式按钮
+            const btn = document.createElement('button');
+            btn.className = 'interaction-mode-btn';
+            btn.id = 'interaction-mode-btn';
+            btn.textContent = CONTENT.hints.interactionModeBtn;
+            document.body.appendChild(btn);
+
+            // 缓存按钮引用
+            DOM_CACHE.interactionModeBtn = btn;
+
+            // 显示按钮
+            setTimeout(() => {
+                btn.classList.add('visible');
+            }, 100);
+
+            // 添加点击事件
+            btn.addEventListener('click', () => {
+                requestCameraAccess();
+            });
+        }
+
+        // 请求摄像头权限
+        function requestCameraAccess() {
+            if (CAMERA_STATE.enabled) {
+                return;
             }
-        },
-        width: 640, height: 480
-    });
+            // 隐藏交互模式按钮
+            if (DOM_CACHE.interactionModeBtn) {
+                DOM_CACHE.interactionModeBtn.classList.remove('visible');
+            }
 
-    // 检查摄像头权限状态（非阻塞方式）
-    function checkCameraPermissionAndEnable() {
-        // 使用setTimeout确保不阻塞主流程
-        setTimeout(async () => {
-            try {
-                // 检查是否支持 permissions API
-                if (navigator.permissions) {
-                    const permission = await navigator.permissions.query({name: 'camera'});
-                    if (permission.state === 'granted') {
-                        // 如果已授权，则启用摄像头
-                        try {
-                            await cameraUtils.start();
-                            CAMERA_STATE.enabled = true;
-                            CAMERA_STATE.permissionDenied = false;
-                            console.log("Camera auto-enabled due to existing permission");
-                        } catch (err) {
-                            console.log("Failed to auto-start camera:", err);
-                            CAMERA_STATE.enabled = false;
-                            CAMERA_STATE.permissionDenied = true;
-                        }
+            // 更新提示文本
+            safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
+
+            // 尝试启动摄像头
+            cameraUtils.start().then(() => {
+                // 成功启动，更新状态
+                CAMERA_STATE.enabled = true;
+                CAMERA_STATE.permissionDenied = false;
+                safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+                setTimeout(() => {
+                    if (DOM_CACHE.interactionModeBtn && DOM_CACHE.interactionModeBtn.parentNode) {
+                        DOM_CACHE.interactionModeBtn.parentNode.removeChild(DOM_CACHE.interactionModeBtn);
+                        DOM_CACHE.interactionModeBtn = null;
                     }
-                }
-            } catch (err) {
-                console.log("Unable to check camera permission:", err);
+                }, 500);
+            }).catch(err => {
+                // 权限被拒绝
+                console.log("Camera access error:", err);
+                CAMERA_STATE.permissionDenied = true;
+                safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
+                DOM_CACHE.interactionModeBtn.classList.add('visible');
+            });
+        }
+
+        window.enterArchive = function () {
+            if (APP_STATE.mode === 'UNLOCKED') return;
+            APP_STATE.mode = 'UNLOCKED';
+
+            // UI
+            safeClass(DOM_CACHE.mainHint, 'add', 'hidden');
+            DOM_CACHE.mainHint.style.display = 'none';
+            DOM_CACHE.subHint.style.display = 'none';
+            safeClass(DOM_CACHE.exitBtn, 'add', 'visible');
+
+            // 粒子爆炸效果
+            particleSystem.explode(300);
+
+            startNarrative();
+        }
+
+        window.exitArchive = function () {
+            APP_STATE.mode = 'LOCKED';
+            APP_STATE.exitCooldownUntil = Date.now() + 2000;
+            APP_STATE.namasteStableFrames = 0; // 清空手势识别进度
+
+            DOM_CACHE.mainHint.style.display = 'block';
+            DOM_CACHE.subHint.style.display = 'block';
+            safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+            if (CAMERA_STATE.enabled) {
+                safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
+            } else {
+                safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.cameraAccessInfo);
             }
-        }, 0); // 尽快执行，但仍是异步的
-    }
 
-    // 页面加载完成后检查摄像头权限状态
-    window.addEventListener('load', () => {
-        console.log("Page loaded, checking camera permission status");
-        checkCameraPermissionAndEnable();
 
-        // 无论摄像头权限如何，3.5秒后确保页面加载状态完成
-        setTimeout(() => {
+            safeClass(DOM_CACHE.exitBtn, 'remove', 'visible');
+            safeClass(DOM_CACHE.narrativeLayer, 'remove', 'show-text');
+
+            APP_STATE.unlockProgress = 0;
+            clearTimeout(narrativeTimer);
+            particleSystem.explode(50);
+
+            // 退出后重新显示交互模式按钮（如果之前已启用摄像头）
+            if (CAMERA_STATE.enabled) {
+                showInteractionModeButton();
+            }
+        }
+
+        function startNarrative() {
+            let idx = 0;
+            const nTitle = DOM_CACHE.nTitle;
+            const nSub = DOM_CACHE.nSub;
+            const layer = DOM_CACHE.narrativeLayer;
+
+            // 必须检查元素是否存在
+            if (!nTitle || !nSub || !layer) return;
+
+            const next = () => {
+                if (APP_STATE.mode !== 'UNLOCKED') return;
+
+                const slide = CONTENT.slides[idx % CONTENT.slides.length];
+
+                nTitle.innerText = slide.t;
+                nSub.innerText = slide.s;
+                layer.classList.add('show-text');
+
+                // 粒子散开做背景
+                particleSystem.scatter();
+
+                narrativeTimer = setTimeout(() => {
+                    layer.classList.remove('show-text');
+                    particleSystem.explode(10);
+                    narrativeTimer = setTimeout(next, 1000);
+                }, 3000);
+
+                idx++;
+            };
+            next();
+        }
+
+        /**
+         * ============================================================================
+         * 7. MediaPipe 手势
+         * ============================================================================
+         */
+        const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+        hands.setOptions({maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.85, minTrackingConfidence: 0.85});
+
+        hands.onResults(results => {
+            // Loader logic
             if (!APP_STATE.isLoaded) {
                 APP_STATE.isLoaded = true;
-                console.log("Forced page load completion");
+                CAMERA_STATE.enabled = true;
             }
-        }, 3500);
-    });
 
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        composer.setSize(window.innerWidth, window.innerHeight);
-        material.uniforms.scale.value = window.innerHeight / 2;
-    });
+            // 只有在摄像头启用时才处理手势
+            if (CAMERA_STATE.enabled) {
+                const landmarks = results.multiHandLandmarks;
+                const sysStatus = DOM_CACHE.sysStatus;
 
-    // 循环播放加载文案
-    let loadIdx = 0;
-    const loadTimer = setInterval(() => {
-        if (APP_STATE.isLoaded) {
-            clearInterval(loadTimer);
-            return;
+                if (landmarks && landmarks.length > 0) {
+                    APP_STATE.handCount = landmarks.length;
+                    safeUpdateText(sysStatus, `LINKED (${APP_STATE.handCount})`);
+                    if (sysStatus) sysStatus.style.color = ENV.theme === 'day' ? '#0044cc' : '#00ff00';
+
+                    // 坐标处理 (镜像)
+                    const process = (lm) => ({
+                        x: ((1.0 - lm.x) * 2 - 1) * 800,
+                        y: -(lm.y * 2 - 1 - 0.2) * 600
+                    });
+
+                    const p1 = process(landmarks[0][9]);
+                    APP_STATE.handL.x += (p1.x - APP_STATE.handL.x) * 0.25;
+                    APP_STATE.handL.y += (p1.y - APP_STATE.handL.y) * 0.25;
+
+                    if (landmarks.length > 1) {
+                        const p2 = process(landmarks[1][9]);
+                        APP_STATE.handR.x += (p2.x - APP_STATE.handR.x) * 0.25;
+                        APP_STATE.handR.y += (p2.y - APP_STATE.handR.y) * 0.25;
+                    }
+
+                    // 合十检测
+                    if (landmarks.length === 2 && APP_STATE.mode === 'LOCKED' && Date.now() > APP_STATE.exitCooldownUntil) {
+                        const w1 = landmarks[0][0], w2 = landmarks[1][0];
+                        const i1 = landmarks[0][8], i2 = landmarks[1][8];
+                        const m1 = landmarks[0][12], m2 = landmarks[1][12];
+                        const dW = Math.hypot(w1.x - w2.x, w1.y - w2.y);
+                        const dI = Math.hypot(i1.x - i2.x, i1.y - i2.y);
+                        const dM = Math.hypot(m1.x - m2.x, m1.y - m2.y);
+                        const okW = dW < 0.28;
+                        const okI = dI < 0.20;
+                        const okM = dM < 0.20;
+                        const ok = ((okW ? 1 : 0) + (okI ? 1 : 0) + (okM ? 1 : 0)) >= 2;
+                        if (ok) {
+                            APP_STATE.namasteStableFrames++;
+                        } else {
+                            APP_STATE.namasteStableFrames = Math.max(0, APP_STATE.namasteStableFrames - 1);
+                        }
+                        const targetFrames = 20;
+                        const pct = Math.min(100, Math.round(APP_STATE.namasteStableFrames / targetFrames * 100));
+                        if (pct > 0) safeUpdateText(DOM_CACHE.mainHint, `${CONTENT.hints.unlocking} ${pct}%`);
+                        if (APP_STATE.namasteStableFrames >= targetFrames) enterArchive();
+                        if (!ok && APP_STATE.namasteStableFrames === 0) safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+                    }
+                } else {
+                    APP_STATE.handCount = 0;
+                    safeUpdateText(sysStatus, 'SEARCHING...');
+                    if (sysStatus) sysStatus.style.color = 'inherit';
+                    APP_STATE.unlockProgress = 0;
+                    safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
+                }
+            }
+        });
+
+        const videoElement = DOM_CACHE.inputVideo;
+        const cameraUtils = new Camera(videoElement, {
+            onFrame: async () => {
+                try {
+                    await hands.send({image: videoElement});
+                } catch (err) {
+                    // 捕获并隐藏技术性错误信息
+                    if (err.name !== 'NotAllowedError' && err.message.indexOf('Permission dismissed') === -1) {
+                        console.log("Camera processing error:", err);
+                    }
+                }
+            },
+            width: 640, height: 480
+        });
+
+        // 检查摄像头权限状态（非阻塞方式）
+        function checkCameraPermissionAndEnable() {
+            // 使用setTimeout确保不阻塞主流程
+            setTimeout(async () => {
+                try {
+                    // 检查是否支持 permissions API
+                    if (navigator.permissions) {
+                        const permission = await navigator.permissions.query({name: 'camera'});
+                        if (permission.state === 'granted') {
+                            // 如果已授权，则启用摄像头
+                            try {
+                                await cameraUtils.start();
+                                CAMERA_STATE.enabled = true;
+                                CAMERA_STATE.permissionDenied = false;
+                                console.log("Camera auto-enabled due to existing permission");
+                            } catch (err) {
+                                console.log("Failed to auto-start camera:", err);
+                                CAMERA_STATE.enabled = false;
+                                CAMERA_STATE.permissionDenied = true;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.log("Unable to check camera permission:", err);
+                }
+            }, 0); // 尽快执行，但仍是异步的
         }
-        safeUpdateText(DOM_CACHE.loaderMsg, CONTENT.load[loadIdx % CONTENT.load.length]);
-        loadIdx++;
-    }, 800);
 
-    // 资源加载完成后显示进入按钮
-    setTimeout(() => {
-        // 显示进入选项
-        DOM_CACHE.enterContainer.style.opacity = '1';
+        // 页面加载完成后检查摄像头权限状态
+        window.addEventListener('load', () => {
+            console.log("Page loaded, checking camera permission status");
+            checkCameraPermissionAndEnable();
 
-        // 开始5秒倒计时
-        let countdown = 5;
-        safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
+            // 无论摄像头权限如何，3.5秒后确保页面加载状态完成
+            setTimeout(() => {
+                if (!APP_STATE.isLoaded) {
+                    APP_STATE.isLoaded = true;
+                    console.log("Forced page load completion");
+                }
+            }, 3500);
+        });
 
-        CAMERA_STATE.countdownInterval = setInterval(() => {
-            countdown--;
-            if (countdown > 0) {
-                safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
-            } else {
-                clearInterval(CAMERA_STATE.countdownInterval);
-                enterAnimationMode(); // 确保调用进入动画模式
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 循环播放加载文案
+        let loadIdx = 0;
+        const loadTimer = setInterval(() => {
+            if (APP_STATE.isLoaded) {
+                clearInterval(loadTimer);
+                return;
             }
-        }, 1000);
-    }, 3000);
+            safeUpdateText(DOM_CACHE.loaderMsg, CONTENT.load[loadIdx % CONTENT.load.length]);
+            loadIdx++;
+        }, 800);
 
-    // 进入按钮事件处理
-    DOM_CACHE.enterBtn.addEventListener('click', () => {
-        clearInterval(CAMERA_STATE.countdownInterval);
-        enterAnimationMode();
-    });
+        // 资源加载完成后显示进入按钮
+        setTimeout(() => {
+            // 显示进入选项
+            DOM_CACHE.enterContainer.style.opacity = '1';
+
+            // 开始5秒倒计时
+            let countdown = 5;
+            safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
+
+            CAMERA_STATE.countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    safeUpdateText(DOM_CACHE.countdownHint, CONTENT.hints.countdownHint.replace('{second}', countdown + ''));
+                } else {
+                    clearInterval(CAMERA_STATE.countdownInterval);
+                    enterAnimationMode();
+                }
+            }, 1000);
+        }, 3000);
+
+        // 进入按钮事件处理
+        DOM_CACHE.enterBtn.addEventListener('click', () => {
+            clearInterval(CAMERA_STATE.countdownInterval);
+            enterAnimationMode();
+        });
 
     safeUpdateText(DOM_CACHE.mainHint, CONTENT.hints.main);
     safeUpdateText(DOM_CACHE.subHint, CONTENT.hints.sub);
