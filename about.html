@@ -40,18 +40,119 @@
     <meta property="wechat:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
 
     <!-- 核心资源：使用 BootCDN 加速 -->
-    <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/about.css?version=20251125">
+    <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/about.css?version=20251125" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <!-- Artalk 评论样式 -->
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.css">
-    <link rel="stylesheet" href="css/artalk.css?version=20251125">
+    <link rel="preload" href="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/artalk.css?version=20251125" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="./images/logo.png">
+    
+    <!-- 关键CSS内联 -->
+    <style>
+      /* 关键的首屏样式 */
+      :root {
+        --font-main: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+        --bg-base: #f3f4f6;
+        --text-primary: #1f2937;
+        --glass-bg: rgba(255, 255, 255, 0.75);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+        --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+        --radius: 24px;
+      }
+      
+      [data-theme="night"] {
+        --bg-base: #0f0f12;
+        --text-primary: #ffffff;
+        --glass-bg: rgba(30, 30, 35, 0.55);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+        --glass-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+      }
+      
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      body {
+        font-family: var(--font-main);
+        background: var(--bg-base);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+      
+      .app-root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .main-container {
+        flex: 1;
+        margin: 120px auto 60px;
+        padding: 0 30px;
+        max-width: 1200px;
+      }
+      
+      @media (max-width: 768px) {
+        .main-container {
+          margin: 20px auto 100px;
+          padding: 0 16px;
+        }
+      }
+    </style>
 
     <!--IE淘汰计划-->
     <script>
         if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href = "https://imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location.href);
+    </script>
+    
+    <!-- 关键JS内联 -->
+    <script>
+      // 预加载关键配置
+      const SiteConfig = {
+        github: { username: 'listener-He' },
+        blog: { rssUrl: 'https://blog.hehouhui.cn/api/rss' },
+        cacheKeys: {
+          github: { key: 'gh_data', ttlMs: 36000000 },
+          blog: { key: 'blog_data', ttlMs: 3600000 },
+          theme: { key: 'theme', ttlMs: 3600000 }
+        },
+        analytics: {
+          busuanzi: {
+            src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
+            site_pv_id: 'busuanzi_site_pv',
+            site_uv_id: 'busuanzi_site_uv'
+          },
+          baidu: { src: 'https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e' },
+          tencent: { id: '3OBGjwDdEIRS7XZ1', ck: '3OBGjwDdEIRS7XZ1' }
+        },
+        artalk: {
+          server: 'https://artalk.hehouhui.cn',
+          site: 'Honesty的主页'
+        },
+        dev: {
+          isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
+        },
+        defaults: {
+          user: { repos: 165, followers: 6, created: "2018-05-14" },
+          repos: [
+            {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
+            {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
+            {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
+          ],
+          posts: [
+            {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
+            {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
+            {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
+          ]
+        }
+      };
+      
+      window.SiteConfig = SiteConfig;
     </script>
 </head>
 <body>
@@ -110,7 +211,7 @@
             <div class="bento-card area-profile">
                 <div class="profile-content">
                     <div class="avatar-ring">
-                        <img src="images/avatar.jpeg" alt="Honesty" class="avatar-img" loading="lazy">
+                        <img src="images/avatar.jpeg" alt="Honesty" class="avatar-img" loading="lazy" width="120" height="120">
                         <div class="status-dot" data-i18n="status.online">Online</div>
                     </div>
                     <div class="profile-info">
@@ -184,7 +285,7 @@
                         <span class="mbti-code gradient-text">INFJ</span>
                         <span class="mbti-name" data-i18n="mbti.name">Advocate</span>
                         <span class="mbti-icon">
-                         <img src="images/INFJ.webp" alt="INFJ" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.4)" loading="lazy"/>
+                         <img src="images/INFJ.webp" alt="INFJ" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.4)" loading="lazy" width="32" height="32"/>
                         </span>
                     </div>
                     <p class="mbti-desc" data-i18n="mbti.desc">"理想主义与道德感，果断决绝的行动力。深度洞察与创意，关怀与同理心。"</p>
@@ -319,7 +420,7 @@
             <button class="modal-close" onclick="toggleWechat()"><i class="ri-close-line"></i></button>
             <h3 data-i18n="modal.wechat">Official Account</h3>
             <div class="qr-box">
-                <img src="./images/mp-honesy.jpg" alt="WeChat QR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" loading="lazy">
+                <img src="./images/mp-honesy.jpg" alt="WeChat QR" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" loading="lazy" width="200" height="200">
 <!--                <div class="qr-fallback">QR Load Failed</div>-->
             </div>
             <p data-i18n="modal.desc">Scan to follow Tech Share</p>
@@ -335,10 +436,10 @@
 </div>
 
 <!-- 脚本：BootCDN jQuery / Artalk -->
-<script src="js/jquery.min.js"></script>
-<script src="js/config.js?version=20251125"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.js"></script>
-<script src="js/about.js?version=20251125"></script>
+<script src="js/jquery.min.js" defer></script>
+<script src="js/config.js?version=20251125" defer></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.js" defer></script>
+<script src="js/about.js?version=20251125" defer></script>
 
 <!-- 不蒜子统计 -->
 <script>
@@ -409,5 +510,12 @@
         initFormatter();
     }
 </script>
+<noscript>
+  <link href="https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcdn.net/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/about.css?version=20251125">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/artalk/2.9.1/Artalk.css">
+  <link rel="stylesheet" href="css/artalk.css?version=20251125">
+</noscript>
 </body>
 </html>
