@@ -186,20 +186,135 @@
         }
         #audio-control:hover { background: #fceea7; color: #03050B; }
 
-        /* --- 响应式设计优化 (针对手机/平板) --- */
-        @media (max-width: 768px) {
-            h1 { font-size: 38px; letter-spacing: 4px; }
+        /* --- 响应式设计优化 (针对不同设备尺寸) --- */
+        
+        /* 超小设备 (小于 480px) */
+        @media (max-width: 479px) {
+            h1 { 
+                font-size: 28px; 
+                letter-spacing: 2px; 
+                padding: 0 10px;
+                text-align: center;
+            }
+            
+            #controls-container {
+                width: 95%;
+                padding: 12px 15px;
+                box-sizing: border-box;
+            }
+            
+            .upload-btn {
+                font-size: 11px;
+                padding: 8px 16px;
+            }
+            
+            #audio-control {
+                width: 36px;
+                height: 36px;
+                bottom: 15px; 
+                left: 15px;
+                font-size: 14px;
+            }
+            
+            .hint-text {
+                font-size: 10px;
+                letter-spacing: 0.5px;
+            }
+            
+            .gesture-guide h3 {
+                font-size: 12px;
+                margin: 10px 0 5px;
+            }
+            
+            .gesture-guide ul {
+                font-size: 10px;
+                padding-left: 12px;
+                margin: 0 0 8px;
+            }
+            
+            .controls-hint {
+                font-size: 10px;
+                left: 10%;
+                bottom: 3%;
+            }
+        }
+        
+        /* 小设备 (480px 到 768px) */
+        @media (min-width: 480px) and (max-width: 768px) {
+            h1 { 
+                font-size: 34px; 
+                letter-spacing: 3px;
+                text-align: center;
+            }
+            
             #controls-container {
                 width: 90%;
                 padding: 15px 20px;
                 box-sizing: border-box;
             }
+            
             .upload-btn {
                 font-size: 12px;
                 padding: 10px 20px;
             }
+            
             #audio-control {
-                bottom: 20px; left: 20px;
+                bottom: 20px; 
+                left: 20px;
+            }
+            
+            .controls-hint {
+                font-size: 11px;
+                left: 12%;
+            }
+        }
+        
+        /* 平板设备 (769px 到 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            h1 { 
+                font-size: 46px; 
+                letter-spacing: 5px;
+            }
+            
+            #controls-container {
+                width: 80%;
+                padding: 20px 25px;
+            }
+            
+            .upload-btn {
+                font-size: 13px;
+                padding: 12px 25px;
+            }
+            
+            .hint-text {
+                font-size: 11px;
+            }
+            
+            .gesture-guide h3 {
+                font-size: 13px;
+            }
+            
+            .gesture-guide ul {
+                font-size: 11px;
+            }
+        }
+        
+        /* 大屏幕设备 (大于 1024px) */
+        @media (min-width: 1025px) {
+            h1 { 
+                font-size: 56px; 
+                letter-spacing: 6px;
+            }
+            
+            #controls-container {
+                width: auto;
+                max-width: 500px;
+                padding: 20px 30px;
+            }
+            
+            .upload-btn {
+                font-size: 14px;
+                padding: 12px 30px;
             }
         }
 
@@ -237,7 +352,7 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <div class="loader-text">加载节日魔法中... (Loading Holiday Magic)</div>
+    <div class="loader-text">加载节日魔法中...</div>
 </div>
 
 <div id="canvas-container"></div>
