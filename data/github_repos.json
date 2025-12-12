@@ -15,10 +15,17 @@
   },
   {
     "name": "Home",
-    "stargazers_count": 2,
+    "stargazers_count": 3,
     "forks_count": 0,
     "description": "现代化个人主页，融合科技感与个性化元素，展示个人技术栈、开源项目和博客文章。",
     "html_url": "https://github.com/listener-He/Home"
+  },
+  {
+    "name": "auto-ip2region",
+    "stargazers_count": 2,
+    "forks_count": 0,
+    "description": "Auto IP2Region 是一个智能化的IP地址地理信息解析库，它结合了本地数据库和多个免费在线API服务，通过智能负载均衡和自动故障转移机制，为您提供准确、可靠的IP地理位置信息查询服务。",
+    "html_url": "https://github.com/listener-He/auto-ip2region"
   },
   {
     "name": "collection-complete",
@@ -33,6 +40,13 @@
     "forks_count": 3,
     "description": "",
     "html_url": "https://github.com/listener-He/keycloak-services-social-weixin"
+  },
+  {
+    "name": "fast-blur",
+    "stargazers_count": 1,
+    "forks_count": 0,
+    "description": "High-performance, lightweight data obfuscation library for Java. Offers fast, reversible data transformation without traditional encryption overhead. Ideal for caching, logging, and performance-critical applications. / 专为Java设计的高性能轻量级数据混淆库。提供快速、可逆的数据转换，无需传统加密开销。适用于缓存、日志和性能关键型应用。",
+    "html_url": "https://github.com/listener-He/fast-blur"
   },
   {
     "name": "Notion-Wechat-Blog",
