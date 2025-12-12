@@ -61,6 +61,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            pointer-events: none;
         }
 
         /* --- UI Layer and Permanent Title --- */
@@ -176,15 +177,54 @@
             font-family: 'Noto Sans SC', sans-serif;
         }
 
-        /* --- Audio Control (保持不变) --- */
+        /* --- Audio Control --- */
         #audio-control {
-            position: absolute; bottom: 30px; left: 30px; width: 40px; height: 40px;
-            background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(252, 238, 167, 0.4);
-            border-radius: 50%; color: #fceea7;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; cursor: pointer; z-index: 15; transition: all 0.3s; pointer-events: auto;
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 40px;
+            height: 40px;
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(252, 238, 167, 0.4);
+            border-radius: 50%;
+            color: #fceea7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.3s;
+            pointer-events: auto;
         }
-        #audio-control:hover { background: #fceea7; color: #03050B; }
+        #audio-control:hover {
+            background: #fceea7;
+            color: #03050B;
+            transform: scale(1.1);
+        }
+
+        /* --- Controls Hint --- */
+        .controls-hint {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 3%;
+            color: rgba(252, 238, 167, 0.7);
+            font-size: 12px;
+            z-index: 20;
+            pointer-events: auto;
+            text-align: center;
+            width: fit-content;
+            max-width: 90%;
+            padding: 6px 12px;
+            background: rgba(10, 10, 10, 0.4);
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(252, 238, 167, 0.2);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
 
         /* --- 响应式设计优化 (针对不同设备尺寸) --- */
 
@@ -234,8 +274,9 @@
 
             .controls-hint {
                 font-size: 10px;
-                left: 10%;
-                bottom: 3%;
+                bottom: 2%;
+                padding: 4px 10px;
+                border-radius: 15px;
             }
         }
 
@@ -265,7 +306,7 @@
 
             .controls-hint {
                 font-size: 11px;
-                left: 12%;
+                bottom: 2.5%;
             }
         }
 
@@ -297,6 +338,10 @@
             .gesture-guide ul {
                 font-size: 11px;
             }
+
+            .controls-hint {
+                font-size: 12px;
+            }
         }
 
         /* 大屏幕设备 (大于 1024px) */
@@ -316,6 +361,11 @@
                 font-size: 14px;
                 padding: 12px 30px;
             }
+
+            .controls-hint {
+                font-size: 13px;
+                bottom: 2%;
+            }
         }
 
         /* 添加手势操作说明样式 */
@@ -329,12 +379,23 @@
         /* 添加左侧提示文字样式 */
         .controls-hint {
             position: fixed;
-            left: 15%;
+            left: 50%;
+            transform: translateX(-50%);
             bottom: 3%;
             color: rgba(252, 238, 167, 0.7);
             font-size: 12px;
             z-index: 11;
             pointer-events: none;
+            text-align: center;
+            width: fit-content;
+            max-width: 90%;
+            padding: 6px 12px;
+            background: rgba(10, 10, 10, 0.4);
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(252, 238, 167, 0.2);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
         }
     </style>
 
@@ -396,7 +457,7 @@
     <span id="audio-icon">🔇</span>
 </div>
 <!-- 添加左侧提示文字 -->
-<div class="controls-hint" id="controls-hint">按 H 键/点击唤起操作台</div>
+<div class="controls-hint" id="controls-hint">按 H 键或点击屏幕唤起操作台</div>
 
 <div id="webcam-wrapper">
     <video id="webcam" autoplay playsinline style="display:none;"></video>
@@ -736,6 +797,7 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         renderer.toneMapping = THREE.ReinhardToneMapping;
         renderer.toneMappingExposure = 2.5; // 略微增加曝光，配合Bloom提升亮度
+        renderer.domElement.style.pointerEvents = 'none'; // 添加这一行，确保canvas元素不拦截事件
         container.appendChild(renderer.domElement);
 
         mainGroup = new THREE.Group();
@@ -1187,6 +1249,7 @@
         // 为提示文字添加点击事件
         if (controlsHint) {
             controlsHint.addEventListener('click', toggleControls);
+            console.log('H 键已绑定到控制台显示/隐藏');
         }
 
         // 页面加载完成后，默认隐藏控制面板
@@ -1205,6 +1268,7 @@
             controlsContainer.classList.toggle('ui-hidden');
             STATE.uiVisible = !controlsContainer.classList.contains('ui-hidden');
         }
+        console.log(`控制面板已${STATE.uiVisible ? '显示' : '隐藏'}`);
     }
 
     function animate() {
