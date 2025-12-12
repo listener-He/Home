@@ -425,8 +425,8 @@
             accentRed: 0xcc0000, // 略微提亮红色
         },
         particles: {
-            count: 1000,
-            dustCount: 2000,
+            count: 2000,
+            dustCount: 3000,
             treeHeight: 24,
             treeRadius: 8
         },
@@ -932,7 +932,7 @@
     async function initMediaPipe() {
         video = document.getElementById('webcam');
         const vision = await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+            "data/wasm"
         );
         // 使用 Google Cloud Storage 上的模型文件
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
@@ -1280,42 +1280,42 @@
 
         // 确保音频循环播放
         audio.loop = true;
-        
-        // 保存音频状态到 localStorage
+
+        // 保存音频状态到 sessionStorage
         function saveAudioState() {
-            localStorage.setItem('bgMusicState', JSON.stringify({
+            sessionStorage.setItem('bgMusicState', JSON.stringify({
                 isPlaying: isPlaying && !audio.paused,
                 isMuted: isMuted,
                 currentTime: audio.currentTime
             }));
         }
-        
-        // 从 localStorage 恢复音频状态
+
+        // 从 sessionStorage 恢复音频状态
         function restoreAudioState() {
             try {
-                const savedState = localStorage.getItem('bgMusicState');
+                const savedState = sessionStorage.getItem('bgMusicState');
                 if (savedState) {
                     const state = JSON.parse(savedState);
                     isMuted = state.isMuted;
                     audio.muted = isMuted;
-                    
+
                     // 如果之前正在播放，则尝试继续播放
                     if (state.isPlaying) {
                         setTimeout(() => {
                             audio.play().catch(e => console.log("Restore playback failed:", e));
                         }, 100);
                     }
-                    
+
                     updateAudioState();
                 }
             } catch (e) {
                 console.log("Failed to restore audio state:", e);
             }
         }
-        
+
         // 页面加载时尝试恢复音频状态
         restoreAudioState();
-        
+
         // 定期保存音频状态
         setInterval(saveAudioState, 5000); // 每5秒保存一次
 
@@ -1389,20 +1389,20 @@
         document.addEventListener('click', autoPlay);
         document.addEventListener('keydown', autoPlay);
         document.addEventListener('touchstart', autoPlay, { passive: true });
-        
+
         // 监听音频事件
-        audio.addEventListener('play', () => { 
-            isPlaying = true; 
-            updateAudioState(); 
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            updateAudioState();
             saveAudioState();
         });
-        
-        audio.addEventListener('pause', () => { 
-            isPlaying = false; 
-            updateAudioState(); 
+
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            updateAudioState();
             saveAudioState();
         });
-        
+
         audio.addEventListener('ended', () => {
             // 音频结束时重新播放（作为额外保障）
             if (!audio.loop) {
@@ -1410,7 +1410,7 @@
                 audio.play().catch(e => console.error("Replay failed:", e));
             }
         });
-        
+
         // 监听时间更新事件，用于保存播放位置
         audio.addEventListener('timeupdate', () => {
             // 每10秒保存一次状态
