@@ -3,137 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>HONESTY | INTELLIGENT ARCHIVE</title>
+    <title>HONESTY | FLUID ARCHIVE</title>
     <style>
         :root {
-            --font-serif: 'Times New Roman', 'Songti SC', serif;
-            --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-serif: 'Times New Roman', serif;
+            --font-sans: 'Arial', sans-serif;
             --ui-color: 255, 255, 255;
-            --accent-color: 100, 200, 255;
         }
 
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #050505;
+            background-color: #000000;
             color: rgb(var(--ui-color));
             font-family: var(--font-sans);
             user-select: none;
+            cursor: none; /* 隐藏鼠标，增加沉浸感 */
         }
 
-        /* 画布层 */
         #canvas-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             z-index: 1;
         }
 
-        /* 视频输入（隐藏，用于Debug可开启） */
         #input-video {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 200px;
-            z-index: 0;
-            opacity: 0.2;
-            transform: scaleX(-1); /* 镜像预览 */
+            display: none; /* 隐藏原始视频流 */
         }
 
-        /* UI 层 */
+        /* UI HUD */
         #ui-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: 10;
             pointer-events: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 40px;
-            box-sizing: border-box;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+            background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* 顶部信息 */
         .header {
             display: flex;
             justify-content: space-between;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             font-size: 10px;
-            opacity: 0.7;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            text-transform: uppercase;
         }
 
-        /* 中间叙事文字 */
-        .narrative-container {
+        .center-text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            width: 80%;
-            max-width: 800px;
-            mix-blend-mode: overlay;
+            width: 100%;
         }
 
         .n-title {
             font-family: var(--font-serif);
-            font-size: clamp(32px, 5vw, 64px);
+            font-size: clamp(30px, 4vw, 80px);
+            letter-spacing: 10px;
             font-weight: 300;
-            margin-bottom: 20px;
-            letter-spacing: 8px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
-            text-shadow: 0 0 30px rgba(var(--accent-color), 0.5);
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            margin-bottom: 10px;
+            transition: opacity 1s;
         }
 
         .n-sub {
-            font-size: 14px;
-            letter-spacing: 4px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1.5s 0.2s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .active .n-title, .active .n-sub {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 底部交互提示 */
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
             font-size: 12px;
-            letter-spacing: 1px;
+            letter-spacing: 4px;
+            opacity: 0.8;
         }
 
-        .interaction-hint {
+        .footer {
             text-align: center;
-            width: 100%;
-            opacity: 0.6;
-            animation: breathe 4s infinite ease-in-out;
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            animation: breathe 3s infinite ease-in-out;
         }
 
-        .gesture-icon {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: rgb(var(--accent-color));
-            border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 10px rgb(var(--accent-color));
-        }
-
-        /* 加载屏 */
+        /* 加载动画 */
         #loader {
             position: fixed;
             inset: 0;
@@ -142,295 +95,249 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s;
+            transition: opacity 0.8s;
         }
 
-        .loader-text {
-            font-family: var(--font-serif);
-            letter-spacing: 5px;
-            animation: pulse 2s infinite;
+        .loader-ring {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-top: 1px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+        @keyframes breathe { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     </style>
 
-    <!-- Libraries -->
+    <!-- 依赖库 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Post Processing -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <!-- MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div id="loader"><div class="loader-text">INITIALIZING NEURAL LINK...</div></div>
+<div id="loader"><div class="loader-ring"></div></div>
 
 <div id="canvas-container"></div>
 <video id="input-video" playsinline></video>
 
 <div id="ui-layer">
     <div class="header">
-        <span id="theme-name">THEME: DETECTING...</span>
-        <span id="system-status">WAITING FOR CAMERA</span>
+        <span id="theme-display">DETECTING TIME...</span>
+        <span id="hand-status">WAITING INPUT</span>
     </div>
 
-    <div class="narrative-container" id="narrative-box">
-        <div class="n-title" id="text-title">HONESTY</div>
-        <div class="n-sub" id="text-sub">INTELLIGENT ARCHIVE</div>
+    <div class="center-text">
+        <div class="n-title" id="main-title">HONESTY</div>
+        <div class="n-sub" id="sub-title">FLUID MEMORY</div>
     </div>
 
-    <div class="footer">
-        <div class="interaction-hint">
-            <span id="gesture-hint">双手合十 · 唤醒记忆</span>
-        </div>
+    <div class="footer" id="hint-text">
+        单手·流体跟随 | 合十·凝聚形态
     </div>
 </div>
 
 <script>
     /**
      * ============================================================================
-     * 1. THEME ENGINE (节日/主题算法)
+     * 1. 节日与主题配置 (Theme Config)
      * ============================================================================
      */
     const Themes = {
-        DEFAULT:    { id: 'default',   name: 'Saturn / 素墨',  colors: [0x8899a6, 0x4a90e2], shape: 'SATURN' },
-        SPRING:     { id: 'spring',    name: 'Spring / 春笺',  colors: [0xff0000, 0xffd700], shape: 'LANTERN' },
-        VALENTINE:  { id: 'valentine', name: 'Love / 心语',    colors: [0xff69b4, 0xff1493], shape: 'HEART' },
-        QINGMING:   { id: 'qingming',  name: 'Rain / 雨巷',    colors: [0x2c3e50, 0xbdc3c7], shape: 'WILLOW' },
-        MIDAUTUMN:  { id: 'midautumn', name: 'Moon / 月笺',    colors: [0x0f1729, 0xffd700], shape: 'MOON' },
-        NATIONAL:   { id: 'national',  name: 'Glory / 山河',   colors: [0xff0000, 0xffff00], shape: 'STAR' },
-        HALLOWEEN:  { id: 'halloween', name: 'Night / 夜宴',   colors: [0xff8c00, 0x800080], shape: 'PUMPKIN' },
-        GHOST:      { id: 'ghost',     name: 'Spirit / 幽思',  colors: [0x008080, 0x90ee90], shape: 'LOTUS' },
-        CHRISTMAS:  { id: 'christmas', name: 'Snow / 雪颂',    colors: [0x0f5e36, 0xc41e3a], shape: 'TREE' }
+        DEFAULT:    { name: 'Saturn / 深空', c1: [0.1, 0.5, 1.0], c2: [0.8, 0.9, 1.0], shape: 'SATURN' }, // 蓝白
+        SPRING:     { name: 'Spring / 春笺', c1: [1.0, 0.0, 0.2], c2: [1.0, 0.8, 0.0], shape: 'LANTERN' }, // 红金
+        VALENTINE:  { name: 'Love / 心语',   c1: [1.0, 0.2, 0.6], c2: [0.8, 0.0, 0.8], shape: 'HEART' },   // 粉紫
+        QINGMING:   { name: 'Rain / 雨巷',   c1: [0.0, 0.3, 0.2], c2: [0.6, 0.7, 0.7], shape: 'WILLOW' },  // 青灰
+        MIDAUTUMN:  { name: 'Moon / 月笺',   c1: [0.0, 0.1, 0.3], c2: [1.0, 0.9, 0.6], shape: 'MOON' },    // 深蓝金
+        NATIONAL:   { name: 'Glory / 山河',  c1: [0.9, 0.1, 0.0], c2: [1.0, 1.0, 0.0], shape: 'STAR' },    // 红黄
+        HALLOWEEN:  { name: 'Night / 夜宴',  c1: [1.0, 0.5, 0.0], c2: [0.4, 0.0, 0.6], shape: 'PUMPKIN' }, // 橙紫
+        GHOST:      { name: 'River / 幽思',  c1: [0.0, 0.8, 0.5], c2: [0.1, 0.9, 0.8], shape: 'LOTUS' },   // 荧光绿
+        CHRISTMAS:  { name: 'Snow / 雪颂',   c1: [0.0, 0.4, 0.1], c2: [0.8, 0.1, 0.1], shape: 'TREE' }     // 绿红
     };
 
-    const Narratives = {
-        default:   { t: "HONESTY", s: "In the silence of the universe, I found myself." },
-        spring:    { t: "RENEWAL", s: "Every beginning is a promise to the future." },
-        valentine: { t: "DEVOTION", s: "Love is the only gravity that transcends time." },
-        qingming:  { t: "MEMORY",  s: "Rain falls like ink, writing stories of the past." },
-        midautumn: { t: "REUNION", s: "Though miles apart, we share the same moonlight." },
-        national:  { t: "PRIDE",   s: "Stars shine brightest when they burn together." },
-        halloween: { t: "MASK",    s: "We are all ghosts driving meat-coated skeletons." },
-        ghost:     { t: "FLOAT",   s: "Lights on the river, guiding souls back home." },
-        christmas: { t: "WISH",    s: "Warmth is not a temperature, but a presence." }
-    };
+    // 简单的日期检测算法
+    function getThemeByDate() {
+        const now = new Date();
+        const m = now.getMonth() + 1;
+        const d = now.getDate();
 
-    class ThemeManager {
-        constructor() {
-            this.currentTheme = Themes.DEFAULT;
-            this.detectTheme();
-        }
+        // 逻辑：如果在特定日期范围内，返回对应主题，否则返回 DEFAULT
+        if (m === 2 && d > 10 && d < 18) return Themes.VALENTINE;
+        if (m === 2 && d < 10) return Themes.SPRING; // 假设春节
+        if (m === 4 && d < 10) return Themes.QINGMING;
+        if (m === 9 && d > 10 && d < 20) return Themes.MIDAUTUMN;
+        if (m === 10 && d < 8) return Themes.NATIONAL;
+        if (m === 10 && d > 25) return Themes.HALLOWEEN;
+        if (m === 8 && d > 10 && d < 20) return Themes.GHOST;
+        if (m === 12 && d > 15) return Themes.CHRISTMAS;
 
-        detectTheme() {
-            const now = new Date();
-            const m = now.getMonth() + 1; // 1-12
-            const d = now.getDate();
-
-            // 简单节日映射 (为了演示，公历近似)
-            // 实际项目可引入 Lunar Calendar 库
-            const festivals = [
-                { t: Themes.SPRING,    m: 2,  d: 10, range: 10 }, // 假设春节
-                { t: Themes.VALENTINE, m: 2,  d: 14, range: 7 },
-                { t: Themes.QINGMING,  m: 4,  d: 4,  range: 7 },
-                { t: Themes.GHOST,     m: 8,  d: 18, range: 7 }, // 中元节近似
-                { t: Themes.MIDAUTUMN, m: 9,  d: 17, range: 7 }, // 中秋近似
-                { t: Themes.NATIONAL,  m: 10, d: 1,  range: 7 },
-                { t: Themes.HALLOWEEN, m: 10, d: 31, range: 7 },
-                { t: Themes.CHRISTMAS, m: 12, d: 25, range: 10 }
-            ];
-
-            let closest = null;
-            let minDist = Infinity;
-
-            festivals.forEach(fes => {
-                // 简单日期距离计算 (忽略跨年问题，简单demo)
-                if (Math.abs(fes.m - m) <= 1) {
-                    const diff = Math.abs((fes.m * 30 + fes.d) - (m * 30 + d));
-                    if (diff <= fes.range && diff < minDist) {
-                        minDist = diff;
-                        closest = fes.t;
-                    }
-                }
-            });
-
-            // 18:00 - 6:00 强制黑夜模式逻辑由渲染器处理，这里只管节日
-            this.currentTheme = closest || Themes.DEFAULT;
-            this.applyUI();
-        }
-
-        applyUI() {
-            document.getElementById('theme-name').innerText = `THEME: ${this.currentTheme.name}`;
-            const color = new THREE.Color(this.currentTheme.colors[1]);
-            document.documentElement.style.setProperty('--accent-color', `${color.r*255}, ${color.g*255}, ${color.b*255}`);
-
-            // Update Narrative
-            const txt = Narratives[this.currentTheme.id] || Narratives.default;
-            const titleEl = document.getElementById('text-title');
-            const subEl = document.getElementById('text-sub');
-            const box = document.getElementById('narrative-box');
-
-            box.classList.remove('active');
-            setTimeout(() => {
-                titleEl.innerText = txt.t;
-                subEl.innerText = txt.s;
-                box.classList.add('active');
-            }, 1000);
-        }
+        return Themes.DEFAULT;
     }
+
+    const currentTheme = getThemeByDate();
+
+    // 更新UI
+    document.getElementById('theme-display').innerText = `THEME: ${currentTheme.name}`;
 
     /**
      * ============================================================================
-     * 2. PARTICLE SYSTEM (核心物理引擎)
+     * 2. 粒子物理引擎 (Physics Engine)
      * ============================================================================
      */
-    class ParticleEngine {
-        constructor(scene, count = 20000) {
+    class ParticleSystem {
+        constructor(scene) {
             this.scene = scene;
-            this.count = count;
-            this.particles = null;
-            this.geometry = null;
-            this.material = null;
+            this.count = 6000; // 优化：减少数量，不再那么密集
 
-            // Physics Data
-            this.positions = new Float32Array(count * 3);
-            this.targets = new Float32Array(count * 3); // 目标形状位置
-            this.velocities = new Float32Array(count * 3);
-            this.colors = new Float32Array(count * 3);
+            this.geometry = new THREE.BufferGeometry();
+            this.positions = new Float32Array(this.count * 3);
+            this.velocities = new Float32Array(this.count * 3);
+            this.targets = new Float32Array(this.count * 3); // 聚合时的目标位置
+            this.colors = new Float32Array(this.count * 3);
+            this.sizes = new Float32Array(this.count);
+            this.randoms = new Float32Array(this.count * 3); // 用于噪点运动
 
+            // 状态管理
             this.state = {
-                mode: 'SCATTER', // SCATTER, AGGREGATE
-                timeScale: 1.0,  // 子弹时间
-                mouse: new THREE.Vector3(0, 0, 0),
-                repel: false,
-                attract: false
+                mode: 'SCATTER', // SCATTER(散开/漂浮), FOLLOW(跟随), AGGREGATE(聚合)
+                handPos: new THREE.Vector3(0, 0, 0),
+                scatterForce: 0.95, // 摩擦力
+                speed: 1.0
             };
 
-            this.init();
+            this.initParticles();
+            this.createShaderMaterial();
+            this.mesh = new THREE.Points(this.geometry, this.material);
+            this.scene.add(this.mesh);
+
+            // 预计算形状
+            this.calculateShape(currentTheme.shape);
         }
 
-        init() {
-            this.geometry = new THREE.BufferGeometry();
+        initParticles() {
+            const color1 = new THREE.Color().setRGB(...currentTheme.c1);
+            const color2 = new THREE.Color().setRGB(...currentTheme.c2);
 
-            // Initialize random positions
             for(let i=0; i<this.count; i++) {
-                const i3 = i*3;
-                this.positions[i3] = (Math.random() - 0.5) * 50;
-                this.positions[i3+1] = (Math.random() - 0.5) * 50;
-                this.positions[i3+2] = (Math.random() - 0.5) * 20;
+                const i3 = i * 3;
+                // 初始随机分布 (宽屏分布)
+                this.positions[i3] = (Math.random() - 0.5) * 60;
+                this.positions[i3+1] = (Math.random() - 0.5) * 40;
+                this.positions[i3+2] = (Math.random() - 0.5) * 30;
 
-                // Set initial colors based on default theme
-                this.setColor(i, Themes.DEFAULT.colors);
+                // 随机颜色混合
+                const mixRatio = Math.random();
+                this.colors[i3] = color1.r * mixRatio + color2.r * (1-mixRatio);
+                this.colors[i3+1] = color1.g * mixRatio + color2.g * (1-mixRatio);
+                this.colors[i3+2] = color1.b * mixRatio + color2.b * (1-mixRatio);
+
+                // 随机大小 (让画面更有层次)
+                this.sizes[i] = Math.random() * 1.5 + 0.5;
+
+                // 随机参数
+                this.randoms[i3] = Math.random();
+                this.randoms[i3+1] = Math.random();
+                this.randoms[i3+2] = Math.random();
             }
 
             this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
             this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
+            this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
+        }
 
-            // Shader for romantic glow & performance
-            this.material = new THREE.PointsMaterial({
-                size: 0.15,
-                vertexColors: true,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false,
+        // 解决“粒子是方块”的问题：使用 Shader 绘制圆形
+        createShaderMaterial() {
+            this.material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    pixelRatio: { value: window.devicePixelRatio }
+                },
+                vertexShader: `
+                attribute float size;
+                attribute vec3 color;
+                varying vec3 vColor;
+                uniform float pixelRatio;
+                uniform float time;
+
+                void main() {
+                    vColor = color;
+                    vec3 pos = position;
+
+                    // 简单的呼吸效果
+                    float breath = 1.0 + sin(time * 2.0 + position.x) * 0.1;
+
+                    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                    gl_PointSize = size * 12.0 * pixelRatio * (20.0 / -mvPosition.z) * breath;
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `,
+                fragmentShader: `
+                varying vec3 vColor;
+                void main() {
+                    // 绘制圆形
+                    float r = distance(gl_PointCoord, vec2(0.5));
+                    if (r > 0.5) discard;
+
+                    // 径向渐变 (柔和边缘)
+                    float glow = 1.0 - (r * 2.0);
+                    glow = pow(glow, 2.0);
+
+                    gl_FragColor = vec4(vColor, glow);
+                }
+            `,
                 transparent: true,
-                opacity: 0.8
+                depthWrite: false,
+                blending: THREE.AdditiveBlending // 叠加发光混合模式
             });
-
-            this.particles = new THREE.Points(this.geometry, this.material);
-            this.scene.add(this.particles);
-
-            // Initial Target Generation
-            this.setShape(Themes.DEFAULT.shape);
         }
 
-        setColor(i, colorPair) {
-            const c1 = new THREE.Color(colorPair[0]);
-            const c2 = new THREE.Color(colorPair[1]);
-            // Random mix
-            const mix = Math.random();
-            this.colors[i*3] = c1.r * mix + c2.r * (1-mix);
-            this.colors[i*3+1] = c1.g * mix + c2.g * (1-mix);
-            this.colors[i*3+2] = c1.b * mix + c2.b * (1-mix);
-        }
-
-        updateColors(theme) {
-            // Smooth transition needs shader, here we just snap for demo simplicity
-            // or re-generate buffer
+        // 计算特定主题的形状坐标
+        calculateShape(type) {
             for(let i=0; i<this.count; i++) {
-                this.setColor(i, theme.colors);
-            }
-            this.geometry.attributes.color.needsUpdate = true;
-        }
+                const i3 = i * 3;
+                let x=0, y=0, z=0;
 
-        // 数学之美：形状生成器
-        setShape(shapeType) {
-            const scale = 15;
-            for(let i=0; i<this.count; i++) {
-                const i3 = i*3;
-                let x, y, z;
-                const idx = i / this.count;
-                const theta = idx * Math.PI * 2 * 20; // spiral
-                const phi = Math.acos(2 * Math.random() - 1);
+                // 简单的形状数学生成
+                const u = Math.random() * Math.PI * 2;
+                const v = Math.random() * Math.PI;
 
-                switch(shapeType) {
-                    case 'HEART':
-                        // 3D Heart parametric
-                        const t = Math.PI * (Math.random() - 0.5) * 2; // -PI to PI
-                        const u = Math.random() * 2 * Math.PI; // 0 to 2PI
-                        // Simplified Heart
-                        x = 16 * Math.pow(Math.sin(u), 3);
-                        y = 13 * Math.cos(u) - 5 * Math.cos(2*u) - 2 * Math.cos(3*u) - Math.cos(4*u);
-                        z = t * 5;
-                        x *= 0.5; y *= 0.5;
-                        break;
-
-                    case 'SATURN':
-                        if (Math.random() > 0.3) {
-                            // Sphere
-                            const r = 5 * Math.cbrt(Math.random());
-                            x = r * Math.sin(phi) * Math.cos(theta);
-                            y = r * Math.sin(phi) * Math.sin(theta);
-                            z = r * Math.cos(phi);
-                        } else {
-                            // Ring
-                            const r = 8 + Math.random() * 4;
-                            const ang = Math.random() * Math.PI * 2;
-                            x = r * Math.cos(ang);
-                            y = (Math.random()-0.5) * 0.5;
-                            z = r * Math.sin(ang);
-                        }
-                        break;
-
-                    case 'LANTERN': // Ellipsoid
-                        const lr = 6;
-                        x = lr * Math.sin(phi) * Math.cos(theta);
-                        y = (lr * 1.5) * Math.sin(phi) * Math.sin(theta); // taller
-                        z = lr * Math.cos(phi);
-                        break;
-
-                    case 'TREE': // Cone + Spiral
-                        const h = 20 * Math.random(); // 0 to 20
-                        const radius = (20 - h) * 0.4;
-                        const angle = Math.random() * Math.PI * 2;
-                        y = h - 10;
-                        x = radius * Math.cos(angle);
-                        z = radius * Math.sin(angle);
-                        break;
-
-                    default: // Sphere fallback
-                        const r = 10 * Math.cbrt(Math.random());
-                        x = r * Math.sin(phi) * Math.cos(theta);
-                        y = r * Math.sin(phi) * Math.sin(theta);
-                        z = r * Math.cos(phi);
+                if (type === 'SATURN') {
+                    // 土星：球体 + 环
+                    if (Math.random() > 0.4) {
+                        const r = 5;
+                        x = r * Math.sin(v) * Math.cos(u);
+                        y = r * Math.sin(v) * Math.sin(u);
+                        z = r * Math.cos(v);
+                    } else {
+                        const r = 8 + Math.random() * 3;
+                        x = r * Math.cos(u);
+                        z = r * Math.sin(u);
+                        y = (Math.random()-0.5) * 0.5;
+                    }
+                } else if (type === 'HEART') {
+                    // 爱心方程
+                    const t = Math.PI * (Math.random() - 0.5) * 2; // -PI to PI
+                    // 3D Heart approximation
+                    x = 16 * Math.pow(Math.sin(u), 3);
+                    y = 13 * Math.cos(u) - 5 * Math.cos(2*u) - 2 * Math.cos(3*u) - Math.cos(4*u);
+                    z = t * 4;
+                    x *= 0.4; y *= 0.4; z *= 0.4;
+                } else {
+                    // 默认球体
+                    const r = 7 * Math.sqrt(Math.random());
+                    x = r * Math.sin(v) * Math.cos(u);
+                    y = r * Math.sin(v) * Math.sin(u);
+                    z = r * Math.cos(v);
                 }
 
                 this.targets[i3] = x;
@@ -439,292 +346,266 @@
             }
         }
 
-        animate(delta) {
+        update(time) {
+            this.material.uniforms.time.value = time;
             const positions = this.geometry.attributes.position.array;
 
-            // Physics Parameters
-            const springStrength = 0.05 * this.state.timeScale;
-            const friction = 0.90 + (0.05 * (1-this.state.timeScale)); // Higher friction when slow
-            const mouseForce = 50.0;
+            // 物理参数
+            const friction = this.state.scatterForce; // 阻力
+            const returnForce = 0.03; // 聚合时的吸力
+            const followForce = 0.08; // 跟随时的吸力
+            const noiseStrength = 0.05; // 漂浮时的扰动
 
             for(let i=0; i<this.count; i++) {
-                const i3 = i*3;
+                const i3 = i * 3;
 
-                // 1. Attraction to Shape Target
+                // 1. 计算目标力
+                let ax = 0, ay = 0, az = 0;
+
                 if (this.state.mode === 'AGGREGATE') {
-                    const ax = (this.targets[i3] - positions[i3]) * springStrength;
-                    const ay = (this.targets[i3+1] - positions[i3+1]) * springStrength;
-                    const az = (this.targets[i3+2] - positions[i3+2]) * springStrength;
-
-                    this.velocities[i3] += ax;
-                    this.velocities[i3+1] += ay;
-                    this.velocities[i3+2] += az;
-                } else {
-                    // Scatter mode: drifting
-                    this.velocities[i3] += (Math.random()-0.5) * 0.01;
-                    this.velocities[i3+1] += (Math.random()-0.5) * 0.01;
-                    this.velocities[i3+2] += (Math.random()-0.5) * 0.01;
+                    // 聚合：被吸向预定形状
+                    ax = (this.targets[i3] - positions[i3]) * returnForce;
+                    ay = (this.targets[i3+1] - positions[i3+1]) * returnForce;
+                    az = (this.targets[i3+2] - positions[i3+2]) * returnForce;
                 }
+                else if (this.state.mode === 'FOLLOW') {
+                    // 跟随：被吸向手部位置 (解决“排斥”问题)
+                    // 增加一点随机偏移，让它们围绕手旋转而不是坍缩成一个点
+                    const dx = this.state.handPos.x - positions[i3];
+                    const dy = this.state.handPos.y - positions[i3+1];
+                    const dz = this.state.handPos.z - positions[i3+2];
 
-                // 2. Interactive Force (Mouse/Hand)
-                if (this.state.repel || this.state.attract) {
-                    const dx = positions[i3] - this.state.mouse.x;
-                    const dy = positions[i3+1] - this.state.mouse.y;
-                    const dz = positions[i3+2] - this.state.mouse.z; // Assumes 2D interaction plane mostly
+                    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
-                    const distSq = dx*dx + dy*dy;
-                    const dist = Math.sqrt(distSq);
-
-                    if (dist < 10) {
-                        const f = (10 - dist) / 10; // 0 to 1
-                        const dir = this.state.repel ? 1 : -1;
-
-                        this.velocities[i3] += (dx / dist) * f * mouseForce * 0.01 * dir;
-                        this.velocities[i3+1] += (dy / dist) * f * mouseForce * 0.01 * dir;
+                    // 距离越近，吸力越弱，防止穿模
+                    if (dist > 1.0) {
+                        ax = dx * followForce * 0.5;
+                        ay = dy * followForce * 0.5;
+                        az = dz * followForce * 0.5;
                     }
+
+                    // 添加螺旋运动 (Cross product模拟)
+                    ax += (Math.random()-0.5) * 0.5;
+                    ay += (Math.random()-0.5) * 0.5;
+                }
+                else {
+                    // SCATTER / IDLE: 自由漂浮 + 噪点运动
+                    // 回归到一个较大的随机区域，而不是无限飞走
+                    const homeX = (this.randoms[i3]-0.5) * 80;
+                    const homeY = (this.randoms[i3+1]-0.5) * 60;
+
+                    // 缓慢的布朗运动
+                    ax = (Math.sin(time + i) * noiseStrength) + (homeX - positions[i3]) * 0.002;
+                    ay = (Math.cos(time + i) * noiseStrength) + (homeY - positions[i3+1]) * 0.002;
+                    az = (Math.sin(time * 0.5 + i) * noiseStrength) - positions[i3+2] * 0.002;
                 }
 
-                // 3. Update Position
-                positions[i3] += this.velocities[i3] * this.state.timeScale;
-                positions[i3+1] += this.velocities[i3+1] * this.state.timeScale;
-                positions[i3+2] += this.velocities[i3+2] * this.state.timeScale;
+                // 2. 应用力到速度
+                this.velocities[i3] += ax;
+                this.velocities[i3+1] += ay;
+                this.velocities[i3+2] += az;
 
-                // 4. Apply Friction
+                // 3. 应用阻力
                 this.velocities[i3] *= friction;
                 this.velocities[i3+1] *= friction;
                 this.velocities[i3+2] *= friction;
+
+                // 4. 更新位置
+                positions[i3] += this.velocities[i3] * this.state.speed;
+                positions[i3+1] += this.velocities[i3+1] * this.state.speed;
+                positions[i3+2] += this.velocities[i3+2] * this.state.speed;
             }
 
             this.geometry.attributes.position.needsUpdate = true;
         }
-    }
 
-    /**
-     * ============================================================================
-     * 3. GESTURE CONTROLLER (指令解析)
-     * ============================================================================
-     */
-    class GestureController {
-        constructor(videoElement, onCommand) {
-            this.video = videoElement;
-            this.onCommand = onCommand; // Callback function
-            this.hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+        // 状态切换方法
+        setState(mode, handPos = null) {
+            if (mode === 'SCATTER' && this.state.mode === 'AGGREGATE') {
+                // 解决问题4：如果从聚合状态丢失手势，给一个向外的“炸开”力
+                this.explode();
+            }
 
-            this.hands.setOptions({
-                maxNumHands: 2,
-                modelComplexity: 1,
-                minDetectionConfidence: 0.7,
-                minTrackingConfidence: 0.7
-            });
-
-            this.hands.onResults(this.onResults.bind(this));
-
-            // Hand smoothness
-            this.handL = { x:0, y:0, z:0 };
-            this.handR = { x:0, y:0, z:0 };
+            this.state.mode = mode;
+            if (handPos) {
+                this.state.handPos.copy(handPos);
+            }
         }
 
-        start() {
-            const camera = new Camera(this.video, {
-                onFrame: async () => {
-                    await this.hands.send({image: this.video});
-                },
-                width: 640,
-                height: 480
-            });
-            camera.start();
-        }
-
-        onResults(results) {
-            const landmarks = results.multiHandLandmarks;
-            const statusEl = document.getElementById('system-status');
-
-            if (!landmarks || landmarks.length === 0) {
-                statusEl.innerText = "NO HANDS DETECTED";
-                this.onCommand({ type: 'IDLE' });
-                return;
+        explode() {
+            // 给所有粒子一个瞬间的随机向外速度
+            for(let i=0; i<this.count; i++) {
+                const i3 = i * 3;
+                this.velocities[i3] += (Math.random() - 0.5) * 2.0;
+                this.velocities[i3+1] += (Math.random() - 0.5) * 2.0;
+                this.velocities[i3+2] += (Math.random() - 0.5) * 2.0;
             }
-
-            statusEl.innerText = `HANDS LINKED: ${landmarks.length}`;
-
-            // 1. Process Coordinates (Mirror & Norm to World)
-            // Assume z is 0 for interaction plane
-            const process = (lm) => ({
-                // Mirror X: (1 - x)
-                x: (1.0 - lm.x) * 30 - 15, // Map 0..1 to -15..15 World Units
-                y: -(lm.y * 20 - 10),      // Map 0..1 to -10..10
-                z: 0
-            });
-
-            const l1 = landmarks[0];
-            const p1 = process(l1[9]); // Middle finger MCP as center
-
-            // Smoothing
-            this.handL.x += (p1.x - this.handL.x) * 0.2;
-            this.handL.y += (p1.y - this.handL.y) * 0.2;
-
-            let cmd = { type: 'MOVE', pos: this.handL, hands: 1 };
-
-            if (landmarks.length === 2) {
-                const l2 = landmarks[1];
-                const p2 = process(l2[9]);
-
-                this.handR.x += (p2.x - this.handR.x) * 0.2;
-                this.handR.y += (p2.y - this.handR.y) * 0.2;
-
-                // Calculate Distance
-                const dx = this.handL.x - this.handR.x;
-                const dy = this.handL.y - this.handR.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-
-                // NAMASTE Detection (Hands very close)
-                if (dist < 3.0) {
-                    cmd = { type: 'NAMASTE', pos: {x:(this.handL.x+this.handR.x)/2, y:(this.handL.y+this.handR.y)/2} };
-                }
-                // BULLET TIME (Hands far apart)
-                else if (dist > 15.0) {
-                    cmd = { type: 'SPREAD', dist: dist };
-                }
-                else {
-                    cmd = { type: 'DUAL_MOVE', p1: this.handL, p2: this.handR };
-                }
-            }
-            else {
-                // PINCH Detection (Thumb tip close to Index tip)
-                const thumb = l1[4];
-                const index = l1[8];
-                const dPinch = Math.hypot(thumb.x - index.x, thumb.y - index.y);
-                if (dPinch < 0.05) {
-                    cmd.type = 'PINCH';
-                }
-            }
-
-            this.onCommand(cmd);
         }
     }
 
     /**
      * ============================================================================
-     * 4. MAIN APP (组装)
+     * 3. 程序主逻辑 (Main App)
      * ============================================================================
      */
-    class App {
-        constructor() {
-            this.container = document.getElementById('canvas-container');
-            this.scene = new THREE.Scene();
-            this.scene.fog = new THREE.FogExp2(0x000000, 0.02);
+    const scene = new THREE.Scene();
+    // 雾效增强空间感
+    scene.fog = new THREE.FogExp2(0x000000, 0.015);
 
-            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            this.camera.position.z = 25;
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 30;
 
-            this.renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            this.container.appendChild(this.renderer.domElement);
+    const renderer = new THREE.WebGLRenderer({
+        antialias: false, // 后处理时不需要原生抗锯齿
+        powerPreference: "high-performance"
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Post Processing (Bloom)
-            this.composer = new THREE.EffectComposer(this.renderer);
-            this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
-            const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-            bloomPass.threshold = 0;
-            bloomPass.strength = 1.2; // Romantic Glow
-            bloomPass.radius = 0.5;
-            this.composer.addPass(bloomPass);
+    // 后处理：Bloom (辉光) 是浪漫感的关键
+    const composer = new THREE.EffectComposer(renderer);
+    composer.addPass(new THREE.RenderPass(scene, camera));
 
-            // Modules
-            this.themeManager = new ThemeManager();
-            this.particles = new ParticleEngine(this.scene);
-            this.particles.updateColors(this.themeManager.currentTheme);
-            this.particles.setShape(this.themeManager.currentTheme.shape);
+    const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    bloomPass.strength = 1.8; // 强辉光
+    bloomPass.radius = 0.8;
+    bloomPass.threshold = 0.1;
+    composer.addPass(bloomPass);
 
-            // Resize
-            window.addEventListener('resize', () => {
-                this.camera.aspect = window.innerWidth / window.innerHeight;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(window.innerWidth, window.innerHeight);
-                this.composer.setSize(window.innerWidth, window.innerHeight);
-            });
+    // 初始化粒子系统
+    const particles = new ParticleSystem(scene);
 
-            // Initialize Gesture
-            const video = document.getElementById('input-video');
-            this.gestureCtrl = new GestureController(video, (cmd) => this.handleCommand(cmd));
+    // 手势识别
+    const videoElement = document.getElementById('input-video');
+    const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
 
-            // Hide Loader
-            setTimeout(() => {
-                this.gestureCtrl.start();
-                document.getElementById('loader').style.opacity = 0;
-                setTimeout(()=> document.getElementById('loader').remove(), 1000);
-            }, 1500);
+    hands.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.7,
+        minTrackingConfidence: 0.7
+    });
 
-            this.animate();
-        }
+    hands.onResults(onHandsResults);
 
-        handleCommand(cmd) {
-            const p = this.particles;
-            const hint = document.getElementById('gesture-hint');
+    const cameraUtils = new Camera(videoElement, {
+        onFrame: async () => {
+            await hands.send({image: videoElement});
+        },
+        width: 640,
+        height: 480
+    });
 
-            // Reset frame state
-            p.state.repel = false;
-            p.state.attract = false;
-            p.state.timeScale = 1.0;
+    // 启动
+    setTimeout(() => {
+        cameraUtils.start();
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(()=>document.getElementById('loader').remove(), 800);
+    }, 1000);
 
-            switch(cmd.type) {
-                case 'IDLE':
-                    // Auto scatter slowly
-                    if(p.state.mode !== 'SCATTER') p.state.mode = 'SCATTER';
-                    hint.innerText = "双手合十 · 唤醒记忆";
-                    break;
+    // 手势逻辑处理
+    function onHandsResults(results) {
+        const landmarks = results.multiHandLandmarks;
+        const statusEl = document.getElementById('hand-status');
+        const hintEl = document.getElementById('hint-text');
 
-                case 'MOVE':
-                    // One hand repel (brushing through stars)
-                    p.state.mode = 'SCATTER';
-                    p.state.repel = true;
-                    p.state.mouse.set(cmd.pos.x, cmd.pos.y, 0);
-                    hint.innerText = "单手 · 拨动星尘";
-                    break;
-
-                case 'PINCH':
-                    // Gravity Well
-                    p.state.mode = 'SCATTER';
-                    p.state.attract = true;
-                    p.state.mouse.set(cmd.pos.x, cmd.pos.y, 0);
-                    hint.innerText = "捏合 · 捕获引力";
-                    break;
-
-                case 'NAMASTE':
-                    // Aggregate to Shape
-                    p.state.mode = 'AGGREGATE';
-                    hint.innerText = "合十 · 凝聚形态";
-                    break;
-
-                case 'SPREAD':
-                    // Bullet time
-                    p.state.mode = 'SCATTER';
-                    p.state.timeScale = 0.1; // Slow motion
-                    hint.innerText = "张开 · 凝固时间";
-                    break;
-
-                case 'DUAL_MOVE':
-                    p.state.mode = 'SCATTER';
-                    p.state.repel = true; // Two repulsion points logic omitted for brevity, using mouse 1
-                    p.state.mouse.set(cmd.p1.x, cmd.p1.y, 0);
-                    break;
+        if (!landmarks || landmarks.length === 0) {
+            statusEl.innerText = "NO SIGNAL";
+            // 解决问题4：手势丢失，自动散开
+            if (particles.state.mode !== 'SCATTER') {
+                particles.setState('SCATTER');
+                hintEl.innerText = "等待输入...";
             }
+            return;
         }
 
-        animate() {
-            requestAnimationFrame(this.animate.bind(this));
+        statusEl.innerText = "SIGNAL LINKED";
 
-            // Rotate Scene slowly
-            this.scene.rotation.y += 0.001 * this.particles.state.timeScale;
+        // 坐标映射：将归一化的 0-1 坐标映射到 3D 世界坐标 (-25 到 25)
+        // 注意：x 需要镜像翻转 (1-x)
+        const mapHand = (lm) => {
+            return new THREE.Vector3(
+                (1.0 - lm.x) * 50 - 25,
+                -(lm.y * 30 - 15),
+                0
+            );
+        };
 
-            this.particles.animate();
-            this.composer.render();
+        // 取第一只手做跟随
+        const hand1 = landmarks[0][9]; // 中指根部
+        const pos1 = mapHand(hand1);
+
+        if (landmarks.length === 2) {
+            // 双手逻辑
+            const hand2 = landmarks[1][9];
+            const pos2 = mapHand(hand2);
+
+            // 计算双手距离
+            const dist = pos1.distanceTo(pos2);
+
+            if (dist < 6.0) {
+                // 合十 -> 聚合
+                particles.setState('AGGREGATE');
+                hintEl.innerText = "正在凝聚记忆...";
+            } else if (dist > 25.0) {
+                // 张开 -> 子弹时间 (减速)
+                particles.setState('SCATTER');
+                particles.state.speed = 0.1;
+                hintEl.innerText = "时间凝固";
+            } else {
+                // 双手移动 -> 强力跟随
+                particles.setState('FOLLOW', pos1.lerp(pos2, 0.5)); // 跟随双手中心
+                particles.state.speed = 1.0;
+                hintEl.innerText = "双倍引力";
+            }
+        } else {
+            // 单手逻辑 -> 跟随 (解决问题3)
+            // 捏合检测
+            const thumb = landmarks[0][4];
+            const index = landmarks[0][8];
+            const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+
+            if (pinchDist < 0.05) {
+                // 捏合 -> 极强吸力
+                particles.setState('FOLLOW', pos1);
+                hintEl.innerText = "捕获中...";
+            } else {
+                // 普通移动 -> 柔和跟随
+                particles.setState('FOLLOW', pos1);
+                hintEl.innerText = "流体跟随";
+            }
+            particles.state.speed = 1.0;
         }
     }
 
-    // Start
-    new App();
+    // 渲染循环
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        const time = clock.getElapsedTime();
+        particles.update(time);
+
+        // 摄像机微动，增加沉浸感
+        camera.position.x = Math.sin(time * 0.1) * 2;
+        camera.position.y = Math.cos(time * 0.1) * 2;
+        camera.lookAt(0,0,0);
+
+        composer.render();
+    }
+
+    // 窗口大小适配
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+        particles.material.uniforms.pixelRatio.value = window.devicePixelRatio;
+    });
+
+    animate();
 
 </script>
 </body>
