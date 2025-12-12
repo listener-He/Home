@@ -3,154 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关于我 - Honesty</title>
+    <title>🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆</title>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-
-    <!--SEO信息 -->
     <meta name="description"
-          content="关于Honesty,关于HeHouHui,关于HeHui,关于明厚, About Me Honesty, About Me HeHouHui, About Me HeHui">
-    <meta name="keywords" content="Honesty,HeHouHui,HeHui,明厚">
-    <link rel="canonical" href="https://www.hehouhui.cn/about.html">
+          content="在这个充满节日气氛的 3D 圣诞树世界里，Honesty 邀请您上传照片，共同点亮美好的回忆。——来自Honesty的节日祝福。">
+    <meta name="keywords" content="Honesty,HeHouHui,HeHui,圣诞,Christmas,3D,Threejs,WebXR">
+    <link rel="canonical" href="https://www.hehouhui.cn/christmas.html">
     <meta name="author" content="Honesty">
 
-    <!-- 社交平台分享优化 -->
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.hehouhui.cn/christmas.html">
-    <meta property="og:title" content="🎄圣诞快乐🎉 - Honesty的个人主页">
+    <meta property="og:title" content="🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆">
     <meta property="og:description"
-          content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
+          content="Honesty 邀请你上传照片，共同点亮美好的节日回忆。点击进入 3D 互动体验！">
     <meta property="og:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
-    <meta property="og:site_name" content="Honesty的个人主页">
-    <meta property="og:locale" content="zh_CN">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.hehouhui.cn/christmas.html">
-    <meta property="twitter:title" content="🎄圣诞快乐🎉 - Honesty的个人主页">
-    <meta property="twitter:description"
-          content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。来自湖南，现在上海工作，享受在这座充满活力的城市中追求技术梦想。">
-    <meta property="twitter:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
-    <meta property="twitter:site" content="@Honesty861024">
-    <link rel="alternate" hreflang="zh-cn" href="https://www.hehouhui.cn/about.html">
-    <link rel="alternate" hreflang="en" href="https://www.hehouhui.cn/about.html?lang=en">
-    <link rel="alternate" hreflang="x-default" href="https://www.hehouhui.cn/about.html">
-
-    <!-- 微信小程序/朋友圈分享 -->
-    <meta property="wechat:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
-    <meta property="wechat:title" content="关于我 - Honesty的个人主页">
-    <meta property="wechat:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
-    <title>Grand Luxury Tree Final v2</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Times New Roman', serif; }
-        #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        /* 引入优雅字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+SC:wght@300;500&display=swap');
 
-        /* UI Overlay - Minimalist */
-        #ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; pointer-events: none;
-            display: flex; flex-direction: column;
-            align-items: center;
-            padding-top: 40px;
-            box-sizing: border-box;
-            /* Remove transition here as we don't hide the whole layer anymore */
+        /* 背景颜色深度优化: 从纯黑 (#000000) 调整为极深午夜蓝 (#03050B) */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #03050B; /* 调整为极深午夜蓝，增强冷暖对比 */
+            font-family: 'Noto Sans SC', 'Cinzel', 'Times New Roman', serif;
         }
 
-        /* When hidden class is applied to specific elements */
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* --- UI Layer and Permanent Title --- */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 5vh; /* 标题固定在顶部 */
+            box-sizing: border-box;
+        }
+
+        /* 标题样式：永久显示，使用金色渐变 */
+        h1 {
+            pointer-events: auto; /* 确保不影响其他交互，但本身不响应点击 */
+            color: #fceea7;
+            font-size: 56px;
+            margin: 0;
+            font-weight: 400;
+            letter-spacing: 6px;
+            text-shadow: 0 0 50px rgba(252, 238, 167, 0.6);
+            /* 奢华金色渐变 */
+            background: linear-gradient(to bottom, #fff8e8, #fceea7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Cinzel', 'Noto Sans SC', serif;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            margin-bottom: 20px; /* 标题与控制区间隔 */
+        }
+
+        /* 控制面板容器：居中偏上，可隐藏 */
+        #controls-container {
+            margin-top: 10px; /* 确保在标题下方 */
+            background: rgba(10, 10, 10, 0.2); /* 更轻微的背景，增加透明度 */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(252, 238, 167, 0.1); /* 更细的边框 */
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(252, 238, 167, 0.05);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
         .ui-hidden {
             opacity: 0;
             pointer-events: none !important;
         }
 
-        /* Loading */
+        /* --- Loading --- */
         #loader {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100;
+            background: #03050B; /* 使用新的背景色 */
+            z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease-out;
         }
         .loader-text {
-            color: #d4af37; font-size: 14px; letter-spacing: 4px; margin-top: 20px;
+            color: #fceea7; /* 调整为更亮的金色 */
+            font-size: 14px; letter-spacing: 4px; margin-top: 20px;
             text-transform: uppercase; font-weight: 100;
         }
         .spinner {
-            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.2);
-            border-top: 1px solid #d4af37; border-radius: 50%;
+            width: 40px; height: 40px; border: 1px solid rgba(252, 238, 167, 0.2);
+            border-top: 1px solid #fceea7; border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Typography - Centerpiece */
-        h1 {
-            color: #fceea7; font-size: 56px; margin: 0; font-weight: 400;
-            letter-spacing: 6px;
-            text-shadow: 0 0 50px rgba(252, 238, 167, 0.6);
-            background: linear-gradient(to bottom, #fff, #eebb66);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-family: 'Cinzel', 'Times New Roman', serif;
-            opacity: 0.9;
-            transition: opacity 0.5s ease; /* Ensure smooth transitions if needed */
-        }
-
-        /* Upload Button - Restored & Elegant */
+        /* --- Upload Button --- */
         .upload-wrapper {
-            margin-top: 20px;
+            margin-top: 15px;
             pointer-events: auto;
             text-align: center;
-            transition: opacity 0.5s ease; /* Add transition for smooth hiding */
         }
         .upload-btn {
-            background: rgba(20, 20, 20, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            color: #d4af37;
-            padding: 10px 25px;
+            background: rgba(252, 238, 167, 0.1); /* 轻微金色透明背景 */
+            border: 1px solid rgba(252, 238, 167, 0.5);
+            color: #fceea7; /* 调整为更亮的金色文字 */
+            padding: 12px 30px; /* 增大点击区域 */
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 10px;
+            text-transform: none;
+            letter-spacing: 2px;
+            font-size: 14px;
             transition: all 0.4s;
             display: inline-block;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px);
+            border-radius: 6px;
+        }
+        /* 修复上传按钮背景色为白色的问题 */
+        .upload-btn input[type="file"] {
+            background: transparent;
         }
         .upload-btn:hover {
-            background: #d4af37;
-            color: #000;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            background: #fceea7; /* 鼠标悬停时使用更亮的金色 */
+            color: #03050B;
+            box-shadow: 0 0 25px rgba(252, 238, 167, 0.8);
         }
         .hint-text {
-            color: rgba(212, 175, 55, 0.5);
-            font-size: 9px;
-            margin-top: 8px;
+            color: rgba(252, 238, 167, 0.8);
+            font-size: 11px;
+            margin-top: 10px;
             letter-spacing: 1px;
-            text-transform: uppercase;
+            font-family: 'Noto Sans SC', sans-serif;
         }
 
-        #file-input { display: none; }
+        /* --- Audio Control (保持不变) --- */
+        #audio-control {
+            position: absolute; bottom: 30px; left: 30px; width: 40px; height: 40px;
+            background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(252, 238, 167, 0.4);
+            border-radius: 50%; color: #fceea7;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer; z-index: 15; transition: all 0.3s; pointer-events: auto;
+        }
+        #audio-control:hover { background: #fceea7; color: #03050B; }
 
-        /* Webcam feedback */
-        #webcam-wrapper {
-            position: absolute; bottom: 40px; right: 40px;
-            width: 120px; height: 90px;
-            border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden; opacity: 0; /* Hidden by default but functional */
+        /* --- 响应式设计优化 (针对手机/平板) --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 38px; letter-spacing: 4px; }
+            #controls-container {
+                width: 90%;
+                padding: 15px 20px;
+                box-sizing: border-box;
+            }
+            .upload-btn {
+                font-size: 12px;
+                padding: 10px 20px;
+            }
+            #audio-control {
+                bottom: 20px; left: 20px;
+            }
+        }
+
+        /* 添加手势操作说明样式 */
+        .gesture-guide {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(252, 238, 167, 0.2);
+            width: 100%;
+        }
+
+        /* 添加左侧提示文字样式 */
+        .controls-hint {
+            position: fixed;
+            left: 15%;
+            bottom: 5%;
+            color: rgba(252, 238, 167, 0.7);
+            font-size: 12px;
+            z-index: 11;
             pointer-events: none;
         }
-        
-        /* 添加硬件加速样式以提高性能 */
-        #canvas-container, #ui-layer, #loader {
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-        }
-        
-        .particle {
-            will-change: transform;
-        }
-    </style>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
     </style>
 
     <script type="importmap">
@@ -167,28 +213,60 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <div class="loader-text">Loading Holiday Magic</div>
+    <div class="loader-text">加载节日魔法中... (Loading Holiday Magic)</div>
 </div>
 
 <div id="canvas-container"></div>
 
 <div id="ui-layer">
-    <h1>Merry Christmas - Honesty</h1>
+    <h1>🎄 圣诞快乐 🎁 - Honesty</h1>
 
-    <div class="upload-wrapper">
-        <label class="upload-btn">
-            Add Memories
-            <input type="file" id="file-input" multiple accept="image/*">
-        </label>
-        <div class="hint-text">Press 'H' to Hide Controls</div>
+    <div id="controls-container" class="ui-hidden">
+        <div id="mode-status" class="hint-text" style="font-size: 12px; color: #fff8e8; opacity: 0.9; letter-spacing: 1px;">
+            当前模式：随机漂浮 (SCATTER)
+        </div>
+
+        <div class="upload-wrapper">
+            <label class="upload-btn">
+                添加你的回忆 (Add Memories)
+                <input type="file" id="file-input" hidden="hidden" multiple accept="image/*">
+            </label>
+            <div class="hint-text">
+                提示: 按 'H' 键隐藏控制台 | 尝试手势交互 (MediaPipe)
+            </div>
+        </div>
+        
+        <!-- 添加手势操作说明 -->
+        <div class="gesture-guide">
+            <h3 style="color: #fceea7; margin: 15px 0 8px; font-size: 14px; font-weight: 500;">手势操作指南</h3>
+            <ul style="text-align: left; color: rgba(252, 238, 167, 0.85); font-size: 11px; padding-left: 15px; margin: 0 0 10px; line-height: 1.5;">
+                <li>握拳 👊 - 粒子聚合成圣诞树</li>
+                <li>全部手指捏合 ✋ - 抓取最近照片并放大</li>
+                <li>拇指+食指捏合 ☝️ - 粒子向前移动</li>
+                <li>拇指+无名指+小指捏合 🤏 - 粒子向后移动</li>
+                <li>手掌向上 🙌 - 粒子右旋转</li>
+                <li>手掌向下 👇 - 粒子左旋转</li>
+            </ul>
+        </div>
     </div>
 </div>
 
-<!-- Webcam hidden structure -->
+
+
+<div id="audio-control" style="opacity: 0;">
+    <span id="audio-icon">🔇</span>
+</div>
+<!-- 添加左侧提示文字 -->
+<div class="controls-hint">按 H 键唤起操作台</div>
+
 <div id="webcam-wrapper">
     <video id="webcam" autoplay playsinline style="display:none;"></video>
     <canvas id="webcam-preview"></canvas>
 </div>
+
+<audio id="bg-music" loop preload="auto">
+    <source src="data/christmas.mp3" type="audio/mpeg">
+</audio>
 
 <script type="module">
     import * as THREE from 'three';
@@ -201,28 +279,39 @@
     // --- CONFIGURATION ---
     const CONFIG = {
         colors: {
-            bg: 0x000000,
-            champagneGold: 0xffd966,
+            bg: 0x03050B, // 极深午夜蓝
+            champagneGold: 0xffeebb, // 更亮的金色
             deepGreen: 0x03180a,
-            accentRed: 0x990000,
+            accentRed: 0xcc0000, // 略微提亮红色
         },
         particles: {
-            count: 1000,  // 减少粒子数量以提高性能
-            dustCount: 2000,  // 减少尘埃粒子数量
+            count: 1000,
+            dustCount: 2000,
             treeHeight: 24,
             treeRadius: 8
         },
         camera: {
             z: 50
+        },
+        // 添加动画优化配置
+        animation: {
+            responseSpeed: 8.0,     // 进一步提高手势响应速度
+            scatterRotation: 0.5,   // 散射模式下的旋转速度
+            treeRotation: 0.8,      // 树模式下的旋转速度
+            positionLerp: 5.0,      // 位置插值速度
+            scaleLerp: 8.0,         // 缩放插值速度
+            noiseStrength: 0.2,     // 噪声扰动强度
+            gestureInfluence: 0.7   // 手势对粒子的影响强度
         }
     };
 
     const STATE = {
-        mode: 'SCATTER',
-        focusIndex: -1,
+        mode: 'SCATTER', // SCATTER, TREE, FOCUS
         focusTarget: null,
         hand: {detected: false, x: 0, y: 0},
-        rotation: {x: 0, y: 0}
+        rotation: {x: 0, y: 0},
+        uiVisible: true,
+        gestureCommand: null // 存储当前手势指令
     };
 
     let scene, camera, renderer, composer;
@@ -230,66 +319,204 @@
     let clock = new THREE.Clock();
     let particleSystem = [];
     let photoMeshGroup = new THREE.Group();
-    let handLandmarker, video, webcamCanvas, webcamCtx;
+    let handLandmarker, video;
     let caneTexture;
+    let lastHandGesture = null;
+    const modeStatusElement = document.getElementById('mode-status');
 
-    async function init() {
-        initThree();
-        setupEnvironment();
-        setupLights();
-        createTextures();
-        createParticles();
-        createDust();
-        createDefaultPhotos();
-        setupPostProcessing();
-        setupEvents();
-        await initMediaPipe();
+    // --- Particle Class ---
+    class Particle {
+        constructor(mesh, type, isDust = false) {
+            this.mesh = mesh;
+            this.type = type;
+            this.isDust = isDust;
+            this.posTree = new THREE.Vector3();
+            this.posScatter = new THREE.Vector3();
+            this.baseScale = mesh.scale.x;
 
-        // Play background music
-        const audio = document.getElementById('bg-music');
-        if (audio) {
-            // 尝试自动播放音频
-            try {
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log("Audio autoplay failed:", error);
-                    });
-                }
-            } catch (error) {
-                console.error("Error attempting to play audio:", error);
-            }
+            // 为每个粒子添加噪声偏移，使运动更加自然
+            this.noiseOffset = new THREE.Vector3(
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100
+            );
+
+            const speedMult = (type === 'PHOTO') ? 0.3 : 2.0;
+            this.spinSpeed = new THREE.Vector3(
+                (Math.random() - 0.5) * speedMult,
+                (Math.random() - 0.5) * speedMult,
+                (Math.random() - 0.5) * speedMult
+            );
+            this.calculatePositions();
+            this.mesh.userData.particleType = type;
+
+            // 添加粒子对手势指令的响应属性
+            this.gestureResponsiveness = 0.5 + Math.random() * 0.5; // 粒子对手势的敏感度
         }
 
-        const loader = document.getElementById('loader');
-        loader.style.opacity = 0;
-        setTimeout(() => loader.remove(), 800);
+        calculatePositions() {
+            const h = CONFIG.particles.treeHeight;
+            const halfH = h / 2;
+            let t = Math.random();
+            t = Math.pow(t, 0.8);
+            const y = (t * h) - halfH;
+            let rMax = CONFIG.particles.treeRadius * (1.0 - t);
+            if (rMax < 0.5) rMax = 0.5;
+            const angle = t * 50 * Math.PI + Math.random() * Math.PI;
+            const r = rMax * (0.8 + Math.random() * 0.4);
+            this.posTree.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
 
-        animate();
+            // 限制散射模式下粒子的分布范围，防止超出屏幕
+            let rScatter = this.isDust ? (12 + Math.random() * 15) : (8 + Math.random() * 10);
+            // 限制最大范围，防止照片飞出屏幕
+            rScatter = Math.min(rScatter, 25);
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            this.posScatter.set(
+                rScatter * Math.sin(phi) * Math.cos(theta),
+                rScatter * Math.sin(phi) * Math.sin(theta),
+                rScatter * Math.cos(phi)
+            );
+        }
+
+        // 添加噪声函数，用于创建更自然的运动
+        noise(t) {
+            return Math.sin(t) * 0.5 + Math.sin(t * 0.37) * 0.25 + Math.sin(t * 0.19) * 0.125;
+        }
+
+        update(dt, mode, focusTargetMesh, elapsedTime, handState, gestureCommand) {
+            let target = this.posScatter;
+            if (mode === 'TREE') target = this.posTree;
+            else if (mode === 'FOCUS') {
+                if (this.mesh === focusTargetMesh) {
+                    const desiredWorldPos = new THREE.Vector3(0, 2, 35);
+                    const invMatrix = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
+                    target = desiredWorldPos.applyMatrix4(invMatrix);
+                } else {
+                    target = this.posScatter;
+                }
+            }
+
+            // 在散射模式下添加噪声扰动，让粒子运动更生动
+            if (mode === 'SCATTER') {
+                const noiseX = this.noise(elapsedTime * 0.5 + this.noiseOffset.x) * CONFIG.animation.noiseStrength;
+                const noiseY = this.noise(elapsedTime * 0.5 + this.noiseOffset.y) * CONFIG.animation.noiseStrength;
+                const noiseZ = this.noise(elapsedTime * 0.5 + this.noiseOffset.z) * CONFIG.animation.noiseStrength;
+
+                target.x += noiseX;
+                target.y += noiseY;
+                target.z += noiseZ;
+
+                // 限制粒子位置，防止飞出屏幕
+                const maxDistance = 30;
+                if (target.length() > maxDistance) {
+                    target.normalize().multiplyScalar(maxDistance);
+                }
+
+                // 实时手势影响 - 只关注当前手势位置，不使用历史轨迹
+                if (handState.detected) {
+                    // 将2D手势坐标转换为3D空间中的影响点
+                    const handInfluencePoint = new THREE.Vector3(
+                        handState.x * 15,  // 调整影响范围
+                        handState.y * 15,
+                        0
+                    );
+
+                    // 计算粒子与手势影响点之间的距离
+                    const distance = this.mesh.position.distanceTo(handInfluencePoint);
+                    const maxInfluenceDistance = 8.0;
+
+                    // 如果粒子在影响范围内，则受到手势牵引
+                    if (distance < maxInfluenceDistance) {
+                        // 计算影响强度（距离越近影响越强）
+                        const influenceStrength = (1.0 - distance / maxInfluenceDistance) *
+                                                CONFIG.animation.gestureInfluence *
+                                                this.gestureResponsiveness;
+
+                        // 计算从粒子指向手势点的向量
+                        const direction = new THREE.Vector3()
+                            .subVectors(handInfluencePoint, this.mesh.position)
+                            .normalize();
+
+                        // 根据手势指令调整方向
+                        switch (gestureCommand) {
+                            case 'LEFT_ROTATE':
+                                // 左旋转时，粒子围绕手势点逆时针移动
+                                direction.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI/2);
+                                break;
+                            case 'RIGHT_ROTATE':
+                                // 右旋转时，粒子围绕手势点顺时针移动
+                                direction.applyAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI/2);
+                                break;
+                            case 'MOVE_FORWARD':
+                                // 往前时，粒子朝向手势点移动
+                                // 方向已经是朝向手势点了，无需额外处理
+                                break;
+                            case 'MOVE_BACKWARD':
+                                // 往后时，粒子远离手势点移动
+                                direction.multiplyScalar(-1);
+                                break;
+                            default:
+                                // 默认情况下，粒子轻微朝向手势点移动
+                                direction.multiplyScalar(0.5);
+                        }
+
+                        // 应用影响到目标位置
+                        target.add(
+                            direction.multiplyScalar(influenceStrength * 2.0)
+                        );
+                    }
+                }
+            }
+
+            const lerpSpeed = (mode === 'FOCUS' && this.mesh === focusTargetMesh) ? 7.0 : CONFIG.animation.positionLerp;
+            this.mesh.position.lerp(target, Math.min(lerpSpeed * dt, 1.0));
+
+            if (mode === 'SCATTER') {
+                this.mesh.rotation.x += this.spinSpeed.x * dt;
+                this.mesh.rotation.y += this.spinSpeed.y * dt;
+                this.mesh.rotation.z += this.spinSpeed.z * dt;
+            } else if (mode === 'TREE') {
+                this.mesh.rotation.x = THREE.MathUtils.lerp(this.mesh.rotation.x, 0, Math.min(dt * 5, 1.0));
+                this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, 0, Math.min(dt * 5, 1.0));
+                this.mesh.rotation.y += 1.2 * dt;
+            }
+
+            if (mode === 'FOCUS' && this.mesh === focusTargetMesh) {
+                this.mesh.lookAt(camera.position);
+            }
+
+            let s = this.baseScale;
+            if (this.isDust) {
+                s = this.baseScale * (0.8 + 0.4 * Math.sin(elapsedTime * 4 + this.mesh.id));
+                if (mode === 'TREE') s = 0;
+            } else if (mode === 'SCATTER' && this.type === 'PHOTO') {
+                s = this.baseScale * 2.5;
+            } else if (mode === 'FOCUS') {
+                if (this.mesh === focusTargetMesh) s = 4.5;
+                else s = this.baseScale * 0.8;
+            }
+
+            this.mesh.scale.lerp(new THREE.Vector3(s, s, s), Math.min(CONFIG.animation.scaleLerp * dt, 1.0));
+        }
     }
+    // --- End of Particle Class ---
 
     function initThree() {
         const container = document.getElementById('canvas-container');
         scene = new THREE.Scene();
         scene.background = new THREE.Color(CONFIG.colors.bg);
-        scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.01);
+        // 背景沉浸式优化: 强化雾效，使其颜色与背景色匹配，增加景深
+        scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.015);
 
         camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 2, CONFIG.camera.z);
 
-        renderer = new THREE.WebGLRenderer({ 
-            antialias: true, 
-            alpha: false, 
-            powerPreference: "high-performance",
-            stencil: false,
-            depth: true,
-            logarithmicDepthBuffer: false
-        });
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         renderer.toneMapping = THREE.ReinhardToneMapping;
-        renderer.toneMappingExposure = 2.2;
-        renderer.setClearColor(0x000000, 1);
+        renderer.toneMappingExposure = 2.5; // 略微增加曝光，配合Bloom提升亮度
         container.appendChild(renderer.domElement);
 
         mainGroup = new THREE.Group();
@@ -302,34 +529,31 @@
     }
 
     function setupLights() {
-        const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+        // 调整灯光强度，适应更暗的背景
+        const ambient = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambient);
 
-        const innerLight = new THREE.PointLight(0xffaa00, 2, 20);
+        const innerLight = new THREE.PointLight(0xffaa00, 3, 20); // 增强内部点光
         innerLight.position.set(0, 5, 0);
         mainGroup.add(innerLight);
 
-        const spotGold = new THREE.SpotLight(0xffcc66, 1200);
+        const spotGold = new THREE.SpotLight(0xffddaa, 1800); // 增强聚光灯
         spotGold.position.set(30, 40, 40);
         spotGold.angle = 0.5;
         spotGold.penumbra = 0.5;
         scene.add(spotGold);
 
-        const spotBlue = new THREE.SpotLight(0x6688ff, 600);
+        const spotBlue = new THREE.SpotLight(0x6688ff, 800); // 增强冷色侧光
         spotBlue.position.set(-30, 20, -30);
         scene.add(spotBlue);
-
-        const fill = new THREE.DirectionalLight(0xffeebb, 0.8);
-        fill.position.set(0, 0, 50);
-        scene.add(fill);
     }
 
     function setupPostProcessing() {
         const renderScene = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
-        bloomPass.threshold = 0.8;
-        bloomPass.strength = 0.35;
-        bloomPass.radius = 0.35;
+        bloomPass.threshold = 0.7; // 调整阈值，使更多粒子发光
+        bloomPass.strength = 0.45; // 增强发光强度
+        bloomPass.radius = 0.45;
 
         composer = new EffectComposer(renderer);
         composer.addPass(renderScene);
@@ -338,214 +562,87 @@
 
     function createTextures() {
         const canvas = document.createElement('canvas');
-        canvas.width = 128;
-        canvas.height = 128;
+        canvas.width = 128; canvas.height = 128;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, 128, 128);
-        ctx.fillStyle = '#880000';
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 128, 128);
+        ctx.fillStyle = '#cc0000'; // 使用新的红色
         ctx.beginPath();
         for (let i = -128; i < 256; i += 32) {
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i + 32, 128);
-            ctx.lineTo(i + 16, 128);
-            ctx.lineTo(i - 16, 0);
+            ctx.moveTo(i, 0); ctx.lineTo(i + 32, 128); ctx.lineTo(i + 16, 128); ctx.lineTo(i - 16, 0);
         }
         ctx.fill();
         caneTexture = new THREE.CanvasTexture(canvas);
-        caneTexture.wrapS = THREE.RepeatWrapping;
-        caneTexture.wrapT = THREE.RepeatWrapping;
+        caneTexture.wrapS = THREE.RepeatWrapping; caneTexture.wrapT = THREE.RepeatWrapping;
         caneTexture.repeat.set(3, 3);
     }
 
-    class Particle {
-        constructor(mesh, type, isDust = false) {
-            this.mesh = mesh;
-            this.type = type;
-            this.isDust = isDust;
-
-            this.posTree = new THREE.Vector3();
-            this.posScatter = new THREE.Vector3();
-            this.baseScale = mesh.scale.x;
-
-            // Individual Spin Speed
-            // Photos spin slower to be readable
-            const speedMult = (type === 'PHOTO') ? 0.3 : 2.0;
-
-            this.spinSpeed = new THREE.Vector3(
-                (Math.random() - 0.5) * speedMult,
-                (Math.random() - 0.5) * speedMult,
-                (Math.random() - 0.5) * speedMult
-            );
-
-            this.calculatePositions();
-            
-            // 添加类标识符以提高性能
-            mesh.userData.particleType = type;
-        }
-
-        calculatePositions() {
-            // TREE: Tight Spiral
-            const h = CONFIG.particles.treeHeight;
-            const halfH = h / 2;
-            let t = Math.random();
-            t = Math.pow(t, 0.8);
-            const y = (t * h) - halfH;
-            let rMax = CONFIG.particles.treeRadius * (1.0 - t);
-            if (rMax < 0.5) rMax = 0.5;
-            const angle = t * 50 * Math.PI + Math.random() * Math.PI;
-            const r = rMax * (0.8 + Math.random() * 0.4);
-            this.posTree.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
-
-            // SCATTER: 3D Sphere
-            let rScatter = this.isDust ? (12 + Math.random() * 20) : (8 + Math.random() * 12);
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
-            this.posScatter.set(
-                rScatter * Math.sin(phi) * Math.cos(theta),
-                rScatter * Math.sin(phi) * Math.sin(theta),
-                rScatter * Math.cos(phi)
-            );
-        }
-
-        update(dt, mode, focusTargetMesh) {
-            let target = this.posScatter;
-
-            if (mode === 'TREE') target = this.posTree;
-            else if (mode === 'FOCUS') {
-                if (this.mesh === focusTargetMesh) {
-                    const desiredWorldPos = new THREE.Vector3(0, 2, 35);
-                    const invMatrix = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
-                    target = desiredWorldPos.applyMatrix4(invMatrix);
-                } else {
-                    target = this.posScatter;
-                }
-            }
-
-            // Movement Easing - 优化动画插值计算
-            const lerpSpeed = (mode === 'FOCUS' && this.mesh === focusTargetMesh) ? 5.0 : 2.0;
-            this.mesh.position.lerp(target, Math.min(lerpSpeed * dt, 1.0));
-
-            // Rotation Logic - CRITICAL: Ensure spin happens in Scatter
-            if (mode === 'SCATTER') {
-                this.mesh.rotation.x += this.spinSpeed.x * dt;
-                this.mesh.rotation.y += this.spinSpeed.y * dt;
-                this.mesh.rotation.z += this.spinSpeed.z * dt;
-            } else if (mode === 'TREE') {
-                // Reset rotations slowly
-                this.mesh.rotation.x = THREE.MathUtils.lerp(this.mesh.rotation.x, 0, Math.min(dt * 2, 1.0));
-                this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, 0, Math.min(dt * 2, 1.0));
-                this.mesh.rotation.y += 0.5 * dt;
-            }
-
-            if (mode === 'FOCUS' && this.mesh === focusTargetMesh) {
-                this.mesh.lookAt(camera.position);
-            }
-
-            // Scale Logic
-            let s = this.baseScale;
-            if (this.isDust) {
-                s = this.baseScale * (0.8 + 0.4 * Math.sin(clock.elapsedTime * 4 + this.mesh.id));
-                if (mode === 'TREE') s = 0;
-            } else if (mode === 'SCATTER' && this.type === 'PHOTO') {
-                // Large preview size in scatter
-                s = this.baseScale * 2.5;
-            } else if (mode === 'FOCUS') {
-                if (this.mesh === focusTargetMesh) s = 4.5;
-                else s = this.baseScale * 0.8;
-            }
-
-            this.mesh.scale.lerp(new THREE.Vector3(s, s, s), Math.min(4 * dt, 1.0));
-        }
-    }
-
-    // --- CREATION ---
     function createParticles() {
-        // 优化几何体和材质的创建，减少内存占用
-        const sphereGeo = new THREE.SphereGeometry(0.5, 16, 16); // 减少分段数以提高性能
-        const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55, 1, 1, 1); // 减少分段数
-        const curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 0.3, 0),
-            new THREE.Vector3(0.1, 0.5, 0), new THREE.Vector3(0.3, 0.4, 0)
-        ]);
-        const candyGeo = new THREE.TubeGeometry(curve, 8, 0.08, 4, false); // 减少分段数
+        const sphereGeo = new THREE.SphereGeometry(0.5, 16, 16);
+        const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+        const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 0.3, 0), new THREE.Vector3(0.1, 0.5, 0), new THREE.Vector3(0.3, 0.4, 0)]);
+        const candyGeo = new THREE.TubeGeometry(curve, 8, 0.08, 4, false);
 
+        // 材质颜色更新，使用更亮的金色
         const goldMat = new THREE.MeshStandardMaterial({
             color: CONFIG.colors.champagneGold,
             metalness: 1.0, roughness: 0.1,
-            envMapIntensity: 2.0,
-            emissive: 0x443300,
-            emissiveIntensity: 0.3,
+            envMapIntensity: 2.5, // 增强环境反射
+            emissive: 0x886600, // 增强自发光，配合 Bloom
+            emissiveIntensity: 0.5,
             flatShading: false
         });
 
         const greenMat = new THREE.MeshStandardMaterial({
             color: CONFIG.colors.deepGreen,
             metalness: 0.2, roughness: 0.8,
-            emissive: 0x002200,
-            emissiveIntensity: 0.2,
+            emissive: 0x002200, emissiveIntensity: 0.2,
             flatShading: false
         });
 
         const redMat = new THREE.MeshPhysicalMaterial({
             color: CONFIG.colors.accentRed,
             metalness: 0.3, roughness: 0.2, clearcoat: 1.0,
-            emissive: 0x330000,
+            emissive: 0x550000, // 增强红色自发光
             flatShading: false
         });
 
-        const candyMat = new THREE.MeshStandardMaterial({ 
-            map: caneTexture, 
-            roughness: 0.4,
-            flatShading: false
-        });
+        const candyMat = new THREE.MeshStandardMaterial({ map: caneTexture, roughness: 0.4, flatShading: false });
 
         for (let i = 0; i < CONFIG.particles.count; i++) {
             const rand = Math.random();
             let mesh, type;
 
-            if (rand < 0.40) {
-                mesh = new THREE.Mesh(boxGeo, greenMat);
-                type = 'BOX';
-            } else if (rand < 0.70) {
-                mesh = new THREE.Mesh(boxGeo, goldMat);
-                type = 'GOLD_BOX';
-            } else if (rand < 0.92) {
-                mesh = new THREE.Mesh(sphereGeo, goldMat);
-                type = 'GOLD_SPHERE';
-            } else if (rand < 0.97) {
-                mesh = new THREE.Mesh(sphereGeo, redMat);
-                type = 'RED';
-            } else {
-                mesh = new THREE.Mesh(candyGeo, candyMat);
-                type = 'CANE';
-            }
+            if (rand < 0.40) { mesh = new THREE.Mesh(boxGeo, greenMat); type = 'BOX'; }
+            else if (rand < 0.70) { mesh = new THREE.Mesh(boxGeo, goldMat); type = 'GOLD_BOX'; }
+            else if (rand < 0.92) { mesh = new THREE.Mesh(sphereGeo, goldMat); type = 'GOLD_SPHERE'; }
+            else if (rand < 0.97) { mesh = new THREE.Mesh(sphereGeo, redMat); type = 'RED'; }
+            else { mesh = new THREE.Mesh(candyGeo, candyMat); type = 'CANE'; }
 
             const s = 0.4 + Math.random() * 0.5;
             mesh.scale.set(s, s, s);
             mesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-
             mainGroup.add(mesh);
             particleSystem.push(new Particle(mesh, type, false));
         }
 
+        // 星星材质更新，增强发光
         const starGeo = new THREE.OctahedronGeometry(1.2, 0);
         const starMat = new THREE.MeshStandardMaterial({
-            color: 0xffdd88, emissive: 0xffaa00, emissiveIntensity: 1.0,
+            color: 0xffdd88,
+            emissive: 0xffaa00,
+            emissiveIntensity: 2.0, // 大幅增强星星的自发光
             metalness: 1.0, roughness: 0
         });
         const star = new THREE.Mesh(starGeo, starMat);
         star.position.set(0, CONFIG.particles.treeHeight / 2 + 1.2, 0);
         mainGroup.add(star);
-
         mainGroup.add(photoMeshGroup);
     }
 
     function createDust() {
-        // 优化灰尘粒子的几何体以提高性能
+        // 灰尘粒子材质优化
         const geo = new THREE.TetrahedronGeometry(0.08, 0);
         const mat = new THREE.MeshBasicMaterial({ color: 0xffeebb, transparent: true, opacity: 0.8 });
-
         for (let i = 0; i < CONFIG.particles.dustCount; i++) {
             const mesh = new THREE.Mesh(geo, mat);
             mesh.scale.setScalar(0.5 + Math.random());
@@ -556,16 +653,13 @@
 
     function createDefaultPhotos() {
         const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
+        canvas.width = 512; canvas.height = 512;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#050505';
-        ctx.fillRect(0, 0, 512, 512);
-        ctx.strokeStyle = '#eebb66';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(20, 20, 472, 472);
-        ctx.font = '500 60px Times New Roman';
-        ctx.fillStyle = '#eebb66';
+        ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, 512, 512);
+        ctx.strokeStyle = '#fceea7'; // 边框使用更亮的金色
+        ctx.lineWidth = 15; ctx.strokeRect(20, 20, 472, 472);
+        ctx.font = '500 60px Cinzel, Times New Roman';
+        ctx.fillStyle = '#fceea7';
         ctx.textAlign = 'center';
         ctx.fillText("JOYEUX", 256, 230);
         ctx.fillText("W.F", 256, 300);
@@ -577,11 +671,8 @@
 
     function addPhotoToScene(texture) {
         const frameGeo = new THREE.BoxGeometry(1.4, 1.4, 0.05);
-        const frameMat = new THREE.MeshStandardMaterial({
-            color: CONFIG.colors.champagneGold,
-            metalness: 1.0,
-            roughness: 0.1
-        });
+        // 相框材质使用更亮的金色
+        const frameMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.champagneGold, metalness: 1.0, roughness: 0.1 });
         const frame = new THREE.Mesh(frameGeo, frameMat);
 
         const photoGeo = new THREE.PlaneGeometry(1.2, 1.2);
@@ -609,26 +700,25 @@
                 new THREE.TextureLoader().load(ev.target.result, (t) => {
                     t.colorSpace = THREE.SRGBColorSpace;
                     addPhotoToScene(t);
+                    STATE.mode = 'SCATTER';
+                    STATE.focusTarget = null;
+                    updateModeStatus(STATE.mode);
                 });
             }
             reader.readAsDataURL(f);
         });
     }
 
-    // --- MEDIAPIPE ---
+    // --- MediaPipe and Gesture Processing ---
     async function initMediaPipe() {
         video = document.getElementById('webcam');
-        webcamCanvas = document.getElementById('webcam-preview');
-        webcamCtx = webcamCanvas.getContext('2d');
-        webcamCanvas.width = 160;
-        webcamCanvas.height = 120;
-
         const vision = await FilesetResolver.forVisionTasks(
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
         );
+        // 使用 Google Cloud Storage 上的模型文件
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
             baseOptions: {
-                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+                modelAssetPath: `data/hand_landmarker.task`,
                 delegate: "GPU"
             },
             runningMode: "VIDEO",
@@ -636,18 +726,21 @@
         });
 
         if (navigator.mediaDevices?.getUserMedia) {
-            const stream = await navigator.mediaDevices.getUserMedia({video: true});
-            video.srcObject = stream;
-            video.addEventListener("loadeddata", predictWebcam);
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({video: true});
+                video.srcObject = stream;
+                video.addEventListener("loadeddata", predictWebcam);
+            } catch (error) {
+                console.warn("无法访问摄像头 (MediaPipe 功能受限):", error);
+            }
         }
     }
 
     let lastVideoTime = -1;
-
     async function predictWebcam() {
         if (video.currentTime !== lastVideoTime) {
             lastVideoTime = video.currentTime;
-            if (handLandmarker) {
+            if (handLandmarker && video.readyState >= 2) {
                 const result = handLandmarker.detectForVideo(video, performance.now());
                 processGestures(result);
             }
@@ -655,48 +748,132 @@
         requestAnimationFrame(predictWebcam);
     }
 
+    const MODE_TEXT = {
+        'SCATTER': '当前模式：随机漂浮 (SCATTER)',
+        'TREE': '当前模式：圣诞树形态 (TREE)',
+        'FOCUS': '当前模式：回忆聚焦 (FOCUS)'
+    };
+
+    function updateModeStatus(mode) {
+        if (modeStatusElement) {
+            modeStatusElement.textContent = MODE_TEXT[mode] || MODE_TEXT['SCATTER'];
+        }
+    }
+
     function processGestures(result) {
+        let newMode = 'SCATTER';
+        let newFocusTarget = null;
+        let newGestureCommand = null;
+
         if (result.landmarks && result.landmarks.length > 0) {
             STATE.hand.detected = true;
             const lm = result.landmarks[0];
             STATE.hand.x = (lm[9].x - 0.5) * 2;
             STATE.hand.y = (lm[9].y - 0.5) * 2;
 
-            const thumb = lm[4]; const index = lm[8]; const wrist = lm[0];
-            const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
-            const tips = [lm[8], lm[12], lm[16], lm[20]];
-            let avgDist = 0;
-            tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
-            avgDist /= 4;
+            const thumb = lm[4];
+            const index = lm[8];
+            const middle = lm[12];
+            const ring = lm[16];
+            const pinky = lm[20];
+            const wrist = lm[0];
 
-            // 添加手势状态变化检测以减少不必要的状态切换
-            const prevMode = STATE.mode;
-            
-            if (pinchDist < 0.05) {
-                if (STATE.mode !== 'FOCUS') {
-                    STATE.mode = 'FOCUS';
+            // 计算各手指尖与拇指的距离（稍微放宽条件以便更容易触发）
+            const thumbIndexDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+            const thumbMiddleDist = Math.hypot(thumb.x - middle.x, thumb.y - middle.y);
+            const thumbRingDist = Math.hypot(thumb.x - ring.x, thumb.y - ring.y);
+            const thumbPinkyDist = Math.hypot(thumb.x - pinky.x, thumb.y - pinky.y);
+
+            // 计算手指尖到手腕的距离（用于检测握拳）
+            const tips = [index, middle, ring, pinky];
+            let avgTipDist = tips.reduce((sum, t) => sum + Math.hypot(t.x - wrist.x, t.y - wrist.y), 0) / 4;
+
+            // 更精确的手势识别逻辑（调整阈值以便更容易识别）
+            const isIndexPinching = thumbIndexDist < 0.07;  // 稍微放宽条件
+            const isMiddlePinching = thumbMiddleDist < 0.07;  // 稍微放宽条件
+            const isRingPinching = thumbRingDist < 0.07;  // 稍微放宽条件
+            const isPinkyPinching = thumbPinkyDist < 0.07;  // 稍微放宽条件
+
+            // 握拳检测（所有指尖都靠近手腕）
+            const isFist = avgTipDist < 0.25;
+
+            // 手势指令识别
+            if (isIndexPinching && !isMiddlePinching && !isRingPinching && !isPinkyPinching) {
+                // 只有拇指和食指捏合 -> 往前移动
+                newGestureCommand = 'MOVE_FORWARD';
+            } else if (!isIndexPinching && !isMiddlePinching && isRingPinching && isPinkyPinching) {
+                // 只有拇指与无名指、小指捏合 -> 往后移动
+                newGestureCommand = 'MOVE_BACKWARD';
+            } else if (!isFist && tips.every(t => t.y < wrist.y - 0.1)) {
+                // 所有指尖都在手腕上方（手向上）-> 右旋转
+                newGestureCommand = 'RIGHT_ROTATE';
+            } else if (!isFist && tips.some(t => t.y > wrist.y + 0.1)) {
+                // 有些指尖在手腕下方（手向下）-> 左旋转
+                newGestureCommand = 'LEFT_ROTATE';
+            }
+
+            // 模式切换逻辑（修复冲突问题）
+            if (isIndexPinching && isMiddlePinching && isRingPinching && isPinkyPinching) {
+                // 所有手指都捏合 -> 进入焦点模式（显示图片）
+                newMode = 'FOCUS';
+                if (STATE.mode !== 'FOCUS' || !STATE.focusTarget) {
+                    // 查找距离中心最近的照片
                     const photos = particleSystem.filter(p => p.type === 'PHOTO');
-                    if (photos.length) STATE.focusTarget = photos[Math.floor(Math.random()*photos.length)].mesh;
+                    if (photos.length) {
+                        // 计算每个照片与中心的距离
+                        let closestPhoto = null;
+                        let minDistance = Infinity;
+
+                        photos.forEach(photo => {
+                            // 获取照片在3D空间中的位置
+                            const worldPos = new THREE.Vector3();
+                            photo.mesh.getWorldPosition(worldPos);
+
+                            // 计算与中心的距离
+                            const distance = worldPos.length();
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestPhoto = photo.mesh;
+                            }
+                        });
+
+                        newFocusTarget = closestPhoto || photos[Math.floor(Math.random() * photos.length)].mesh;
+                    }
+                } else {
+                    newFocusTarget = STATE.focusTarget;
                 }
-            } else if (avgDist < 0.25) {
-                STATE.mode = 'TREE';
-                STATE.focusTarget = null;
+            } else if (isFist) {
+                // 握拳 -> 树模式
+                newMode = 'TREE';
             } else {
-                STATE.mode = 'SCATTER';
-                STATE.focusTarget = null;
+                // 其他情况 -> 散射模式
+                newMode = 'SCATTER';
             }
-            
-            // 只有在状态发生变化时才进行相关处理
-            if (prevMode !== STATE.mode) {
-                console.log(`Mode changed to: ${STATE.mode}`);
-            }
+
+            // 更新手势指令
+            STATE.gestureCommand = newGestureCommand;
         } else {
             STATE.hand.detected = false;
+            STATE.gestureCommand = null;
+        }
+
+        // 快速模式切换
+        if (newMode !== lastHandGesture) {
+            lastHandGesture = newMode;
+            setTimeout(() => {
+                if (newMode === lastHandGesture) {
+                    if (STATE.mode !== newMode) {
+                        STATE.mode = newMode;
+                        STATE.focusTarget = newFocusTarget;
+                        updateModeStatus(STATE.mode);
+                    }
+                }
+            }, 30); // 极快的模式切换延迟
         }
     }
 
+    // --- Event Handling ---
     function setupEvents() {
-        // 优化窗口大小调整事件处理，使用防抖动技术
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
@@ -705,15 +882,26 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 composer.setSize(window.innerWidth, window.innerHeight);
-            }, 100); // 100ms 防抖动延迟
+            }, 100);
         });
         document.getElementById('file-input').addEventListener('change', handleImageUpload);
 
-        // Toggle UI logic - ONLY hide controls, keep title
+        // H 键控制控制台的显示/隐藏 (标题保持不变)
+        const controlsContainer = document.getElementById('controls-container');
         window.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 'h') {
-                const controls = document.querySelector('.upload-wrapper');
-                if (controls) controls.classList.toggle('ui-hidden');
+                if (controlsContainer) {
+                    controlsContainer.classList.toggle('ui-hidden');
+                    STATE.uiVisible = !controlsContainer.classList.contains('ui-hidden');
+                }
+            }
+        });
+
+        // 页面加载完成后，默认隐藏控制面板
+        window.addEventListener('load', () => {
+            if (controlsContainer) {
+                controlsContainer.classList.add('ui-hidden');
+                STATE.uiVisible = false;
             }
         });
     }
@@ -721,69 +909,133 @@
     function animate() {
         requestAnimationFrame(animate);
         const dt = Math.min(clock.getDelta(), 0.1);
+        const elapsedTime = clock.getElapsedTime();
 
-        // Rotation Logic
+        // Rotation Logic - 进一步提高手势响应速度
         if (STATE.mode === 'SCATTER' && STATE.hand.detected) {
             const targetRotY = STATE.hand.x * Math.PI * 0.9;
             const targetRotX = STATE.hand.y * Math.PI * 0.25;
-            STATE.rotation.y += (targetRotY - STATE.rotation.y) * Math.min(3.0 * dt, 1.0);
-            STATE.rotation.x += (targetRotX - STATE.rotation.x) * Math.min(3.0 * dt, 1.0);
+            // 进一步提高插值速度
+            STATE.rotation.y += (targetRotY - STATE.rotation.y) * Math.min(CONFIG.animation.responseSpeed * dt, 1.0);
+            STATE.rotation.x += (targetRotX - STATE.rotation.x) * Math.min(CONFIG.animation.responseSpeed * dt, 1.0);
         } else {
             if (STATE.mode === 'TREE') {
-                STATE.rotation.y += 0.3 * dt;
-                STATE.rotation.x += (0 - STATE.rotation.x) * Math.min(2.0 * dt, 1.0);
+                // 提高树模式旋转速度
+                STATE.rotation.y += CONFIG.animation.treeRotation * dt;
+                STATE.rotation.x += (0 - STATE.rotation.x) * Math.min(5.0 * dt, 1.0);
             } else {
-                STATE.rotation.y += 0.1 * dt;
+                // 提高散射模式旋转速度
+                STATE.rotation.y += CONFIG.animation.scatterRotation * dt;
             }
         }
 
         mainGroup.rotation.y = STATE.rotation.y;
         mainGroup.rotation.x = STATE.rotation.x;
 
-        particleSystem.forEach(p => p.update(dt, STATE.mode, STATE.focusTarget));
+        // 传递更多参数用于粒子更新
+        particleSystem.forEach(p => p.update(
+            dt,
+            STATE.mode,
+            STATE.focusTarget,
+            elapsedTime,
+            STATE.hand,
+            STATE.gestureCommand
+        ));
         composer.render();
+    }
+
+    // --- MAIN INIT ---
+    async function init() {
+        initThree();
+        setupEnvironment();
+        setupLights();
+        createTextures();
+        createParticles();
+        createDust();
+        createDefaultPhotos();
+        setupPostProcessing();
+        setupEvents();
+        await initMediaPipe();
+
+        const loader = document.getElementById('loader');
+        loader.style.opacity = 0;
+        setTimeout(() => loader.remove(), 800);
+
+        animate();
     }
 
     init();
 </script>
 
-<!-- Background Music -->
-<audio id="bg-music" loop preload="auto">
-    <source src="data/christmas.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-    // Auto play background music
+    // --- 音频播放控制优化脚本 (保持原样) ---
     document.addEventListener('DOMContentLoaded', function () {
         const audio = document.getElementById('bg-music');
+        const audioControl = document.getElementById('audio-control');
+        const audioIcon = document.getElementById('audio-icon');
+
+        let isPlaying = false;
+        let isMuted = true;
+
+        function updateAudioState() {
+            audio.muted = isMuted;
+            if (isPlaying) {
+                audioIcon.textContent = isMuted ? '🔇' : '🎵';
+                audioControl.style.opacity = 1;
+            } else {
+                audioIcon.textContent = '▶️';
+                audioControl.style.opacity = 1;
+            }
+        }
+
         try {
-            // 尝试自动播放
             const playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
-                    // 自动播放成功
-                    console.log("Background music is playing");
+                    isPlaying = true;
+                    isMuted = false;
+                    audio.muted = false;
+                    updateAudioState();
                 }).catch(error => {
-                    // 自动播放失败（浏览器限制），需要用户交互
-                    console.log("Auto-play prevented by browser policy:", error);
-                    // 添加用户交互事件来播放音频
-                    document.body.addEventListener('click', function () {
-                        if (audio.paused) {
-                            audio.play();
-                        }
-                    }, {once: true});
+                    isPlaying = false;
+                    isMuted = true;
+                    updateAudioState();
                 });
             }
         } catch (error) {
-            console.error("Error attempting to play audio:", error);
+            isPlaying = false;
+            isMuted = true;
+            updateAudioState();
         }
 
+        audioControl.addEventListener('click', function () {
+            if (audio.paused && !isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    isMuted = false;
+                    updateAudioState();
+                }).catch(e => {
+                    console.error("Manual play failed:", e);
+                });
+            } else if (isPlaying) {
+                isMuted = !isMuted;
+                audio.muted = isMuted;
+                updateAudioState();
+            } else {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    isMuted = false;
+                    updateAudioState();
+                });
+            }
+        });
+
+        audio.addEventListener('play', () => { isPlaying = true; updateAudioState(); });
+        audio.addEventListener('pause', () => { isPlaying = false; updateAudioState(); });
     });
 </script>
-<!-- 不蒜子统计 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // 动态加载不蒜子统计脚本
         const script = document.createElement('script');
         script.src = "//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js";
         script.async = true;
