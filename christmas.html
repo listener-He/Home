@@ -187,131 +187,131 @@
         #audio-control:hover { background: #fceea7; color: #03050B; }
 
         /* --- 响应式设计优化 (针对不同设备尺寸) --- */
-        
+
         /* 超小设备 (小于 480px) */
         @media (max-width: 479px) {
-            h1 { 
-                font-size: 28px; 
-                letter-spacing: 2px; 
+            h1 {
+                font-size: 28px;
+                letter-spacing: 2px;
                 padding: 0 10px;
                 text-align: center;
             }
-            
+
             #controls-container {
                 width: 95%;
                 padding: 12px 15px;
                 box-sizing: border-box;
             }
-            
+
             .upload-btn {
                 font-size: 11px;
                 padding: 8px 16px;
             }
-            
+
             #audio-control {
                 width: 36px;
                 height: 36px;
-                bottom: 15px; 
+                bottom: 15px;
                 left: 15px;
                 font-size: 14px;
             }
-            
+
             .hint-text {
                 font-size: 10px;
                 letter-spacing: 0.5px;
             }
-            
+
             .gesture-guide h3 {
                 font-size: 12px;
                 margin: 10px 0 5px;
             }
-            
+
             .gesture-guide ul {
                 font-size: 10px;
                 padding-left: 12px;
                 margin: 0 0 8px;
             }
-            
+
             .controls-hint {
                 font-size: 10px;
                 left: 10%;
                 bottom: 3%;
             }
         }
-        
+
         /* 小设备 (480px 到 768px) */
         @media (min-width: 480px) and (max-width: 768px) {
-            h1 { 
-                font-size: 34px; 
+            h1 {
+                font-size: 34px;
                 letter-spacing: 3px;
                 text-align: center;
             }
-            
+
             #controls-container {
                 width: 90%;
                 padding: 15px 20px;
                 box-sizing: border-box;
             }
-            
+
             .upload-btn {
                 font-size: 12px;
                 padding: 10px 20px;
             }
-            
+
             #audio-control {
-                bottom: 20px; 
+                bottom: 20px;
                 left: 20px;
             }
-            
+
             .controls-hint {
                 font-size: 11px;
                 left: 12%;
             }
         }
-        
+
         /* 平板设备 (769px 到 1024px) */
         @media (min-width: 769px) and (max-width: 1024px) {
-            h1 { 
-                font-size: 46px; 
+            h1 {
+                font-size: 46px;
                 letter-spacing: 5px;
             }
-            
+
             #controls-container {
                 width: 80%;
                 padding: 20px 25px;
             }
-            
+
             .upload-btn {
                 font-size: 13px;
                 padding: 12px 25px;
             }
-            
+
             .hint-text {
                 font-size: 11px;
             }
-            
+
             .gesture-guide h3 {
                 font-size: 13px;
             }
-            
+
             .gesture-guide ul {
                 font-size: 11px;
             }
         }
-        
+
         /* 大屏幕设备 (大于 1024px) */
         @media (min-width: 1025px) {
-            h1 { 
-                font-size: 56px; 
+            h1 {
+                font-size: 56px;
                 letter-spacing: 6px;
             }
-            
+
             #controls-container {
                 width: auto;
                 max-width: 500px;
                 padding: 20px 30px;
             }
-            
+
             .upload-btn {
                 font-size: 14px;
                 padding: 12px 30px;
@@ -330,7 +330,7 @@
         .controls-hint {
             position: fixed;
             left: 15%;
-            bottom: 5%;
+            bottom: 3%;
             color: rgba(252, 238, 167, 0.7);
             font-size: 12px;
             z-index: 11;
@@ -396,7 +396,7 @@
     <span id="audio-icon">🔇</span>
 </div>
 <!-- 添加左侧提示文字 -->
-<div class="controls-hint">按 H 键唤起操作台</div>
+<div class="controls-hint" id="controls-hint">按 H 键/点击唤起操作台</div>
 
 <div id="webcam-wrapper">
     <video id="webcam" autoplay playsinline style="display:none;"></video>
@@ -405,6 +405,7 @@
 
 <audio id="bg-music" loop preload="auto">
     <source src="data/christmas.mp3" type="audio/mpeg">
+    您的浏览器不支持音频元素。
 </audio>
 
 <script type="module">
@@ -542,7 +543,7 @@
                     } else if (window.innerWidth <= 768) {
                         focusZ = 30; // 中等屏幕设备
                     }
-                    
+
                     const desiredWorldPos = new THREE.Vector3(0, 2, focusZ);
                     const invMatrix = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
                     target = desiredWorldPos.applyMatrix4(invMatrix);
@@ -560,7 +561,7 @@
                 } else if (window.innerWidth <= 768) {
                     noiseStrength *= 0.8; // 中等屏幕设备
                 }
-                
+
                 const noiseX = this.noise(elapsedTime * 0.5 + this.noiseOffset.x) * noiseStrength;
                 const noiseY = this.noise(elapsedTime * 0.5 + this.noiseOffset.y) * noiseStrength;
                 const noiseZ = this.noise(elapsedTime * 0.5 + this.noiseOffset.z) * noiseStrength;
@@ -577,14 +578,14 @@
                 } else if (window.innerWidth <= 768) {
                     maxDistance = 25; // 中等屏幕设备
                 }
-                            
+
                 if (target.length() > maxDistance) {
                     target.normalize().multiplyScalar(maxDistance);
                 }
 
                 // 实时手势影响 - 只关注当前手势位置，不使用历史轨迹
                 // 在触摸屏设备上增加手势灵敏度
-                if (handState.detected && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+                if (handState.detected) {
                     // 将2D手势坐标转换为3D空间中的影响点
                     // 根据屏幕尺寸调整手势影响范围
                     let handInfluenceRange = 15;
@@ -593,12 +594,17 @@
                     } else if (window.innerWidth <= 768) {
                         handInfluenceRange = 12; // 中等屏幕设备
                     }
-                    
+
                     const handInfluencePoint = new THREE.Vector3(
                         handState.x * handInfluenceRange,  // 调整影响范围
                         handState.y * handInfluenceRange,
                         0
                     );
+
+                    // 在触摸屏设备上增强手势影响
+                    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                        handInfluenceRange *= 1.5; // 触摸屏设备增强影响范围
+                    }
 
                     // 计算粒子与手势影响点之间的距离
                     const distance = this.mesh.position.distanceTo(handInfluencePoint);
@@ -648,10 +654,10 @@
                         // 应用影响到目标位置
                         // 在触摸屏设备上增强手势影响
                         let influenceMultiplier = 2.0;
-                        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                            influenceMultiplier = 2.5; // 触摸屏设备增强影响
+                        if (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1024) {
+                            influenceMultiplier = 3.0; // 触摸屏设备增强影响
                         }
-                        
+
                         target.add(
                             direction.multiplyScalar(influenceStrength * influenceMultiplier)
                         );
@@ -666,7 +672,7 @@
             } else if (window.innerWidth <= 768) {
                 lerpSpeed *= 1.1; // 中等屏幕设备
             }
-            
+
             this.mesh.position.lerp(target, Math.min(lerpSpeed * dt, 1.0));
 
             if (mode === 'SCATTER') {
@@ -697,7 +703,7 @@
                 } else if (window.innerWidth <= 768) {
                     focusScale = 3.5; // 中等屏幕设备
                 }
-                
+
                 if (this.mesh === focusTargetMesh) s = focusScale;
                 else s = this.baseScale * 0.8;
             }
@@ -709,7 +715,7 @@
             } else if (window.innerWidth <= 768) {
                 scaleLerpSpeed *= 1.1; // 中等屏幕设备
             }
-            
+
             this.mesh.scale.lerp(new THREE.Vector3(s, s, s), Math.min(scaleLerpSpeed * dt, 1.0));
         }
     }
@@ -938,6 +944,27 @@
             numHands: 1
         });
 
+        // 检查摄像头权限状态
+        try {
+            const permissionStatus = await navigator.permissions.query({name: 'camera'});
+            if (permissionStatus.state === 'granted') {
+                // 如果已经授予权限，直接启动摄像头
+                startWebcam();
+            } else if (permissionStatus.state === 'prompt') {
+                // 如果需要用户授权，显示提示让用户主动点击启动
+                showCameraPermissionPrompt();
+            } else {
+                // 权限被拒绝，显示提示
+                console.warn("摄像头权限已被拒绝");
+            }
+        } catch (error) {
+            // 浏览器不支持权限查询API，直接尝试启动摄像头
+            startWebcam();
+        }
+    }
+
+    // 启动摄像头
+    async function startWebcam() {
         if (navigator.mediaDevices?.getUserMedia) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -947,6 +974,34 @@
                 console.warn("无法访问摄像头 (MediaPipe 功能受限):", error);
             }
         }
+    }
+
+    // 显示摄像头权限提示
+    function showCameraPermissionPrompt() {
+        // 创建提示元素
+        const promptDiv = document.createElement('div');
+        promptDiv.id = 'camera-prompt';
+        promptDiv.innerHTML = `
+            <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                        background: rgba(0, 0, 0, 0.8); color: white; padding: 15px; border-radius: 10px;
+                        text-align: center; z-index: 1000; backdrop-filter: blur(5px);">
+                <p>需要摄像头权限以启用手势控制功能</p>
+                <button id="enable-camera" style="background: #4CAF50; color: white; border: none;
+                                                 padding: 10px 20px; border-radius: 5px; cursor: pointer;
+                                                 margin-top: 10px;">启用摄像头</button>
+            </div>
+        `;
+        document.body.appendChild(promptDiv);
+
+        // 添加点击事件
+        document.getElementById('enable-camera').addEventListener('click', async () => {
+            try {
+                await startWebcam();
+                promptDiv.remove();
+            } catch (error) {
+                console.error("启动摄像头失败:", error);
+            }
+        });
     }
 
     let lastVideoTime = -1;
@@ -1002,13 +1057,22 @@
             let avgTipDist = tips.reduce((sum, t) => sum + Math.hypot(t.x - wrist.x, t.y - wrist.y), 0) / 4;
 
             // 更精确的手势识别逻辑（调整阈值以便更容易识别）
-            const isIndexPinching = thumbIndexDist < 0.07;  // 稍微放宽条件
-            const isMiddlePinching = thumbMiddleDist < 0.07;  // 稍微放宽条件
-            const isRingPinching = thumbRingDist < 0.07;  // 稍微放宽条件
-            const isPinkyPinching = thumbPinkyDist < 0.07;  // 稍微放宽条件
+            // 根据屏幕尺寸调整手势识别阈值，在移动设备上适当放宽条件
+            let pinchThreshold = 0.07;
+            let fistThreshold = 0.25;
+
+            if (window.innerWidth <= 1024) { // 移动端和小屏幕设备
+                pinchThreshold = 0.09;  // 放宽捏合条件
+                fistThreshold = 0.30;   // 放宽握拳条件
+            }
+
+            const isIndexPinching = thumbIndexDist < pinchThreshold;
+            const isMiddlePinching = thumbMiddleDist < pinchThreshold;
+            const isRingPinching = thumbRingDist < pinchThreshold;
+            const isPinkyPinching = thumbPinkyDist < pinchThreshold;
 
             // 握拳检测（所有指尖都靠近手腕）
-            const isFist = avgTipDist < 0.25;
+            const isFist = avgTipDist < fistThreshold;
 
             // 手势指令识别
             if (isIndexPinching && !isMiddlePinching && !isRingPinching && !isPinkyPinching) {
@@ -1023,6 +1087,14 @@
             } else if (!isFist && tips.some(t => t.y > wrist.y + 0.1)) {
                 // 有些指尖在手腕下方（手向下）-> 左旋转
                 newGestureCommand = 'LEFT_ROTATE';
+
+            // 为移动设备增加简单的手势识别
+            } else if (window.innerWidth <= 1024 && !isFist && tips.some(t => t.x < wrist.x - 0.1)) {
+                // 在移动设备上，手指在手腕左侧 -> 向前移动
+                newGestureCommand = 'MOVE_FORWARD';
+            } else if (window.innerWidth <= 1024 && !isFist && tips.some(t => t.x > wrist.x + 0.1)) {
+                // 在移动设备上，手指在手腕右侧 -> 向后移动
+                newGestureCommand = 'MOVE_BACKWARD';
             }
 
             // 模式切换逻辑（修复冲突问题）
@@ -1104,14 +1176,18 @@
 
         // H 键控制控制台的显示/隐藏 (标题保持不变)
         const controlsContainer = document.getElementById('controls-container');
+        const controlsHint = document.getElementById('controls-hint');
+
         window.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 'h') {
-                if (controlsContainer) {
-                    controlsContainer.classList.toggle('ui-hidden');
-                    STATE.uiVisible = !controlsContainer.classList.contains('ui-hidden');
-                }
+                toggleControls();
             }
         });
+
+        // 为提示文字添加点击事件
+        if (controlsHint) {
+            controlsHint.addEventListener('click', toggleControls);
+        }
 
         // 页面加载完成后，默认隐藏控制面板
         window.addEventListener('load', () => {
@@ -1120,6 +1196,15 @@
                 STATE.uiVisible = false;
             }
         });
+    }
+
+    // 控制操作台显示/隐藏的函数
+    function toggleControls() {
+        const controlsContainer = document.getElementById('controls-container');
+        if (controlsContainer) {
+            controlsContainer.classList.toggle('ui-hidden');
+            STATE.uiVisible = !controlsContainer.classList.contains('ui-hidden');
+        }
     }
 
     function animate() {
