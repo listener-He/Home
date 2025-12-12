@@ -43,33 +43,14 @@
     <meta property="wechat:description" content="我是一名充满热情的Java后端开发工程师，专注于AI技术的探索与应用。">
     <title>Grand Luxury Tree Final v2</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000000;
-            font-family: 'Times New Roman', serif;
-        }
-
-        #canvas-container {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
+        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Times New Roman', serif; }
+        #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
         /* UI Overlay - Minimalist */
         #ui-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none;
+            display: flex; flex-direction: column;
             align-items: center;
             padding-top: 40px;
             box-sizing: border-box;
@@ -84,58 +65,29 @@
 
         /* Loading */
         #loader {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease-out;
         }
-
         .loader-text {
-            color: #d4af37;
-            font-size: 14px;
-            letter-spacing: 4px;
-            margin-top: 20px;
-            text-transform: uppercase;
-            font-weight: 100;
+            color: #d4af37; font-size: 14px; letter-spacing: 4px; margin-top: 20px;
+            text-transform: uppercase; font-weight: 100;
         }
-
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-top: 1px solid #d4af37;
-            border-radius: 50%;
+            width: 40px; height: 40px; border: 1px solid rgba(212, 175, 55, 0.2);
+            border-top: 1px solid #d4af37; border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Typography - Centerpiece */
         h1 {
-            color: #fceea7;
-            font-size: 56px;
-            margin: 0;
-            font-weight: 400;
+            color: #fceea7; font-size: 56px; margin: 0; font-weight: 400;
             letter-spacing: 6px;
             text-shadow: 0 0 50px rgba(252, 238, 167, 0.6);
             background: linear-gradient(to bottom, #fff, #eebb66);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: 'Cinzel', 'Times New Roman', serif;
             opacity: 0.9;
             transition: opacity 0.5s ease; /* Ensure smooth transitions if needed */
@@ -148,7 +100,6 @@
             text-align: center;
             transition: opacity 0.5s ease; /* Add transition for smooth hiding */
         }
-
         .upload-btn {
             background: rgba(20, 20, 20, 0.6);
             border: 1px solid rgba(212, 175, 55, 0.4);
@@ -162,13 +113,11 @@
             display: inline-block;
             backdrop-filter: blur(5px);
         }
-
         .upload-btn:hover {
             background: #d4af37;
             color: #000;
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
-
         .hint-text {
             color: rgba(212, 175, 55, 0.5);
             font-size: 9px;
@@ -177,21 +126,26 @@
             text-transform: uppercase;
         }
 
-        #file-input {
-            display: none;
-        }
+        #file-input { display: none; }
 
         /* Webcam feedback */
         #webcam-wrapper {
-            position: absolute;
-            bottom: 40px;
-            right: 40px;
-            width: 120px;
-            height: 90px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            opacity: 0; /* Hidden by default but functional */
+            position: absolute; bottom: 40px; right: 40px;
+            width: 120px; height: 90px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden; opacity: 0; /* Hidden by default but functional */
             pointer-events: none;
+        }
+        
+        /* 添加硬件加速样式以提高性能 */
+        #canvas-container, #ui-layer, #loader {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        .particle {
+            will-change: transform;
         }
     </style>
 
@@ -253,8 +207,8 @@
             accentRed: 0x990000,
         },
         particles: {
-            count: 1500,
-            dustCount: 2500,
+            count: 1000,  // 减少粒子数量以提高性能
+            dustCount: 2000,  // 减少尘埃粒子数量
             treeHeight: 24,
             treeRadius: 8
         },
@@ -323,11 +277,19 @@
         camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 2, CONFIG.camera.z);
 
-        renderer = new THREE.WebGLRenderer({antialias: true, alpha: false, powerPreference: "high-performance"});
+        renderer = new THREE.WebGLRenderer({ 
+            antialias: true, 
+            alpha: false, 
+            powerPreference: "high-performance",
+            stencil: false,
+            depth: true,
+            logarithmicDepthBuffer: false
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         renderer.toneMapping = THREE.ReinhardToneMapping;
         renderer.toneMappingExposure = 2.2;
+        renderer.setClearColor(0x000000, 1);
         container.appendChild(renderer.domElement);
 
         mainGroup = new THREE.Group();
@@ -364,10 +326,10 @@
 
     function setupPostProcessing() {
         const renderScene = new RenderPass(scene, camera);
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-        bloomPass.threshold = 0.7;
-        bloomPass.strength = 0.45;
-        bloomPass.radius = 0.4;
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
+        bloomPass.threshold = 0.8;
+        bloomPass.strength = 0.35;
+        bloomPass.radius = 0.35;
 
         composer = new EffectComposer(renderer);
         composer.addPass(renderScene);
@@ -417,6 +379,9 @@
             );
 
             this.calculatePositions();
+            
+            // 添加类标识符以提高性能
+            mesh.userData.particleType = type;
         }
 
         calculatePositions() {
@@ -457,19 +422,19 @@
                 }
             }
 
-            // Movement Easing
+            // Movement Easing - 优化动画插值计算
             const lerpSpeed = (mode === 'FOCUS' && this.mesh === focusTargetMesh) ? 5.0 : 2.0;
-            this.mesh.position.lerp(target, lerpSpeed * dt);
+            this.mesh.position.lerp(target, Math.min(lerpSpeed * dt, 1.0));
 
             // Rotation Logic - CRITICAL: Ensure spin happens in Scatter
             if (mode === 'SCATTER') {
                 this.mesh.rotation.x += this.spinSpeed.x * dt;
                 this.mesh.rotation.y += this.spinSpeed.y * dt;
-                this.mesh.rotation.z += this.spinSpeed.z * dt; // Added Z for more natural tumble
+                this.mesh.rotation.z += this.spinSpeed.z * dt;
             } else if (mode === 'TREE') {
                 // Reset rotations slowly
-                this.mesh.rotation.x = THREE.MathUtils.lerp(this.mesh.rotation.x, 0, dt);
-                this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, 0, dt);
+                this.mesh.rotation.x = THREE.MathUtils.lerp(this.mesh.rotation.x, 0, Math.min(dt * 2, 1.0));
+                this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, 0, Math.min(dt * 2, 1.0));
                 this.mesh.rotation.y += 0.5 * dt;
             }
 
@@ -490,42 +455,50 @@
                 else s = this.baseScale * 0.8;
             }
 
-            this.mesh.scale.lerp(new THREE.Vector3(s, s, s), 4 * dt);
+            this.mesh.scale.lerp(new THREE.Vector3(s, s, s), Math.min(4 * dt, 1.0));
         }
     }
 
     // --- CREATION ---
     function createParticles() {
-        const sphereGeo = new THREE.SphereGeometry(0.5, 32, 32);
-        const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+        // 优化几何体和材质的创建，减少内存占用
+        const sphereGeo = new THREE.SphereGeometry(0.5, 16, 16); // 减少分段数以提高性能
+        const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55, 1, 1, 1); // 减少分段数
         const curve = new THREE.CatmullRomCurve3([
             new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 0.3, 0),
             new THREE.Vector3(0.1, 0.5, 0), new THREE.Vector3(0.3, 0.4, 0)
         ]);
-        const candyGeo = new THREE.TubeGeometry(curve, 16, 0.08, 8, false);
+        const candyGeo = new THREE.TubeGeometry(curve, 8, 0.08, 4, false); // 减少分段数
 
         const goldMat = new THREE.MeshStandardMaterial({
             color: CONFIG.colors.champagneGold,
             metalness: 1.0, roughness: 0.1,
             envMapIntensity: 2.0,
             emissive: 0x443300,
-            emissiveIntensity: 0.3
+            emissiveIntensity: 0.3,
+            flatShading: false
         });
 
         const greenMat = new THREE.MeshStandardMaterial({
             color: CONFIG.colors.deepGreen,
             metalness: 0.2, roughness: 0.8,
             emissive: 0x002200,
-            emissiveIntensity: 0.2
+            emissiveIntensity: 0.2,
+            flatShading: false
         });
 
         const redMat = new THREE.MeshPhysicalMaterial({
             color: CONFIG.colors.accentRed,
             metalness: 0.3, roughness: 0.2, clearcoat: 1.0,
-            emissive: 0x330000
+            emissive: 0x330000,
+            flatShading: false
         });
 
-        const candyMat = new THREE.MeshStandardMaterial({map: caneTexture, roughness: 0.4});
+        const candyMat = new THREE.MeshStandardMaterial({ 
+            map: caneTexture, 
+            roughness: 0.4,
+            flatShading: false
+        });
 
         for (let i = 0; i < CONFIG.particles.count; i++) {
             const rand = Math.random();
@@ -569,8 +542,9 @@
     }
 
     function createDust() {
+        // 优化灰尘粒子的几何体以提高性能
         const geo = new THREE.TetrahedronGeometry(0.08, 0);
-        const mat = new THREE.MeshBasicMaterial({color: 0xffeebb, transparent: true, opacity: 0.8});
+        const mat = new THREE.MeshBasicMaterial({ color: 0xffeebb, transparent: true, opacity: 0.8 });
 
         for (let i = 0; i < CONFIG.particles.dustCount; i++) {
             const mesh = new THREE.Mesh(geo, mat);
@@ -688,20 +662,21 @@
             STATE.hand.x = (lm[9].x - 0.5) * 2;
             STATE.hand.y = (lm[9].y - 0.5) * 2;
 
-            const thumb = lm[4];
-            const index = lm[8];
-            const wrist = lm[0];
+            const thumb = lm[4]; const index = lm[8]; const wrist = lm[0];
             const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
             const tips = [lm[8], lm[12], lm[16], lm[20]];
             let avgDist = 0;
             tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
             avgDist /= 4;
 
+            // 添加手势状态变化检测以减少不必要的状态切换
+            const prevMode = STATE.mode;
+            
             if (pinchDist < 0.05) {
                 if (STATE.mode !== 'FOCUS') {
                     STATE.mode = 'FOCUS';
                     const photos = particleSystem.filter(p => p.type === 'PHOTO');
-                    if (photos.length) STATE.focusTarget = photos[Math.floor(Math.random() * photos.length)].mesh;
+                    if (photos.length) STATE.focusTarget = photos[Math.floor(Math.random()*photos.length)].mesh;
                 }
             } else if (avgDist < 0.25) {
                 STATE.mode = 'TREE';
@@ -710,17 +685,27 @@
                 STATE.mode = 'SCATTER';
                 STATE.focusTarget = null;
             }
+            
+            // 只有在状态发生变化时才进行相关处理
+            if (prevMode !== STATE.mode) {
+                console.log(`Mode changed to: ${STATE.mode}`);
+            }
         } else {
             STATE.hand.detected = false;
         }
     }
 
     function setupEvents() {
+        // 优化窗口大小调整事件处理，使用防抖动技术
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                composer.setSize(window.innerWidth, window.innerHeight);
+            }, 100); // 100ms 防抖动延迟
         });
         document.getElementById('file-input').addEventListener('change', handleImageUpload);
 
@@ -735,18 +720,18 @@
 
     function animate() {
         requestAnimationFrame(animate);
-        const dt = clock.getDelta();
+        const dt = Math.min(clock.getDelta(), 0.1);
 
         // Rotation Logic
         if (STATE.mode === 'SCATTER' && STATE.hand.detected) {
             const targetRotY = STATE.hand.x * Math.PI * 0.9;
             const targetRotX = STATE.hand.y * Math.PI * 0.25;
-            STATE.rotation.y += (targetRotY - STATE.rotation.y) * 3.0 * dt;
-            STATE.rotation.x += (targetRotX - STATE.rotation.x) * 3.0 * dt;
+            STATE.rotation.y += (targetRotY - STATE.rotation.y) * Math.min(3.0 * dt, 1.0);
+            STATE.rotation.x += (targetRotX - STATE.rotation.x) * Math.min(3.0 * dt, 1.0);
         } else {
             if (STATE.mode === 'TREE') {
                 STATE.rotation.y += 0.3 * dt;
-                STATE.rotation.x += (0 - STATE.rotation.x) * 2.0 * dt;
+                STATE.rotation.x += (0 - STATE.rotation.x) * Math.min(2.0 * dt, 1.0);
             } else {
                 STATE.rotation.y += 0.1 * dt;
             }
