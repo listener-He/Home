@@ -1,179 +1,181 @@
 // 配置文件 - 提取自各个JavaScript文件的关键配置
 // 创建日期: 2025-11-20
 
-const SiteConfig = {
-  // bj.js 配置
-  stars: {
-    count: 300,
-    refreshInterval: 50
-  },
+(function() {
+  const SiteConfig = {
+    // bj.js 配置
+    stars: {
+      count: 300,
+      refreshInterval: 50
+    },
 
-  // main.js 配置
-  animation: {
-    elementUp: {
-      delay: 0,
-      increment: 150
-    }
-  },
+    // main.js 配置
+    animation: {
+      elementUp: {
+        delay: 0,
+        increment: 150
+      }
+    },
 
-  background: {
-    imagePaths: [
-      "/images/bj/1.webp",
-      "/images/bj/2.webp",
-      "/images/bj/3.webp",
-      "/images/bj/4.webp",
-      "/images/bj/5.webp",
-      "/images/bj/6.webp",
-      "/images/bj/7.webp"
-    ]
-  },
+    background: {
+      imagePaths: [
+        "/images/bj/1.webp",
+        "/images/bj/2.webp",
+        "/images/bj/3.webp",
+        "/images/bj/4.webp",
+        "/images/bj/5.webp",
+        "/images/bj/6.webp",
+        "/images/bj/7.webp"
+      ]
+    },
 
-  hitokoto: {
-    apiUrl: 'https://v1.hitokoto.cn?c=c&c=d&c=i&c=k'
-  },
+    hitokoto: {
+      apiUrl: 'https://v1.hitokoto.cn?c=c&c=d&c=i&c=k'
+    },
 
-  // about.js 配置
-  github: {
-    username: 'listener-He'
-  },
+    // about.js 配置
+    github: {
+      username: 'listener-He'
+    },
 
-  blog: {
-    rssUrl: 'https://blog.hehouhui.cn/api/rss'
-  },
+    blog: {
+      rssUrl: 'https://blog.hehouhui.cn/api/rss'
+    },
 
-  // 通用缓存键与TTL（毫秒）
-  cacheKeys: {
-    github: { key: 'gh_data', ttlMs: 36000000 },
-    blog: { key: 'blog_data', ttlMs: 3600000 },
-    theme: { key: 'theme', ttlMs: 3600000 }
-  },
+    // 通用缓存键与TTL（毫秒）
+    cacheKeys: {
+      github: { key: 'gh_data', ttlMs: 36000000 },
+      blog: { key: 'blog_data', ttlMs: 3600000 },
+      theme: { key: 'theme', ttlMs: 3600000 }
+    },
 
-  techStack: [
-    { name: 'Java', category: 'core', weight: 5 },
-    { name: 'Spring Boot', category: 'backend', weight: 5 },
-    { name: 'JavaScript', category: 'frontend', weight: 5 },
-    { name: 'Python', category: 'core', weight: 4 },
-    { name: 'WebFlux', category: 'backend', weight: 5 },
-    { name: 'Reactor', category: 'backend', weight: 5 },
-    { name: 'TypeScript', category: 'frontend', weight: 4 },
-    { name: 'Spring Cloud', category: 'backend', weight: 4 },
-    { name: 'Go', category: 'core', weight: 3 },
-    { name: 'MySQL', category: 'data', weight: 4 },
-    { name: 'Redis', category: 'data', weight: 4 },
-    { name: 'MongoDB', category: 'data', weight: 3 },
-    { name: 'Docker', category: 'ops', weight: 4 },
-    { name: 'Kubernetes', category: 'ops', weight: 3 },
-    { name: 'OpenAI API', category: 'ai', weight: 3 },
-    { name: 'LangChain', category: 'ai', weight: 3 },
-    { name: 'TensorFlow', category: 'ai', weight: 2 },
-    { name: 'PyTorch', category: 'ai', weight: 2 },
-    { name: 'Elasticsearch', category: 'data', weight: 3 },
-    { name: 'RabbitMQ', category: 'data', weight: 2 },
-    { name: 'RocketMQ', category: 'data', weight: 2 },
-    { name: 'Kafka', category: 'data', weight: 2 },
-    { name: 'Jenkins', category: 'ops', weight: 3 },
-    { name: 'Git', category: 'ops', weight: 4 },
-    { name: 'Linux', category: 'ops', weight: 3 },
-    { name: 'AWS', category: 'ops', weight: 2 },
-    { name: 'Nginx', category: 'ops', weight: 2 },
-    { name: 'Spring Security', category: 'backend', weight: 3 },
-    { name: 'MyBatis', category: 'backend', weight: 3 },
-    { name: 'JPA', category: 'backend', weight: 2 },
-    { name: 'Dubbo', category: 'backend', weight: 2 },
-    { name: 'Netty', category: 'backend', weight: 2 },
-    { name: 'Transformers', category: 'ai', weight: 2 },
-    { name: 'Scikit-learn', category: 'ai', weight: 2 },
-    { name: 'Ollama', category: 'ai', weight: 1 },
-    { name: 'Dify', category: 'ai', weight: 1 },
-    { name: 'Spring AI', category: 'ai', weight: 1 },
-    { name: 'ClickHouse', category: 'data', weight: 1 },
-    { name: 'Postgresql', category: 'data', weight: 1 },
-    { name: "Hexo", category: "frontend", weight: 5},
-    { name: "NextJs", category: "frontend", weight: 1},
-    { name: "HuggingFace", category: "ai", weight: 1},
-    { name: "Vue", category: "frontend", weight: 3},
-    { name: "React", category: "frontend", weight: 1},
-    { name: "R2dbc", category: "data", weight: 1},
-    { name: "Proto", category: "core", weight: 1},
-    { name: "Mqtt", category: "core", weight: 2},
-    { name: "Grpc", category: "core", weight: 1},
-    { name: "Figma", category: "frontend", weight: 1}
-  ],
-
-
-  // 默认数据（当API或RSS不可用时使用）
-  defaults: {
-    repos: [
-      {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
-      {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
-      {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
+    techStack: [
+      { name: 'Java', category: 'core', weight: 5 },
+      { name: 'Spring Boot', category: 'backend', weight: 5 },
+      { name: 'JavaScript', category: 'frontend', weight: 5 },
+      { name: 'Python', category: 'core', weight: 4 },
+      { name: 'WebFlux', category: 'backend', weight: 5 },
+      { name: 'Reactor', category: 'backend', weight: 5 },
+      { name: 'TypeScript', category: 'frontend', weight: 4 },
+      { name: 'Spring Cloud', category: 'backend', weight: 4 },
+      { name: 'Go', category: 'core', weight: 3 },
+      { name: 'MySQL', category: 'data', weight: 4 },
+      { name: 'Redis', category: 'data', weight: 4 },
+      { name: 'MongoDB', category: 'data', weight: 3 },
+      { name: 'Docker', category: 'ops', weight: 4 },
+      { name: 'Kubernetes', category: 'ops', weight: 3 },
+      { name: 'OpenAI API', category: 'ai', weight: 3 },
+      { name: 'LangChain', category: 'ai', weight: 3 },
+      { name: 'TensorFlow', category: 'ai', weight: 2 },
+      { name: 'PyTorch', category: 'ai', weight: 2 },
+      { name: 'Elasticsearch', category: 'data', weight: 3 },
+      { name: 'RabbitMQ', category: 'data', weight: 2 },
+      { name: 'RocketMQ', category: 'data', weight: 2 },
+      { name: 'Kafka', category: 'data', weight: 2 },
+      { name: 'Jenkins', category: 'ops', weight: 3 },
+      { name: 'Git', category: 'ops', weight: 4 },
+      { name: 'Linux', category: 'ops', weight: 3 },
+      { name: 'AWS', category: 'ops', weight: 2 },
+      { name: 'Nginx', category: 'ops', weight: 2 },
+      { name: 'Spring Security', category: 'backend', weight: 3 },
+      { name: 'MyBatis', category: 'backend', weight: 3 },
+      { name: 'JPA', category: 'backend', weight: 2 },
+      { name: 'Dubbo', category: 'backend', weight: 2 },
+      { name: 'Netty', category: 'backend', weight: 2 },
+      { name: 'Transformers', category: 'ai', weight: 2 },
+      { name: 'Scikit-learn', category: 'ai', weight: 2 },
+      { name: 'Ollama', category: 'ai', weight: 1 },
+      { name: 'Dify', category: 'ai', weight: 1 },
+      { name: 'Spring AI', category: 'ai', weight: 1 },
+      { name: 'ClickHouse', category: 'data', weight: 1 },
+      { name: 'Postgresql', category: 'data', weight: 1 },
+      { name: "Hexo", category: "frontend", weight: 5},
+      { name: "NextJs", category: "frontend", weight: 1},
+      { name: "HuggingFace", category: "ai", weight: 1},
+      { name: "Vue", category: "frontend", weight: 3},
+      { name: "React", category: "frontend", weight: 1},
+      { name: "R2dbc", category: "data", weight: 1},
+      { name: "Proto", category: "core", weight: 1},
+      { name: "Mqtt", category: "core", weight: 2},
+      { name: "Grpc", category: "core", weight: 1},
+      { name: "Figma", category: "frontend", weight: 1}
     ],
-    posts: [
-      {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
-      {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
-      {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
-    ],
-    user: { repos: 165, followers: 6, created: "2018-05-14" }
-  },
 
-  socialCards: {
-    rings: [130, 180, 230],
-    goldenAngle: 137.5,
-    baseSpeed: 16
-  },
 
-  artalk: {
-    server: 'https://artalk.hehouhui.cn',
-    site: 'Honesty的主页',
-    placeholder: '来说点什么吧...',
-    noComment: '暂无评论',
-    sendBtn: '发送'
-  },
+    // 默认数据（当API或RSS不可用时使用）
+    defaults: {
+      repos: [
+        {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
+        {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
+        {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
+      ],
+      posts: [
+        {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
+        {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
+        {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
+      ],
+      user: { repos: 165, followers: 6, created: "2018-05-14" }
+    },
 
-  // 站点统计配置
-  analytics: {
-    busuanzi: {
-      src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
-      site_pv_id: 'busuanzi_site_pv',
-      site_uv_id: 'busuanzi_site_uv',
-      formatter: true
+    socialCards: {
+      rings: [130, 180, 230],
+      goldenAngle: 137.5,
+      baseSpeed: 16
     },
-    baidu: {
-      src: 'https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e',
-      id: 'ae2a009a75b13c21d5121ee51375ea4e'
+
+    artalk: {
+      server: 'https://artalk.hehouhui.cn',
+      site: 'Honesty的主页',
+      placeholder: '来说点什么吧...',
+      noComment: '暂无评论',
+      sendBtn: '发送'
     },
-    google: {
-      src: 'https://www.googletagmanager.com/gtag/js',
-      id: 'G-DYWDEVKDP0'
+
+    // 站点统计配置
+    analytics: {
+      busuanzi: {
+        src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
+        site_pv_id: 'busuanzi_site_pv',
+        site_uv_id: 'busuanzi_site_uv',
+        formatter: true
+      },
+      baidu: {
+        src: 'https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e',
+        id: 'ae2a009a75b13c21d5121ee51375ea4e'
+      },
+      google: {
+        src: 'https://www.googletagmanager.com/gtag/js',
+        id: 'G-DYWDEVKDP0'
+      },
+      tencent: {
+        src: 'https://sdk.51.la/js-sdk-pro.min.js',
+        id: '3OBGjwDdEIRS7XZ1',
+        ck: '3OBGjwDdEIRS7XZ1'
+      }
     },
-    tencent: {
-      src: 'https://sdk.51.la/js-sdk-pro.min.js',
-      id: '3OBGjwDdEIRS7XZ1',
-      ck: '3OBGjwDdEIRS7XZ1'
+
+    animationSettings: {
+      observerOptions: {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      },
+      itemObserverOptions: {
+        threshold: 0.15,
+        rootMargin: '0px 0px -20px 0px'
+      }
+    },
+
+    // 开发环境配置
+    dev: {
+      isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
     }
-  },
+  };
 
-  animationSettings: {
-    observerOptions: {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    },
-    itemObserverOptions: {
-      threshold: 0.15,
-      rootMargin: '0px 0px -20px 0px'
-    }
-  },
 
-  // 开发环境配置
-  dev: {
-    isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
+  // 导出配置
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = SiteConfig;
+  } else if (typeof window !== 'undefined') {
+    window.SiteConfig = SiteConfig;
   }
-};
-
-
-// 导出配置
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SiteConfig;
-} else if (typeof window !== 'undefined') {
-  window.SiteConfig = SiteConfig;
-}
+})();

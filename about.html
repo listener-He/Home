@@ -109,51 +109,6 @@
     <script>
         if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href = "https://imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location.href);
     </script>
-    
-    <!-- 关键JS内联 -->
-    <script>
-      // 预加载关键配置
-      const SiteConfig = {
-        github: { username: 'listener-He' },
-        blog: { rssUrl: 'https://blog.hehouhui.cn/api/rss' },
-        cacheKeys: {
-          github: { key: 'gh_data', ttlMs: 36000000 },
-          blog: { key: 'blog_data', ttlMs: 3600000 },
-          theme: { key: 'theme', ttlMs: 3600000 }
-        },
-        analytics: {
-          busuanzi: {
-            src: '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js',
-            site_pv_id: 'busuanzi_site_pv',
-            site_uv_id: 'busuanzi_site_uv'
-          },
-          baidu: { src: 'https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e' },
-          tencent: { id: '3OBGjwDdEIRS7XZ1', ck: '3OBGjwDdEIRS7XZ1' }
-        },
-        artalk: {
-          server: 'https://artalk.hehouhui.cn',
-          site: 'Honesty的主页'
-        },
-        dev: {
-          isLocal: (typeof location !== 'undefined') ? (location.hostname.indexOf('localhost') > -1 || location.hostname.indexOf('127.0.0.1') > -1) : false
-        },
-        defaults: {
-          user: { repos: 165, followers: 6, created: "2018-05-14" },
-          repos: [
-            {name: "yunxiao-LLM-reviewer", desc: "AI Code Reviewer based on LLM", stars: 9, url: "#"},
-            {name: "hexo-theme-stellar", desc: "Comprehensive Hexo theme", stars: 5, url: "#"},
-            {name: "Universal-IoT-Java", desc: "IoT Platform Demo", stars: 2, url: "#"}
-          ],
-          posts: [
-            {title: "Vector Database Guide", date: "2025-01-02", cat: "Tech", url: "#"},
-            {title: "Spring Boot 3.0 Features", date: "2024-12-30", cat: "Java", url: "#"},
-            {title: "Microservices Patterns", date: "2024-12-28", cat: "Arch", url: "#"}
-          ]
-        }
-      };
-      
-      window.SiteConfig = SiteConfig;
-    </script>
 </head>
 <body>
 <!-- 动态背景层 -->
@@ -446,14 +401,14 @@
     document.addEventListener('DOMContentLoaded', function () {
         // 动态加载不蒜子统计脚本
         const script = document.createElement('script');
-        script.src = SiteConfig.analytics.busuanzi.src;
+        script.src = "//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.abbr.min.js";
         script.async = true;
         document.head.appendChild(script);
     });
 </script>
 <script>
     try {
-        !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id: SiteConfig.analytics.tencent.id, ck: SiteConfig.analytics.tencent.ck});
+        !function(p){"use strict";!function(t){var s=window,e=document,i=p,c="".concat("https:"===e.location.protocol?"https://":"http://","sdk.51.la/js-sdk-pro.min.js"),n=e.createElement("script"),r=e.getElementsByTagName("script")[0];n.type="text/javascript",n.setAttribute("charset","UTF-8"),n.async=!0,n.src=c,n.id="LA_COLLECT",i.d=n;var o=function(){s.LA.ids.push(i)};s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)}()}({id:"3OBGjwDdEIRS7XZ1",ck:"3OBGjwDdEIRS7XZ1"});
     } catch (e) {
         console.log("51.la统计错误", e);
     }
@@ -465,7 +420,7 @@
     (function () {
         try {
             var hm = document.createElement("script");
-            hm.src = SiteConfig.analytics.baidu.src;
+            hm.src = "https://hm.baidu.com/hm.js?ae2a009a75b13c21d5121ee51375ea4e";
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         } catch (e) {
@@ -479,8 +434,8 @@
 <script>
     // 监听不蒜子数据的错误兜底
     function initFormatter() {
-        const pvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_pv_id);
-        const uvEl = document.getElementById(SiteConfig.analytics.busuanzi.site_uv_id);
+        const pvEl = document.getElementById("busuanzi_site_pv");
+        const uvEl = document.getElementById("busuanzi_site_uv");
 
         if (!pvEl && !uvEl) return;
         console.log('[Busuanzi]', 'Formatting... Listener observer');
