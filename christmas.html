@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆</title>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="./images/logo.png">
 
     <meta name="description"
           content="在这个充满节日气氛的 3D 圣诞树世界里，Honesty 邀请您上传照片，共同点亮美好的回忆。——来自Honesty的节日祝福。">
@@ -12,15 +14,37 @@
     <link rel="canonical" href="https://www.hehouhui.cn/christmas.html">
     <meta name="author" content="Honesty">
 
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hehouhui.cn/christmas.html">
     <meta property="og:title" content="🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆">
     <meta property="og:description"
           content="Honesty 邀请你上传照片，共同点亮美好的节日回忆。点击进入 3D 互动体验！">
     <meta property="og:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="og:site_name" content="Honesty的个人主页">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.hehouhui.cn/christmas.html">
+    <meta property="twitter:title" content="🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆">
+    <meta property="twitter:description"
+          content="Honesty 邀请你上传照片，共同点亮美好的节日回忆。点击进入 3D 互动体验！">
+    <meta property="twitter:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="twitter:site" content="@Honesty861024">
+
+    <!-- 微信小程序/朋友圈分享 -->
+    <meta property="wechat:image" content="https://www.hehouhui.cn/images/avatar.jpeg">
+    <meta property="wechat:title" content="🎄 圣诞快乐 🎉 - Honesty 的 3D 魔法回忆">
+    <meta property="wechat:description"
+          content="在这个充满节日气氛的 3D 圣诞树世界里，Honesty 邀请您上传照片，共同点亮美好的回忆。">
+
+    <link rel="alternate" hreflang="zh-cn" href="https://www.hehouhui.cn/christmas.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.hehouhui.cn/christmas.html">
 
     <style>
         /* 引入优雅字体 */
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+SC:wght@300;500&display=swap');
+                /* 使用国内可快速访问的字体资源替换 Google Fonts */
+        @import url('https://fonts.loli.net/css2?family=Cinzel:wght@400;700&family=Noto+Sans+SC:wght@300;500&display=swap');
 
         /* 背景颜色深度优化: 从纯黑 (#000000) 调整为极深午夜蓝 (#03050B) */
         body {
@@ -235,7 +259,7 @@
                 提示: 按 'H' 键隐藏控制台 | 尝试手势交互 (MediaPipe)
             </div>
         </div>
-        
+
         <!-- 添加手势操作说明 -->
         <div class="gesture-guide">
             <h3 style="color: #fceea7; margin: 15px 0 8px; font-size: 14px; font-weight: 500;">手势操作指南</h3>
@@ -1007,7 +1031,15 @@
             isMuted = true;
             updateAudioState();
         }
-
+        function autoPlay() {
+            audio.play().then(() => {
+                isPlaying = true;
+                isMuted = false;
+                updateAudioState();
+            }).catch(e => {
+                console.error("Autoplay failed:", e);
+            });
+        }
         audioControl.addEventListener('click', function () {
             if (audio.paused && !isPlaying) {
                 audio.play().then(() => {
@@ -1029,7 +1061,8 @@
                 });
             }
         });
-
+        document.addEventListener('click', autoPlay);
+        document.addEventListener('keydown', autoPlay);
         audio.addEventListener('play', () => { isPlaying = true; updateAudioState(); });
         audio.addEventListener('pause', () => { isPlaying = false; updateAudioState(); });
     });
