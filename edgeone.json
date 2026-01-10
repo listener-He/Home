@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/.well-known/*.txt",
+      "destination": "/well-known/:splat.txt"
+    }
+  ]
+}
