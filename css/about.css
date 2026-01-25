@@ -1146,7 +1146,7 @@ body {
         grid-template-rows: repeat(2, 1fr);
         gap: 12px;
     }
-    
+
     .stat-item {
         display: flex;
         flex-direction: column;
@@ -1154,7 +1154,7 @@ body {
         align-items: center;
         overflow: hidden;
     }
-    
+
     .stat-val {
         font-size: 1.2rem !important;
         max-width: 100%;
@@ -1182,6 +1182,9 @@ body {
         flex-shrink: 1;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+    .busuanzi-font {
+        font-size: 0.8rem !important;
     }
 
     .stat-key {
@@ -1222,11 +1225,11 @@ body {
         grid-template-columns: repeat(5, 1fr);
         gap: 8px;
     }
-    
+
     .stat-item {
         min-width: 0;
     }
-    
+
     .stat-val {
         max-width: 100%;
         flex-shrink: 1;

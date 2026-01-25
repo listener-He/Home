@@ -389,12 +389,18 @@
                 if (pvEl.textContent.includes('禁用')) {
                     pvEl.textContent = '-';
                     return;
+                } else if (pvEl.textContent.length > 3) {
+                    pvEl.classList.add('busuanzi-font')
                 }
             }
+
             if (uvEl?.textContent) {
                 if (uvEl.textContent.includes('禁用')) {
                     uvEl.textContent = '-';
                     return;
+                }
+                else if (uvEl.textContent.length > 3) {
+                    uvEl.classList.add('busuanzi-font')
                 }
             }
         });
